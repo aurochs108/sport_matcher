@@ -8,15 +8,15 @@ void main() {
   group('MinimumTextLengthValidator', () {
     final random = Random();
     final minimumLength = random.nextInt(10) + 2;
-    final validator = MinimumTextLengthValidator(minimumLength: minimumLength);
+    final sut = MinimumTextLengthValidator(minimumLength: minimumLength);
 
 
     test('should return error message when text is null', () {
-      expect(validator.validate(null), "Cannot be empty");
+      expect(sut.validate(null), "Cannot be empty");
     });
 
     test('should return error message when text is empty', () {
-      expect(validator.validate(''), "Cannot be empty");
+      expect(sut.validate(''), "Cannot be empty");
     });
 
     test('should return error message when text is shorter than the minimum length', () {
@@ -24,21 +24,21 @@ void main() {
       final numberToSubstract = max(random.nextInt(minimumLength) - 1, 1);
       final text = uuid.v4().characters.take(minimumLength - numberToSubstract).string;
 
-      expect(validator.validate(text), "Cannot be less than $minimumLength characters");
+      expect(sut.validate(text), "Cannot be less than $minimumLength characters");
     });
 
     test('should return error message when text length equals minimum length', () {
       final uuid = Uuid();
       final text = uuid.v4().characters.take(minimumLength).string;
 
-      expect(validator.validate(text), "Cannot be less than $minimumLength characters");
+      expect(sut.validate(text), "Cannot be less than $minimumLength characters");
     });
 
     test('should return null when text meets the minimum length', () {
       final uuid = Uuid();
       final text = uuid.v4().characters.take(minimumLength + 1).string;
   
-      expect(validator.validate(text), null);
+      expect(sut.validate(text), null);
     });
 
     test('should return null when text is longer than the minimum length', () {
@@ -46,7 +46,7 @@ void main() {
       final numberToAdd = random.nextInt(5) + 2;
       final text = uuid.v4().characters.take(minimumLength + numberToAdd).string;
 
-      expect(validator.validate(text), null);
+      expect(sut.validate(text), null);
     });
   });
 }

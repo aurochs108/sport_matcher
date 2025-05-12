@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:sport_matcher/ui/authentication/email_authentication/email_authentication_view_model.dart';
+import 'package:sport_matcher/ui/authentication/email_authentication/email_authentication_screen_model.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/password_text_field.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
 
 class EmailAuthenticationScreen extends StatefulWidget {
   EmailAuthenticationScreen({super.key, required String title})
-      : viewModel = EmailAuthenticationViewModel(title: title);
+      : viewModel = EmailAuthenticationScreenModel(title: title);
 
-  final EmailAuthenticationViewModel viewModel;
+  final EmailAuthenticationScreenModel viewModel;
 
   @override
   State<EmailAuthenticationScreen> createState() {

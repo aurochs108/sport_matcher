@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/email_validator.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/minimum_text_length_validator.dart';
 
-class EmailAuthenticationViewModel extends ChangeNotifier {
+class EmailAuthenticationScreenModel extends ChangeNotifier {
   final String title;
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
 
-  final emailValidator = EmailValidator();
-  final passwordValidator = MinimumTextLengthValidator(minimumLength: 12);
+  final AbstractTextValidator emailValidator;
+  final AbstractTextValidator passwordValidator;
 
   bool isFinishProcesButtonActive = false;
 
-  String? emailError;
-  String? passwordError;
   Function()? onStateChanged;
 
-  EmailAuthenticationViewModel({required this.title}) {
+  EmailAuthenticationScreenModel({
+    required this.title,
+    AbstractTextValidator? emailValidator,
+    AbstractTextValidator? passwordValidator,
+  })  : emailValidator = emailValidator ?? EmailValidator(),
+        passwordValidator = passwordValidator ??
+           MinimumTextLengthValidator(minimumLength: 12) {
     emailTextController.addListener(_updateButtonState);
     passwordTextController.addListener(_updateButtonState);
   }
-  
+
   VoidCallback? getFinishProcessButtonAction() {
     if (isFinishProcesButtonActive) {
       return () =>
