@@ -53,8 +53,8 @@ void main() {
         onStateChangedCallsCount: onStateChangedCallsCount,
         expectedOnStateChangedCallsCount: 1,
         emailValidator: emailValidator,
-        passwordValidator: passwordValidator,
         expectedValidatedEmails: [expectedEmail, expectedEmail],
+        passwordValidator: passwordValidator,
         expectedValidatedPasswords: ["", expectedPassword],
       );
     });
@@ -80,8 +80,8 @@ void main() {
         onStateChangedCallsCount: onStateChangedCallsCount,
         expectedOnStateChangedCallsCount: 0,
         emailValidator: emailValidator,
-        passwordValidator: passwordValidator,
         expectedValidatedEmails: [expectedEmail],
+        passwordValidator: passwordValidator,
         expectedValidatedPasswords: [""],
       );
     });
@@ -107,8 +107,8 @@ void main() {
         onStateChangedCallsCount: onStateChangedCallsCount,
         expectedOnStateChangedCallsCount: 0,
         emailValidator: emailValidator,
-        passwordValidator: passwordValidator,
         expectedValidatedEmails: [""],
+        passwordValidator: passwordValidator,
         expectedValidatedPasswords: [expectedPassword],
       );
     });
@@ -121,15 +121,14 @@ void _validateEmailAndPasswordValidatorsAndIsFinishProcessButtonActive({
   required int onStateChangedCallsCount,
   required int expectedOnStateChangedCallsCount,
   required MockAbstractTextValidator emailValidator,
-  required MockAbstractTextValidator passwordValidator,
   required List<String> expectedValidatedEmails,
+  required MockAbstractTextValidator passwordValidator,
   required List<String> expectedValidatedPasswords,
 }) {
   expect(sut.isFinishProcesButtonActive, expectedIsFinishProcesButtonActive);
   expect(onStateChangedCallsCount, expectedOnStateChangedCallsCount);
 
-  final capturedEmails =
-      verify(emailValidator.validate(captureAny)).captured;
+  final capturedEmails = verify(emailValidator.validate(captureAny)).captured;
   expect(capturedEmails, expectedValidatedEmails);
 
   final capturedPasswords =
