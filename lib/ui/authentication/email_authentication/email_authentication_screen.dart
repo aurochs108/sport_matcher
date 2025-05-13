@@ -6,9 +6,9 @@ import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
 
 class EmailAuthenticationScreen extends StatefulWidget {
   EmailAuthenticationScreen({super.key, required String title})
-      : viewModel = EmailAuthenticationScreenModel(title: title);
+      : _viewModel = EmailAuthenticationScreenModel(title: title);
 
-  final EmailAuthenticationScreenModel viewModel;
+  final EmailAuthenticationScreenModel _viewModel;
 
   @override
   State<EmailAuthenticationScreen> createState() {
@@ -20,15 +20,15 @@ class _EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
   @override
   void initState() {
     super.initState();
-    widget.viewModel.onStateChanged = () {
+    widget._viewModel.onStateChanged = () {
       setState(() {}); 
     };
   }
 
   @override
   void dispose() {
-    widget.viewModel.disposeControllers();
-    widget.viewModel.dispose();
+    widget._viewModel.disposeControllers();
+    widget._viewModel.dispose();
     super.dispose();
   }
 
@@ -36,7 +36,7 @@ class _EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.viewModel.title),
+        title: Text(widget._viewModel.title),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 48),
@@ -47,23 +47,23 @@ class _EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
                 children: [
                   PlainTextField(
                     keyboardType: TextInputType.emailAddress,
-                    controller: widget.viewModel.emailTextController,
+                    controller: widget._viewModel.emailTextController,
                     title: "Email",
-                    validator: widget.viewModel.emailValidator,
+                    validator: widget._viewModel.emailValidator,
                   ),
                   SizedBox(
                     height: 16,
                   ),
                   PasswordTextField(
-                    controller: widget.viewModel.passwordTextController,
-                    validator: widget.viewModel.passwordValidator,
+                    controller: widget._viewModel.passwordTextController,
+                    validator: widget._viewModel.passwordValidator,
                   )
                 ],
               ),
             ),
             roundedButton(
-              buttonTitle: widget.viewModel.title,
-              onPressed: widget.viewModel.getFinishProcessButtonAction()
+              buttonTitle: widget._viewModel.title,
+              onPressed: widget._viewModel.getFinishProcessButtonAction()
             )
           ],
         ),
