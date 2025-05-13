@@ -10,9 +10,9 @@ import 'email_authentication_screen_model_test.mocks.dart';
 @GenerateMocks([AbstractTextValidator])
 void main() {
   group('EmailAuthenticationScreenModel', () {
+    late String title;
     late MockAbstractTextValidator emailValidator;
     late MockAbstractTextValidator passwordValidator;
-    late String title;
     late int onStateChangedCallsCount;
     late EmailAuthenticationScreenModel sut;
 
@@ -61,8 +61,9 @@ void main() {
 
     test('should deactivate button when emailValidator returns error', () {
       // given
-      when(emailValidator.validate("")).thenReturn(null);
-      when(passwordValidator.validate(any)).thenReturn(null);
+      final noMessageError = Uuid().v4();
+      when(emailValidator.validate("")).thenReturn(noMessageError);
+      when(passwordValidator.validate("")).thenReturn(noMessageError);
 
       final expectedEmail = Uuid().v4();
       final expectedErrorMessage = Uuid().v4();
@@ -87,8 +88,9 @@ void main() {
 
     test('should deactivate button when passwordValidator returns error', () {
       // given
-      when(emailValidator.validate("")).thenReturn(null);
-      when(passwordValidator.validate(any)).thenReturn(null);
+      final noMessageError = Uuid().v4();
+      when(emailValidator.validate("")).thenReturn(noMessageError);
+      when(passwordValidator.validate("")).thenReturn(noMessageError);
 
       final expectedPassword = Uuid().v4();
       final expectedErrorMessage = Uuid().v4();
