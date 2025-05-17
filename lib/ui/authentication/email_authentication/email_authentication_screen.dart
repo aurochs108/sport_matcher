@@ -5,8 +5,11 @@ import 'package:sport_matcher/ui/core/ui/text_fields/password_text_field.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
 
 class EmailAuthenticationScreen extends StatefulWidget {
-  EmailAuthenticationScreen({super.key, required String title})
-      : _viewModel = EmailAuthenticationScreenModel(title: title);
+  EmailAuthenticationScreen(
+      {super.key, required String title, required onFinishProcessButtonAction})
+      : _viewModel = EmailAuthenticationScreenModel(
+            title: title,
+            onFinishProcessButtonAction: onFinishProcessButtonAction);
 
   final EmailAuthenticationScreenModel _viewModel;
 
@@ -21,7 +24,7 @@ class _EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
   void initState() {
     super.initState();
     widget._viewModel.onStateChanged = () {
-      setState(() {}); 
+      setState(() {});
     };
   }
 
@@ -62,9 +65,8 @@ class _EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
               ),
             ),
             roundedButton(
-              buttonTitle: widget._viewModel.title,
-              onPressed: widget._viewModel.getFinishProcessButtonAction()
-            )
+                buttonTitle: widget._viewModel.title,
+                onPressed: widget._viewModel.getFinishProcessButtonAction())
           ],
         ),
       ),
