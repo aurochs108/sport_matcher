@@ -1,6 +1,9 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class AppTheme {
+  // Paddings
   static const _horizontalPadding = 24.0;
   static const _verticalPadding = 24.0;
 
@@ -9,7 +12,7 @@ class AppTheme {
   }
 
   static EdgeInsets allPaddings(BuildContext context) {
-    final safeArea = safeAreaPadding(context);
+    final safeArea = _safeAreaPadding(context);
     return EdgeInsets.only(
       top: safeArea.top + _verticalPadding,
       bottom: safeArea.bottom + _verticalPadding,
@@ -18,7 +21,12 @@ class AppTheme {
     );
   }
 
-  static EdgeInsets safeAreaPadding(BuildContext context) {
+  static EdgeInsets _safeAreaPadding(BuildContext context) {
     return MediaQuery.of(context).padding;
   }
+
+  // Spacers
+
+  static const double columnSpacingSmall = 8.0;
+  static const double columnSpacingMedium = 16.0;
 }

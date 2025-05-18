@@ -25,6 +25,7 @@ class WelcomeScreen extends StatelessWidget {
         body: Padding(
             padding: AppTheme.allPaddings(context),
             child: Column(
+              spacing: AppTheme.columnSpacingSmall,
               children: [
                 Padding(
                   padding: AppTheme.horizontalPadding(),

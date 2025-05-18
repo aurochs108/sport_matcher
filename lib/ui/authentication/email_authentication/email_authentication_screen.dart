@@ -48,15 +48,13 @@ class _EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
           children: [
             Expanded(
               child: Column(
+                spacing: AppTheme.columnSpacingMedium,
                 children: [
                   PlainTextField(
                     keyboardType: TextInputType.emailAddress,
                     controller: widget._viewModel.emailTextController,
                     title: "Email",
                     validator: widget._viewModel.emailValidator,
-                  ),
-                  SizedBox(
-                    height: 16,
                   ),
                   PasswordTextField(
                     controller: widget._viewModel.passwordTextController,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
+import 'package:sport_matcher/ui/core/ui/collections/chips_screen_view.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
 import 'package:sport_matcher/ui/create_profile/widgets/create_profile_screen_model.dart';
 
@@ -27,6 +28,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         body: Padding(
           padding: AppTheme.horizontalPadding(),
           child: Column(
+            spacing: AppTheme.columnSpacingMedium,
             children: [
               PlainTextField(
                 keyboardType: TextInputType.emailAddress,
@@ -34,6 +36,18 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                 title: "Name",
                 validator: widget._viewModel.nameValidator,
               ),
+              Expanded(
+                child: ChipsCollectionView(items: [
+                  "Bike",
+                  "Hockey",
+                  "Football",
+                  "Climbing",
+                  "Ping Pong",
+                  "Voleyball",
+                  "Tennis",
+                  "Running"
+                ]),
+              )
             ],
           ),
         ),
