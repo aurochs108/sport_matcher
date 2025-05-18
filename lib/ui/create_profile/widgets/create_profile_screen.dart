@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
 import 'package:sport_matcher/ui/create_profile/widgets/create_profile_screen_model.dart';
 
@@ -23,15 +24,18 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
           title: Text("Create profile"),
           automaticallyImplyLeading: false,
         ),
-        body: Column(
-          children: [
-            PlainTextField(
-              keyboardType: TextInputType.emailAddress,
-              controller: widget._viewModel.nameTextController,
-              title: "Name",
-              validator: widget._viewModel.nameValidator,
-            ),
-          ],
+        body: Padding(
+          padding: AppTheme.horizontalPadding(),
+          child: Column(
+            children: [
+              PlainTextField(
+                keyboardType: TextInputType.emailAddress,
+                controller: widget._viewModel.nameTextController,
+                title: "Name",
+                validator: widget._viewModel.nameValidator,
+              ),
+            ],
+          ),
         ),
       ),
     );

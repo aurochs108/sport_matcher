@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/ui/authentication/email_authentication/email_authentication_screen_model.dart';
+import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/password_text_field.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
@@ -42,7 +43,7 @@ class _EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
         title: Text(widget._viewModel.title),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 48),
+        padding: AppTheme.allPaddings(context),
         child: Column(
           children: [
             Expanded(
