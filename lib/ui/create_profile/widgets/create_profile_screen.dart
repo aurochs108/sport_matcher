@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/collections/chips_screen_view.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
+import 'package:sport_matcher/ui/core/ui/texts/title_medium_text.dart';
 import 'package:sport_matcher/ui/create_profile/widgets/create_profile_screen_model.dart';
 
 class CreateProfileScreen extends StatefulWidget {
@@ -28,6 +29,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         body: Padding(
           padding: AppTheme.horizontalPadding(),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             spacing: AppTheme.columnSpacingMedium,
             children: [
               PlainTextField(
@@ -36,17 +38,20 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                 title: "Name",
                 validator: widget._viewModel.nameValidator,
               ),
+              TitleMediumText(text: "Select your favorite sports"),
               Expanded(
-                child: ChipsCollectionView(items: [
-                  "Bike",
-                  "Hockey",
-                  "Football",
-                  "Climbing",
-                  "Ping Pong",
-                  "Voleyball",
-                  "Tennis",
-                  "Running"
-                ]),
+                child: Center(
+                  child: ChipsCollectionView(items: [
+                    "Bike",
+                    "Hockey",
+                    "Football",
+                    "Climbing",
+                    "Ping Pong",
+                    "Voleyball",
+                    "Tennis",
+                    "Running"
+                  ]),
+                ),
               )
             ],
           ),

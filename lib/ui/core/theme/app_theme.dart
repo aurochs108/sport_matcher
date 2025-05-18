@@ -25,8 +25,10 @@ class AppTheme {
     return MediaQuery.of(context).padding;
   }
 
-  // Spacers
+  // Spacings
 
   static const double columnSpacingSmall = 8.0;
   static const double columnSpacingMedium = 16.0;
+
+  static const double rowSpacingSmall = 4.0;
 }
