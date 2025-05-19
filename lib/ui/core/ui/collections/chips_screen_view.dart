@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
+import 'package:sport_matcher/ui/core/ui/buttons/rounded_selectable_button.dart';
 
 class ChipsCollectionView extends StatelessWidget {
   final List<String> items;
@@ -10,26 +11,26 @@ class ChipsCollectionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding:
-            AppTheme.horizontalPadding(),
+        padding: AppTheme.horizontalPadding(),
         child: Wrap(
           spacing: AppTheme.columnSpacingSmall,
           runSpacing: AppTheme.rowSpacingSmall,
-          alignment:
-              WrapAlignment.center,
+          alignment: WrapAlignment.center,
           children: items.map((item) {
-            return Chip(
-              label: Text(
-                item,
-                style: const TextStyle(color: Colors.black),
-              ),
-              backgroundColor: Colors.white,
-              shape: const StadiumBorder(),
-              side: const BorderSide(color: Colors.black, width: 1),
-            );
+            return _activityButton(item);
           }).toList(),
         ),
       ),
+    );
+  }
+
+  Widget _activityButton(String item) {
+    return RoundedSelectableButton(
+      title: item,
+      onSelectionChanged: (isSelected) {
+        // Handle the selection state here
+        print('$item is selected: $isSelected');
+      },
     );
   }
 }
