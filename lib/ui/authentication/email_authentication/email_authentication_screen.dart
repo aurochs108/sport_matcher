@@ -63,7 +63,7 @@ class _EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
                 ],
               ),
             ),
-            roundedButton(
+            RoundedButton(
                 buttonTitle: widget._viewModel.title,
                 onPressed: widget._viewModel.getFinishProcessButtonAction())
           ],

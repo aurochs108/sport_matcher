@@ -34,12 +34,12 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                roundedButton(
+                RoundedButton(
                     buttonTitle: "Sign in",
                     onPressed: () {
                       _navigateToSignIn(context);
                     }),
-                roundedButton(
+                RoundedButton(
                     buttonTitle: "Sign up",
                     onPressed: () {
                       _navigateToSignUp(context);

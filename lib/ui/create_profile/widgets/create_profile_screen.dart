@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
+import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/collections/chips_screen_view.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
 import 'package:sport_matcher/ui/core/ui/texts/title_medium_text.dart';
@@ -28,32 +29,38 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         ),
         body: Padding(
           padding: AppTheme.horizontalPadding(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: AppTheme.columnSpacingMedium,
-            children: [
-              PlainTextField(
-                keyboardType: TextInputType.emailAddress,
-                controller: widget._viewModel.nameTextController,
-                title: "Name",
-                validator: widget._viewModel.nameValidator,
-              ),
-              TitleMediumText(text: "Select your favorite sports"),
-              Expanded(
-                child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: AppTheme.columnSpacingMedium,
+              children: [
+                PlainTextField(
+                  keyboardType: TextInputType.emailAddress,
+                  controller: widget._viewModel.nameTextController,
+                  title: "Name",
+                  validator: widget._viewModel.nameValidator,
+                ),
+                TitleMediumText(text: "Select your favorite sports"),
+                Center(
                   child: ChipsCollectionView(items: [
                     "Bike",
-                    "Hockey",
-                    "Football",
                     "Climbing",
+                    "Football",
+                    "Hockey",
                     "Ping Pong",
-                    "Voleyball",
+                    "Running",
                     "Tennis",
-                    "Running"
+                    "Voleyball",
                   ]),
                 ),
-              )
-            ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    RoundedButton(buttonTitle: "Next", onPressed: null),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
