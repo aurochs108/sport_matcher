@@ -13,6 +13,7 @@ void main() {
     late String title;
     late MockAbstractTextValidator emailValidator;
     late MockAbstractTextValidator passwordValidator;
+    late int onFinishProcessButtonActionCallsCount;
     late int onStateChangedCallsCount;
     late EmailAuthenticationScreenModel sut;
 
@@ -20,10 +21,13 @@ void main() {
       title = Uuid().v4();
       emailValidator = MockAbstractTextValidator();
       passwordValidator = MockAbstractTextValidator();
+      onFinishProcessButtonActionCallsCount = 0;
       sut = EmailAuthenticationScreenModel(
         title: title,
         emailValidator: emailValidator,
         passwordValidator: passwordValidator,
+        onFinishProcessButtonAction: () =>
+            {onFinishProcessButtonActionCallsCount += 1},
       );
       onStateChangedCallsCount = 0;
       sut.onStateChanged = () {

@@ -6,6 +6,11 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EmailAuthenticationScreen(title: "Sign in");
+    return EmailAuthenticationScreen(
+      title: "Sign in",
+      onFinishProcessButtonAction: () {
+        print("todo");
+      },
+    );
   }
 }
