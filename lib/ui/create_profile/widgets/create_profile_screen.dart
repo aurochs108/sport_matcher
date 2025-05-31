@@ -18,52 +18,47 @@ class CreateProfileScreen extends StatefulWidget {
 }
 
 class _CreateProfileScreenState extends State<CreateProfileScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("Create profile"),
-          automaticallyImplyLeading: false,
-        ),
-        body: Padding(
-          padding: AppTheme.horizontalPadding(),
-          child: SingleChildScrollView(
+      @override
+    Widget build(BuildContext context) {
+      return PopScope(
+        canPop: false,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("Create profile"),
+            automaticallyImplyLeading: false,
+          ),
+          body: Padding(
+            padding: AppTheme.horizontalPadding(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: AppTheme.columnSpacingMedium,
               children: [
                 PlainTextField(
-                  keyboardType: TextInputType.emailAddress,
                   controller: widget._viewModel.nameTextController,
                   title: "Name",
                   validator: widget._viewModel.nameValidator,
+                  textCapitalization: TextCapitalization.words,
                 ),
-                TitleMediumText(text: "Select your favorite sports"),
-                Center(
-                  child: ChipsCollectionView(items: [
-                    "Bike",
-                    "Climbing",
-                    "Football",
-                    "Hockey",
-                    "Ping Pong",
-                    "Running",
-                    "Tennis",
-                    "Voleyball",
-                  ]),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    RoundedButton(buttonTitle: "Next", onPressed: null),
-                  ],
-                ),
+                const TitleMediumText(text: "Select your favorite sports"),
+                ChipsCollectionView(items: [
+                  "Bike",
+                  "Climbing",
+                  "Football",
+                  "Hockey",
+                  "Ping Pong",
+                  "Running",
+                  "Tennis",
+                  "Voleyball",
+                ]),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.end,
+                //   children: [
+                //     RoundedButton(buttonTitle: "Next", onPressed: null),
+                //   ],
+                // ),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
+    }
 }
