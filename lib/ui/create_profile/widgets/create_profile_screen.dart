@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/collections/chips_screen_view.dart';
@@ -18,47 +19,45 @@ class CreateProfileScreen extends StatefulWidget {
 }
 
 class _CreateProfileScreenState extends State<CreateProfileScreen> {
-      @override
-    Widget build(BuildContext context) {
-      return PopScope(
-        canPop: false,
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text("Create profile"),
-            automaticallyImplyLeading: false,
-          ),
-          body: Padding(
-            padding: AppTheme.horizontalPadding(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PlainTextField(
-                  controller: widget._viewModel.nameTextController,
-                  title: "Name",
-                  validator: widget._viewModel.nameValidator,
-                  textCapitalization: TextCapitalization.words,
-                ),
-                const TitleMediumText(text: "Select your favorite sports"),
-                ChipsCollectionView(items: [
-                  "Bike",
-                  "Climbing",
-                  "Football",
-                  "Hockey",
-                  "Ping Pong",
-                  "Running",
-                  "Tennis",
-                  "Voleyball",
-                ]),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   children: [
-                //     RoundedButton(buttonTitle: "Next", onPressed: null),
-                //   ],
-                // ),
-              ],
-            ),
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Create profile"),
+          automaticallyImplyLeading: false,
+        ),
+        body: Padding(
+          padding: AppTheme.horizontalPadding(),
+          child: ListView(
+            scrollDirection: Axis.vertical,
+            children: [
+              PlainTextField(
+                controller: widget._viewModel.nameTextController,
+                title: "Name",
+                validator: widget._viewModel.nameValidator,
+                textCapitalization: TextCapitalization.words,
+              ),
+              const SizedBox(height: 16),
+              const TitleMediumText(text: "Select your favorite sports"),
+              const SizedBox(height: 16),
+              ChipsCollectionView(items: [
+                "Bike",
+                "Climbing",
+                "Football",
+                "Hockey",
+                "Ping Pong",
+                "Running",
+                "Tennis",
+                "Voleyball",
+              ]),
+              const SizedBox(height: 16),
+              RoundedButton(buttonTitle: "Next", onPressed: null),
+            ],
           ),
         ),
-      );
-    }
+      ),
+    );
+  }
 }
