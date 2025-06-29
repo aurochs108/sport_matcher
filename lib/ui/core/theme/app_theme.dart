@@ -19,6 +19,15 @@ class AppTheme {
     );
   }
 
+  static EdgeInsets horizontalAndBottom(BuildContext context) {
+    final safeArea = _safeAreaPadding(context);
+    return EdgeInsets.only(
+      bottom: safeArea.bottom + _verticalPadding,
+      left: _horizontalPadding,
+      right: _horizontalPadding,
+    );
+  }
+
   static EdgeInsets _safeAreaPadding(BuildContext context) {
     return MediaQuery.of(context).padding;
   }

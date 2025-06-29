@@ -28,34 +28,52 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
           automaticallyImplyLeading: false,
         ),
         body: Padding(
-          padding: AppTheme.horizontalPadding(),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PlainTextField(
-                  controller: widget._viewModel.nameTextController,
-                  title: "Name",
-                  validator: widget._viewModel.nameValidator,
-                  textCapitalization: TextCapitalization.words,
+          padding: AppTheme.horizontalAndBottom(context),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PlainTextField(
+                        controller: widget._viewModel.nameTextController,
+                        title: "Name",
+                        validator: widget._viewModel.nameValidator,
+                        textCapitalization: TextCapitalization.words,
+                      ),
+                      const SizedBox(height: AppTheme.columnSpacingMedium),
+                      const TitleMediumText(
+                          text: "Select your favorite sports"),
+                      const SizedBox(height: AppTheme.columnSpacingMedium),
+                      ChipsCollectionView(items: [
+                        "Bike",
+                        "Climbing",
+                        "Football",
+                        "Hockey",
+                        "Ping Pong",
+                        "Running",
+                        "Tennis",
+                        "Voleyball",
+                      ]),
+                      const SizedBox(height: AppTheme.columnSpacingMedium),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 16),
-                const TitleMediumText(text: "Select your favorite sports"),
-                const SizedBox(height: 16),
-                ChipsCollectionView(items: [
-                  "Bike",
-                  "Climbing",
-                  "Football",
-                  "Hockey",
-                  "Ping Pong",
-                  "Running",
-                  "Tennis",
-                  "Voleyball",
-                ]),
-                const SizedBox(height: 16),
-                RoundedButton(buttonTitle: "Next", onPressed: null),
-              ],
-            ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                      child:
+                          RoundedButton(buttonTitle: "Back", onPressed: null)),
+                  SizedBox(width: AppTheme.rowSpacingSmall),
+                  Expanded(
+                      child:
+                          RoundedButton(buttonTitle: "Next", onPressed: null)),
+                ],
+              )
+            ],
           ),
         ),
       ),
