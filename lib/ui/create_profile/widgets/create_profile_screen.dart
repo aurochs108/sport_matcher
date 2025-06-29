@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/collections/chips_screen_view.dart';
@@ -30,31 +29,33 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         ),
         body: Padding(
           padding: AppTheme.horizontalPadding(),
-          child: ListView(
-            scrollDirection: Axis.vertical,
-            children: [
-              PlainTextField(
-                controller: widget._viewModel.nameTextController,
-                title: "Name",
-                validator: widget._viewModel.nameValidator,
-                textCapitalization: TextCapitalization.words,
-              ),
-              const SizedBox(height: 16),
-              const TitleMediumText(text: "Select your favorite sports"),
-              const SizedBox(height: 16),
-              ChipsCollectionView(items: [
-                "Bike",
-                "Climbing",
-                "Football",
-                "Hockey",
-                "Ping Pong",
-                "Running",
-                "Tennis",
-                "Voleyball",
-              ]),
-              const SizedBox(height: 16),
-              RoundedButton(buttonTitle: "Next", onPressed: null),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PlainTextField(
+                  controller: widget._viewModel.nameTextController,
+                  title: "Name",
+                  validator: widget._viewModel.nameValidator,
+                  textCapitalization: TextCapitalization.words,
+                ),
+                const SizedBox(height: 16),
+                const TitleMediumText(text: "Select your favorite sports"),
+                const SizedBox(height: 16),
+                ChipsCollectionView(items: [
+                  "Bike",
+                  "Climbing",
+                  "Football",
+                  "Hockey",
+                  "Ping Pong",
+                  "Running",
+                  "Tennis",
+                  "Voleyball",
+                ]),
+                const SizedBox(height: 16),
+                RoundedButton(buttonTitle: "Next", onPressed: null),
+              ],
+            ),
           ),
         ),
       ),
