@@ -5,14 +5,53 @@ import 'package:sport_matcher/ui/core/utilities/validators/minimum_text_length_v
 class CreateProfileScreenModel extends ChangeNotifier {
   final nameTextController = TextEditingController();
   final AbstractTextValidator nameValidator;
+  final Map<String, bool> _activities = {
+    "Bike": false,
+    "Climbing": false,
+    "Football": false,
+    "Hockey": false,
+    "Ping Pong": false,
+    "Running": false,
+    "Tennis": false,
+    "Voleyball": false,
+  };
+  Map<String, bool> get activities => Map.unmodifiable(_activities);
+  var isNextButtonActive = false;
+  Function()? onStateChanged;
 
   CreateProfileScreenModel({
     AbstractTextValidator? nameValidator,
-  }) : nameValidator = nameValidator ?? MinimumTextLengthValidator(minimumLength: 2) {
-    nameTextController.addListener(_updateButtonState);
+  }) : nameValidator =
+            nameValidator ?? MinimumTextLengthValidator(minimumLength: 2) {
+    nameTextController.addListener(_updateSaveButtonState);
   }
 
-  void _updateButtonState() {
-    
+  void updateActivites(String activity, bool isSelected) {
+    _activities[activity] = isSelected;
+    _updateSaveButtonState();
+  }
+
+  void _updateSaveButtonState() {
+    isNextButtonActive = nameTextController.text.length > 1 && _hasSelectedActivities();
+    onStateChanged?.call();
+  }
+
+  bool _hasSelectedActivities() {
+    return activities.values.firstWhere((isSelected) => isSelected, orElse: () => false);
+  }
+
+  VoidCallback? getBackButtonAction() {
+    if (isNextButtonActive) {
+      return () {
+        print("back");
+      };
+    } else {
+      return null;
+    }
+  }
+
+  void disposeControllers() {
+    nameTextController.removeListener(_updateSaveButtonState);
+    nameTextController.dispose();
   }
 }

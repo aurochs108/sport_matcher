@@ -19,6 +19,21 @@ class CreateProfileScreen extends StatefulWidget {
 
 class _CreateProfileScreenState extends State<CreateProfileScreen> {
   @override
+  void initState() {
+    super.initState();
+    widget._viewModel.onStateChanged = () {
+      setState(() {});
+    };
+  }
+  
+  @override
+  void dispose() {
+    widget._viewModel.disposeControllers();
+    widget._viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
@@ -46,18 +61,22 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                       const TitleMediumText(
                           text: "Select your favorite sports"),
                       const SizedBox(height: AppTheme.columnSpacingMedium),
-                      ChipsCollectionView(items: {
-                        "Bike": false,
-                        "Climbing": false,
-                        "Football": false,
-                        "Hockey": false,
-                        "Ping Pong": false,
-                        "Running": false,
-                        "Tennis": false,
-                        "Voleyball": false,
-                      }, onSelectionChanged: (selectedItems) { 
-                        print(selectedItems);
-                       },),
+                      ChipsCollectionView(
+                        items: {
+                          "Bike": false,
+                          "Climbing": false,
+                          "Football": false,
+                          "Hockey": false,
+                          "Ping Pong": false,
+                          "Running": false,
+                          "Tennis": false,
+                          "Voleyball": false,
+                        },
+                        onSelectionChanged: (activity, isSelected) {
+                          widget._viewModel
+                              .updateActivites(activity, isSelected);
+                        },
+                      ),
                       const SizedBox(height: AppTheme.columnSpacingMedium),
                     ],
                   ),
@@ -71,8 +90,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                           RoundedButton(buttonTitle: "Back", onPressed: null)),
                   SizedBox(width: AppTheme.rowSpacingSmall),
                   Expanded(
-                      child:
-                          RoundedButton(buttonTitle: "Next", onPressed: null)),
+                      child: RoundedButton(
+                          buttonTitle: "Next",
+                          onPressed: widget._viewModel.getBackButtonAction())),
                 ],
               )
             ],
