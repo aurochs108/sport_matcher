@@ -47,7 +47,7 @@ class _RoundedSelectableButtonState extends State<RoundedSelectableButton> {
 
   Color _getButtonBackgroundColor() {
     if (isSelected) {
-      return Colors.lightGreenAccent;
+      return Colors.lightBlueAccent;
     } else {
       return Colors.white;
     }
@@ -55,7 +55,7 @@ class _RoundedSelectableButtonState extends State<RoundedSelectableButton> {
 
   Color _getButtonBorderColor() {
     if (isSelected) {
-      return Colors.green;
+      return Colors.blue;
     } else {
       return Colors.black;
     }

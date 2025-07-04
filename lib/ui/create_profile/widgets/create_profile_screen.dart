@@ -46,16 +46,18 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                       const TitleMediumText(
                           text: "Select your favorite sports"),
                       const SizedBox(height: AppTheme.columnSpacingMedium),
-                      ChipsCollectionView(items: [
-                        "Bike",
-                        "Climbing",
-                        "Football",
-                        "Hockey",
-                        "Ping Pong",
-                        "Running",
-                        "Tennis",
-                        "Voleyball",
-                      ]),
+                      ChipsCollectionView(items: {
+                        "Bike": false,
+                        "Climbing": false,
+                        "Football": false,
+                        "Hockey": false,
+                        "Ping Pong": false,
+                        "Running": false,
+                        "Tennis": false,
+                        "Voleyball": false,
+                      }, onSelectionChanged: (selectedItems) { 
+                        print(selectedItems);
+                       },),
                       const SizedBox(height: AppTheme.columnSpacingMedium),
                     ],
                   ),
