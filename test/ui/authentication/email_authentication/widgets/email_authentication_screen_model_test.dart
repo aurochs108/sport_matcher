@@ -1,6 +1,6 @@
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:sport_matcher/ui/authentication/email_authentication/email_authentication_screen_model.dart';
+import 'package:sport_matcher/ui/authentication/email_authentication/widgets/email_authentication_screen_model.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
 import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';
@@ -121,17 +121,19 @@ void main() {
 
     // MARK: - getFinishProcessButtonAction
 
-test('should returns null when button is not active', () {
+    test('should returns null when button is not active', () {
       // when
       final onFinishProcessButtonAction = sut.getFinishProcessButtonAction();
       onFinishProcessButtonAction?.call();
-    
+
       // then
       expect(onFinishProcessButtonAction, isNull);
       expect(onFinishProcessButtonActionCallsCount, 0);
     });
 
-    test('should execute onFinishProcessButtonActionCallsCount when button is active', () {
+    test(
+        'should execute onFinishProcessButtonActionCallsCount when button is active',
+        () {
       // given
       final noTextError = Uuid().v4();
       when(emailValidator.validate("")).thenReturn(noTextError);
@@ -148,7 +150,7 @@ test('should returns null when button is not active', () {
       // when
       final onFinishProcessButtonAction = sut.getFinishProcessButtonAction();
       onFinishProcessButtonAction?.call();
-    
+
       // then
       expect(onFinishProcessButtonAction, isNotNull);
       expect(onFinishProcessButtonActionCallsCount, 1);
