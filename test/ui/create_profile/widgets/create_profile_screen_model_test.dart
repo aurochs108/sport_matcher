@@ -43,7 +43,7 @@ void main() {
 
     // MARK: - next button activation
   
-    test('should activate next button when nameValidator return null has selected activities', () {
+    test('should activate next button when name got proper length and has selected activities', () {
       // given
       when(nameValidator.validate(any)).thenReturn(null);
 
@@ -58,14 +58,9 @@ void main() {
       expect(sut.isNextButtonActive, isTrue);
     });
 
-    test('should deactivate next button when nameValidator returns error', () {
+    test('should deactivate next button when got not proper length', () {
       // given
       when(nameValidator.validate(any)).thenReturn(null);
-      final expectedName = Uuid().v4();
-      final expectedErrorMessage = Uuid().v4();
-      when(nameValidator.validate(expectedName))
-          .thenReturn(expectedErrorMessage);
-
       final activitiesKeys = sut.activities.keys.toList();
       final activity = activitiesKeys.first;
       sut.updateActivites(activity, true);
@@ -79,12 +74,6 @@ void main() {
 
     test('should deactivate next button when no activities have been selected', () {
       // given
-      when(nameValidator.validate(any)).thenReturn(null);
-      final expectedName = Uuid().v4();
-      final expectedErrorMessage = Uuid().v4();
-      when(nameValidator.validate(expectedName))
-          .thenReturn(expectedErrorMessage);
-
       sut.nameTextController.text = RandomString.nextString(length: 2);
 
       // then
