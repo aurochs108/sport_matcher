@@ -40,10 +40,10 @@ class CreateProfileScreenModel extends ChangeNotifier {
     return activities.values.firstWhere((isSelected) => isSelected, orElse: () => false);
   }
 
-  VoidCallback? getBackButtonAction() {
+  VoidCallback? getNextButtonAction() {
     if (isNextButtonActive) {
       return () {
-        print("back");
+        print("Next");
       };
     } else {
       return null;

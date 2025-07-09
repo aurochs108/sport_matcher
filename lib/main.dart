@@ -3,6 +3,6 @@ import 'package:sport_matcher/ui/authentication/welcome/widgets/welcome_screen.d
 
 void main() {
   runApp(MaterialApp(
-    home: WelcomeScreen(),
+    home: WelcomeScreen()
   ));
 }

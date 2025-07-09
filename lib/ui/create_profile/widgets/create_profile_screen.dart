@@ -25,7 +25,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
       setState(() {});
     };
   }
-  
+
   @override
   void dispose() {
     widget._viewModel.disposeControllers();
@@ -96,7 +96,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                   Expanded(
                       child: RoundedButton(
                           buttonTitle: "Next",
-                          onPressed: widget._viewModel.getBackButtonAction())),
+                          onPressed: widget._viewModel.getNextButtonAction())),
                 ],
               )
             ],

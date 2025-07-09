@@ -35,11 +35,13 @@ void main() {
       };
     });
 
+    // MARK: - button activation
+
     test('should activate button when both validators return null', () {
       // given
-      final noMessageError = Uuid().v4();
-      when(emailValidator.validate("")).thenReturn(noMessageError);
-      when(passwordValidator.validate("")).thenReturn(noMessageError);
+      final noTextError = Uuid().v4();
+      when(emailValidator.validate("")).thenReturn(noTextError);
+      when(passwordValidator.validate("")).thenReturn(noTextError);
 
       final expectedEmail = Uuid().v4();
       when(emailValidator.validate(expectedEmail)).thenReturn(null);
@@ -65,9 +67,9 @@ void main() {
 
     test('should deactivate button when emailValidator returns error', () {
       // given
-      final noMessageError = Uuid().v4();
-      when(emailValidator.validate("")).thenReturn(noMessageError);
-      when(passwordValidator.validate("")).thenReturn(noMessageError);
+      final noTextError = Uuid().v4();
+      when(emailValidator.validate("")).thenReturn(noTextError);
+      when(passwordValidator.validate("")).thenReturn(noTextError);
 
       final expectedEmail = Uuid().v4();
       final expectedErrorMessage = Uuid().v4();
@@ -92,9 +94,9 @@ void main() {
 
     test('should deactivate button when passwordValidator returns error', () {
       // given
-      final noMessageError = Uuid().v4();
-      when(emailValidator.validate("")).thenReturn(noMessageError);
-      when(passwordValidator.validate("")).thenReturn(noMessageError);
+      final noTextError = Uuid().v4();
+      when(emailValidator.validate("")).thenReturn(noTextError);
+      when(passwordValidator.validate("")).thenReturn(noTextError);
 
       final expectedPassword = Uuid().v4();
       final expectedErrorMessage = Uuid().v4();
@@ -115,6 +117,41 @@ void main() {
         passwordValidator: passwordValidator,
         expectedValidatedPasswords: [expectedPassword],
       );
+    });
+
+    // MARK: - getFinishProcessButtonAction
+
+test('should returns null when button is not active', () {
+      // when
+      final onFinishProcessButtonAction = sut.getFinishProcessButtonAction();
+      onFinishProcessButtonAction?.call();
+    
+      // then
+      expect(onFinishProcessButtonAction, isNull);
+      expect(onFinishProcessButtonActionCallsCount, 0);
+    });
+
+    test('should execute onFinishProcessButtonActionCallsCount when button is active', () {
+      // given
+      final noTextError = Uuid().v4();
+      when(emailValidator.validate("")).thenReturn(noTextError);
+      when(passwordValidator.validate("")).thenReturn(noTextError);
+
+      final expectedEmail = Uuid().v4();
+      when(emailValidator.validate(expectedEmail)).thenReturn(null);
+      final expectedPassword = Uuid().v4();
+      when(passwordValidator.validate(expectedPassword)).thenReturn(null);
+
+      sut.emailTextController.text = expectedEmail;
+      sut.passwordTextController.text = expectedPassword;
+
+      // when
+      final onFinishProcessButtonAction = sut.getFinishProcessButtonAction();
+      onFinishProcessButtonAction?.call();
+    
+      // then
+      expect(onFinishProcessButtonAction, isNotNull);
+      expect(onFinishProcessButtonActionCallsCount, 1);
     });
   });
 }
