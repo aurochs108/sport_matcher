@@ -4,9 +4,8 @@ import 'package:mockito/mockito.dart';
 import 'package:sport_matcher/ui/create_profile/widgets/create_profile_screen_model.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
 import 'package:test/test.dart';
-import 'package:uuid/uuid.dart';
 
-import '../../../utilities/string_random.dart';
+import '../../../utilities/random_string.dart';
 import 'create_profile_screen_model_test.mocks.dart';
 
 
@@ -48,7 +47,8 @@ void main() {
       when(nameValidator.validate(any)).thenReturn(null);
 
       // when
-      sut.nameTextController.text = RandomString.nextString(length: 2);
+      final randomString = RandomString();
+      sut.nameTextController.text = randomString.nextString(length: 2);
     
       final activitiesKeys = sut.activities.keys.toList();
       final activity = activitiesKeys.first;
@@ -66,7 +66,8 @@ void main() {
       sut.updateActivites(activity, true);
 
       // when
-      sut.nameTextController.text = RandomString.nextString(length: 1);
+      final randomString = RandomString();
+      sut.nameTextController.text = randomString.nextString(length: 1);
 
       // then
       expect(sut.isNextButtonActive, isFalse);
@@ -74,7 +75,8 @@ void main() {
 
     test('should deactivate next button when no activities have been selected', () {
       // given
-      sut.nameTextController.text = RandomString.nextString(length: 2);
+      final randomString = RandomString();
+      sut.nameTextController.text = randomString.nextString(length: 2);
 
       // then
       expect(sut.isNextButtonActive, isFalse);
