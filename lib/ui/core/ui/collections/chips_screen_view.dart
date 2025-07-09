@@ -7,11 +7,11 @@ class ChipsCollectionView extends StatefulWidget {
   final Map<String, bool> items;
   final void Function(String, bool) onSelectionChanged;
 
-  const ChipsCollectionView({
+  ChipsCollectionView({
     super.key,
-    required this.items,
+    required Map<String, bool> items,
     required this.onSelectionChanged,
-  });
+  }) : items = Map<String, bool>.from(items);
 
   @override
   State<ChipsCollectionView> createState() => _ChipsCollectionViewState();
