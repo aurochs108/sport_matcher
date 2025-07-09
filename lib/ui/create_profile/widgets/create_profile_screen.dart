@@ -36,7 +36,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Create profile"),
@@ -86,8 +85,13 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Expanded(
-                      child:
-                          RoundedButton(buttonTitle: "Back", onPressed: null)),
+                    child: RoundedButton(
+                      buttonTitle: "Back",
+                      onPressed: () {
+                        Navigator.of(context).maybePop();
+                      },
+                    ),
+                  ),
                   SizedBox(width: AppTheme.rowSpacingSmall),
                   Expanded(
                       child: RoundedButton(
