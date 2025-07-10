@@ -38,7 +38,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create profile"),
-        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: AppTheme.horizontalAndBottom(context),
@@ -56,8 +55,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                       textCapitalization: TextCapitalization.words,
                     ),
                     const SizedBox(height: AppTheme.columnSpacingMedium),
-                    const TitleMediumText(
-                        text: "Select your favorite sports"),
+                    const TitleMediumText(text: "Select your favorite sports"),
                     const SizedBox(height: AppTheme.columnSpacingMedium),
                     ChipsCollectionView(
                       items: widget._viewModel.activities,
@@ -70,24 +68,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: RoundedButton(
-                    buttonTitle: "Back",
-                    onPressed: () {
-                      Navigator.of(context).maybePop();
-                    },
-                  ),
-                ),
-                SizedBox(width: AppTheme.rowSpacingSmall),
-                Expanded(
-                    child: RoundedButton(
-                        buttonTitle: "Next",
-                        onPressed: widget._viewModel.getNextButtonAction())),
-              ],
-            )
+            RoundedButton(
+                buttonTitle: "Next",
+                onPressed: widget._viewModel.getNextButtonAction()),
           ],
         ),
       ),
