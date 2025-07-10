@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:sport_matcher/ui/authentication/email_authentication/email_authentication_screen_model.dart';
+import 'package:sport_matcher/ui/authentication/email_authentication/widgets/email_authentication_screen_model.dart';
+import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/password_text_field.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
 
 class EmailAuthenticationScreen extends StatefulWidget {
-  EmailAuthenticationScreen({super.key, required String title})
-      : _viewModel = EmailAuthenticationScreenModel(title: title);
+  EmailAuthenticationScreen(
+      {super.key, required String title, required onFinishProcessButtonAction})
+      : _viewModel = EmailAuthenticationScreenModel(
+            title: title,
+            onFinishProcessButtonAction: onFinishProcessButtonAction);
 
   final EmailAuthenticationScreenModel _viewModel;
 
@@ -21,7 +25,7 @@ class _EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
   void initState() {
     super.initState();
     widget._viewModel.onStateChanged = () {
-      setState(() {}); 
+      setState(() {});
     };
   }
 
@@ -39,20 +43,18 @@ class _EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
         title: Text(widget._viewModel.title),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 48),
+        padding: AppTheme.allPaddings(context),
         child: Column(
           children: [
             Expanded(
               child: Column(
+                spacing: AppTheme.columnSpacingMedium,
                 children: [
                   PlainTextField(
                     keyboardType: TextInputType.emailAddress,
                     controller: widget._viewModel.emailTextController,
                     title: "Email",
                     validator: widget._viewModel.emailValidator,
-                  ),
-                  SizedBox(
-                    height: 16,
                   ),
                   PasswordTextField(
                     controller: widget._viewModel.passwordTextController,
@@ -61,10 +63,9 @@ class _EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
                 ],
               ),
             ),
-            roundedButton(
-              buttonTitle: widget._viewModel.title,
-              onPressed: widget._viewModel.getFinishProcessButtonAction()
-            )
+            RoundedButton(
+                buttonTitle: widget._viewModel.title,
+                onPressed: widget._viewModel.getFinishProcessButtonAction())
           ],
         ),
       ),

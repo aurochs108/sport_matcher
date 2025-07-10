@@ -12,6 +12,7 @@ class EmailAuthenticationScreenModel extends ChangeNotifier {
   final AbstractTextValidator passwordValidator;
 
   bool isFinishProcesButtonActive = false;
+  final VoidCallback _onFinishProcessButtonAction;
 
   Function()? onStateChanged;
 
@@ -19,9 +20,11 @@ class EmailAuthenticationScreenModel extends ChangeNotifier {
     required this.title,
     AbstractTextValidator? emailValidator,
     AbstractTextValidator? passwordValidator,
+    required VoidCallback onFinishProcessButtonAction,
   })  : emailValidator = emailValidator ?? EmailValidator(),
         passwordValidator = passwordValidator ??
-           MinimumTextLengthValidator(minimumLength: 12) {
+           MinimumTextLengthValidator(minimumLength: 12),
+           _onFinishProcessButtonAction = onFinishProcessButtonAction {
     emailTextController.addListener(_updateButtonState);
     passwordTextController.addListener(_updateButtonState);
   }
@@ -29,7 +32,7 @@ class EmailAuthenticationScreenModel extends ChangeNotifier {
   VoidCallback? getFinishProcessButtonAction() {
     if (isFinishProcesButtonActive) {
       return () =>
-          print('Email authentication screen _onFinishProcessSelected');
+          _onFinishProcessButtonAction();
     } else {
       return null;
     }
