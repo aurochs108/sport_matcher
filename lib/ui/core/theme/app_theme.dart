@@ -19,7 +19,7 @@ class AppTheme {
     );
   }
 
-  static EdgeInsets horizontalAndBottom(BuildContext context) {
+  static EdgeInsets horizontalAndBottomPadding(BuildContext context) {
     final safeArea = _safeAreaPadding(context);
     return EdgeInsets.only(
       bottom: safeArea.bottom + _verticalPadding,

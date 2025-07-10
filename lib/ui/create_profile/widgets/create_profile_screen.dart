@@ -40,7 +40,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         title: const Text("Create profile"),
       ),
       body: Padding(
-        padding: AppTheme.horizontalAndBottom(context),
+        padding: AppTheme.horizontalAndBottomPadding(context),
         child: Column(
           children: [
             Expanded(
