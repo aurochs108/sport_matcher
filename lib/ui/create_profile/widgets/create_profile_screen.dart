@@ -70,7 +70,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
             ),
             RoundedButton(
                 buttonTitle: "Next",
-                onPressed: widget._viewModel.getNextButtonAction()),
+                onPressed: widget._viewModel.getNextButtonAction(context)),
           ],
         ),
       ),
