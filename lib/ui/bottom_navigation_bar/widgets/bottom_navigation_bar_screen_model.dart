@@ -1,4 +1,4 @@
-import 'package:sport_matcher/ui/bottom_navigation_bar_screen/logic/tab_item.dart';
+import 'package:sport_matcher/ui/bottom_navigation_bar/logic/tab_item.dart';
 
 class BottomNavigationBarScreenModel {
   var currentIndex = TabItem.matcher;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sport_matcher/ui/bottom_navigation_bar_screen/widgets/bottom_navigation_bar_screen.dart';
+import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/minimum_text_length_validator.dart';
 
