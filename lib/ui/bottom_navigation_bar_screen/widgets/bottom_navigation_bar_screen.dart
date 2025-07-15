@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:sport_matcher/ui/bottom_navigation_bar_screen/widgets/bottom_navigation_bar_screen_model.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
-  const BottomNavigationBarScreen({super.key});
+  final BottomNavigationBarScreenModel _viewModel;
+
+  BottomNavigationBarScreen({super.key})
+      : _viewModel = BottomNavigationBarScreenModel();
+
   @override
   State<StatefulWidget> createState() {
     return _BottomNavigationBarScreen();
@@ -9,34 +14,27 @@ class BottomNavigationBarScreen extends StatefulWidget {
 }
 
 class _BottomNavigationBarScreen extends State<BottomNavigationBarScreen> {
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text('Index 0: Matcher', style: optionStyle),
-    Text('Index 1: Profile', style: optionStyle),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    widget._viewModel.onStateChanged = () {
+      setState(() {});
+    };
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('BottomNavigationBar Sample')),
-      body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
+      body: Center(child: Text("")),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.sports), label: 'Matcher'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.face), label: 'Profile'),
+              icon: Icon(Icons.sports_gymnastics), label: 'Matcher'),
+          BottomNavigationBarItem(icon: Icon(Icons.face), label: 'Profile'),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+        currentIndex: widget._viewModel.currentIndex.tabIndex,
+        selectedItemColor: Colors.blue,
+        onTap: widget._viewModel.onItemTapped,
       ),
     );
   }
