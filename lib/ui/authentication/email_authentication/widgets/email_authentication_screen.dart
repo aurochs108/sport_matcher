@@ -6,13 +6,13 @@ import 'package:sport_matcher/ui/core/ui/text_fields/password_text_field.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
 
 class EmailAuthenticationScreen extends StatefulWidget {
+  final EmailAuthenticationScreenModel _viewModel;
+
   EmailAuthenticationScreen(
       {super.key, required String title, required onFinishProcessButtonAction})
       : _viewModel = EmailAuthenticationScreenModel(
             title: title,
             onFinishProcessButtonAction: onFinishProcessButtonAction);
-
-  final EmailAuthenticationScreenModel _viewModel;
 
   @override
   State<EmailAuthenticationScreen> createState() {
