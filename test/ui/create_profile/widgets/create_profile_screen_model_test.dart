@@ -1,13 +1,30 @@
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sport_matcher/ui/create_profile/widgets/create_profile_screen_model.dart';
+import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
-import 'package:test/test.dart';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart' as test;
+import 'package:uuid/uuid.dart';
 
 import '../../../utilities/random_string.dart';
 import 'create_profile_screen_model_test.mocks.dart';
 
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
+class TestNavigatorObserver extends NavigatorObserver {
+  int pushCount = 0;
+  Route? lastPushedRoute;
+
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    pushCount++;
+    lastPushedRoute = route;
+  }
+}
 
 @GenerateMocks([AbstractTextValidator])
 void main() {
@@ -24,7 +41,7 @@ void main() {
 
     // MARK: - updateActivites
 
-    test('should activate button when both validators return null', () {
+    test.test('should activate button when both validators return null', () {
       // given
       final activitiesKeys = sut.activities.keys.toList();
       activitiesKeys.shuffle();
@@ -37,12 +54,12 @@ void main() {
 
       // then
       activitiesCopy[activity] = expectedIsSelected;
-      expect(sut.activities, activitiesCopy);
+      test.expect(sut.activities, activitiesCopy);
     });
 
     // MARK: - next button activation
   
-    test('should activate next button when name got proper length and has selected activities', () {
+    test.test('should activate next button when name got proper length and has selected activities', () {
       // given
       when(nameValidator.validate(any)).thenReturn(null);
 
@@ -55,10 +72,10 @@ void main() {
       sut.updateActivites(activity, true);
 
       // then
-      expect(sut.isNextButtonActive, isTrue);
+      test.expect(sut.isNextButtonActive, isTrue);
     });
 
-    test('should deactivate next button when got not proper length', () {
+    test.test('should deactivate next button when got not proper length', () {
       // given
       when(nameValidator.validate(any)).thenReturn(null);
       final activitiesKeys = sut.activities.keys.toList();
@@ -70,16 +87,51 @@ void main() {
       sut.nameTextController.text = randomString.nextString(length: 1);
 
       // then
-      expect(sut.isNextButtonActive, isFalse);
+      test.expect(sut.isNextButtonActive, isFalse);
     });
 
-    test('should deactivate next button when no activities have been selected', () {
+    test.test('should deactivate next button when no activities have been selected', () {
       // given
       final randomString = RandomString();
       sut.nameTextController.text = randomString.nextString(length: 2);
 
       // then
-      expect(sut.isNextButtonActive, isFalse);
+      test.expect(sut.isNextButtonActive, isFalse);
     });
+
+    // MARK: - getNextButtonAction
+
+  testWidgets('getNextButtonAction pushes BottomNavigationBarScreen', (WidgetTester tester) async {
+    // given
+    final model = CreateProfileScreenModel();
+    model.nameTextController.text = 'ab';
+    model.updateActivites(model.activities.keys.first, true);
+
+    final observer = TestNavigatorObserver();
+    final buttonName = const Uuid().v4();
+
+    await tester.pumpWidget(MaterialApp(
+      home: Builder(builder: (context) {
+        return ElevatedButton(
+          key: Key(buttonName),
+          onPressed: model.getNextButtonAction(context),
+          child: const Text(''),
+        );
+      }),
+      navigatorObservers: [observer],
+    ));
+
+    // MaterialApp pushes the initial "/" route, so record count before tap.
+    final pushCountBeforeTap = observer.pushCount;
+
+    // when
+    await tester.tap(find.byKey(Key(buttonName)));
+    await tester.pumpAndSettle();
+
+    // then — exactly one additional push happened
+    test.expect(observer.pushCount - pushCountBeforeTap, 1);
+    test.expect(observer.lastPushedRoute, isA<MaterialPageRoute>());
+    test.expect(find.byType(BottomNavigationBarScreen), findsOneWidget);
+  });
   });
 }
