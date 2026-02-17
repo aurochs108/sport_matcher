@@ -7,24 +7,11 @@ import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:test/test.dart' as test;
 import 'package:uuid/uuid.dart';
 
 import '../../../utilities/random_string.dart';
+import '../../../mocks/mock_navigator_observer.dart';
 import 'create_profile_screen_model_test.mocks.dart';
-
-class MockNavigatorObserver extends Mock implements NavigatorObserver {}
-
-class TestNavigatorObserver extends NavigatorObserver {
-  int pushCount = 0;
-  Route? lastPushedRoute;
-
-  @override
-  void didPush(Route route, Route? previousRoute) {
-    pushCount++;
-    lastPushedRoute = route;
-  }
-}
 
 @GenerateMocks([AbstractTextValidator])
 void main() {
@@ -41,7 +28,7 @@ void main() {
 
     // MARK: - updateActivites
 
-    test.test('should activate button when both validators return null', () {
+    test('should activate button when both validators return null', () {
       // given
       final activitiesKeys = sut.activities.keys.toList();
       activitiesKeys.shuffle();
@@ -54,12 +41,12 @@ void main() {
 
       // then
       activitiesCopy[activity] = expectedIsSelected;
-      test.expect(sut.activities, activitiesCopy);
+      expect(sut.activities, activitiesCopy);
     });
 
     // MARK: - next button activation
   
-    test.test('should activate next button when name got proper length and has selected activities', () {
+    test('should activate next button when name got proper length and has selected activities', () {
       // given
       when(nameValidator.validate(any)).thenReturn(null);
 
@@ -72,10 +59,10 @@ void main() {
       sut.updateActivites(activity, true);
 
       // then
-      test.expect(sut.isNextButtonActive, isTrue);
+      expect(sut.isNextButtonActive, isTrue);
     });
 
-    test.test('should deactivate next button when got not proper length', () {
+    test('should deactivate next button when got not proper length', () {
       // given
       when(nameValidator.validate(any)).thenReturn(null);
       final activitiesKeys = sut.activities.keys.toList();
@@ -87,16 +74,16 @@ void main() {
       sut.nameTextController.text = randomString.nextString(length: 1);
 
       // then
-      test.expect(sut.isNextButtonActive, isFalse);
+      expect(sut.isNextButtonActive, isFalse);
     });
 
-    test.test('should deactivate next button when no activities have been selected', () {
+    test('should deactivate next button when no activities have been selected', () {
       // given
       final randomString = RandomString();
       sut.nameTextController.text = randomString.nextString(length: 2);
 
       // then
-      test.expect(sut.isNextButtonActive, isFalse);
+      expect(sut.isNextButtonActive, isFalse);
     });
 
     // MARK: - getNextButtonAction
@@ -121,17 +108,16 @@ void main() {
       navigatorObservers: [observer],
     ));
 
-    // MaterialApp pushes the initial "/" route, so record count before tap.
     final pushCountBeforeTap = observer.pushCount;
 
     // when
     await tester.tap(find.byKey(Key(buttonName)));
     await tester.pumpAndSettle();
 
-    // then — exactly one additional push happened
-    test.expect(observer.pushCount - pushCountBeforeTap, 1);
-    test.expect(observer.lastPushedRoute, isA<MaterialPageRoute>());
-    test.expect(find.byType(BottomNavigationBarScreen), findsOneWidget);
+    // then
+    expect(observer.pushCount - pushCountBeforeTap, 1);
+    expect(observer.lastPushedRoute, isA<MaterialPageRoute>());
+    expect(find.byType(BottomNavigationBarScreen), findsOneWidget);
   });
   });
 }
