@@ -36,10 +36,10 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false, // block back + swipe
+      canPop: false,
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false, // HIDE back arrow
+          automaticallyImplyLeading: false,
           title: const Text("Create profile"),
         ),
         body: Padding(
