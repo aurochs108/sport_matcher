@@ -24,17 +24,25 @@ class _BottomNavigationBarScreen extends State<BottomNavigationBarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text("")),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.sports_gymnastics), label: 'Matcher'),
-          BottomNavigationBarItem(icon: Icon(Icons.face), label: 'Profile'),
-        ],
-        currentIndex: widget._viewModel.currentIndex.index,
-        selectedItemColor: Colors.blue,
-        onTap: widget._viewModel.onItemTapped,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: const Center(child: Text("")),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.sports_gymnastics),
+              label: 'Matcher',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.face),
+              label: 'Profile',
+            ),
+          ],
+          currentIndex: widget._viewModel.currentIndex.index,
+          selectedItemColor: Colors.blue,
+          onTap: widget._viewModel.onItemTapped,
+        ),
       ),
     );
   }

@@ -45,15 +45,17 @@ void main() {
     });
 
     // MARK: - next button activation
-  
-    test('should activate next button when name got proper length and has selected activities', () {
+
+    test(
+        'should activate next button when name got proper length and has selected activities',
+        () {
       // given
       when(nameValidator.validate(any)).thenReturn(null);
 
       // when
       final randomString = RandomString();
       sut.nameTextController.text = randomString.nextString(length: 2);
-    
+
       final activitiesKeys = sut.activities.keys.toList();
       final activity = activitiesKeys.first;
       sut.updateActivites(activity, true);
@@ -77,7 +79,8 @@ void main() {
       expect(sut.isNextButtonActive, isFalse);
     });
 
-    test('should deactivate next button when no activities have been selected', () {
+    test('should deactivate next button when no activities have been selected',
+        () {
       // given
       final randomString = RandomString();
       sut.nameTextController.text = randomString.nextString(length: 2);
@@ -88,36 +91,67 @@ void main() {
 
     // MARK: - getNextButtonAction
 
-  testWidgets('getNextButtonAction pushes BottomNavigationBarScreen', (WidgetTester tester) async {
-    // given
-    final model = CreateProfileScreenModel();
-    model.nameTextController.text = 'ab';
-    model.updateActivites(model.activities.keys.first, true);
+    testWidgets('getNextButtonAction pushes BottomNavigationBarScreen',
+        (WidgetTester tester) async {
+      // given
+      final model = CreateProfileScreenModel();
+      model.nameTextController.text = 'ab';
+      model.updateActivites(model.activities.keys.first, true);
 
-    final observer = TestNavigatorObserver();
-    final buttonName = const Uuid().v4();
+      final observer = TestNavigatorObserver();
+      final buttonName = const Uuid().v4();
 
-    await tester.pumpWidget(MaterialApp(
-      home: Builder(builder: (context) {
-        return ElevatedButton(
-          key: Key(buttonName),
-          onPressed: model.getNextButtonAction(context),
-          child: const Text(''),
-        );
-      }),
-      navigatorObservers: [observer],
-    ));
+      await tester.pumpWidget(MaterialApp(
+        home: Builder(builder: (context) {
+          return ElevatedButton(
+            key: Key(buttonName),
+            onPressed: model.getNextButtonAction(context),
+            child: const Text(''),
+          );
+        }),
+        navigatorObservers: [observer],
+      ));
 
-    final pushCountBeforeTap = observer.pushCount;
+      // when
+      final initialPushCount = observer.pushCount;
+      await tester.tap(find.byKey(Key(buttonName)));
+      await tester.pumpAndSettle();
 
-    // when
-    await tester.tap(find.byKey(Key(buttonName)));
-    await tester.pumpAndSettle();
+      // then
+      expect(observer.pushCount, initialPushCount + 1);
+      expect(observer.lastPushedRoute, isA<MaterialPageRoute>());
+      expect(find.byType(BottomNavigationBarScreen), findsOneWidget);
+    });
 
-    // then
-    expect(observer.pushCount - pushCountBeforeTap, 1);
-    expect(observer.lastPushedRoute, isA<MaterialPageRoute>());
-    expect(find.byType(BottomNavigationBarScreen), findsOneWidget);
-  });
+    testWidgets('getNextButtonAction does nothing when button is inactive',
+        (WidgetTester tester) async {
+      // given
+      final model = CreateProfileScreenModel();
+      model.nameTextController.text = '';
+      model.updateActivites(model.activities.keys.first, false);
+
+      final observer = TestNavigatorObserver();
+      final buttonName = const Uuid().v4();
+
+      await tester.pumpWidget(MaterialApp(
+        home: Builder(builder: (context) {
+          return ElevatedButton(
+            key: Key(buttonName),
+            onPressed: model.getNextButtonAction(context),
+            child: const Text(''),
+          );
+        }),
+        navigatorObservers: [observer],
+      ));
+
+      // when
+      final initialPushCount = observer.pushCount;
+      await tester.tap(find.byKey(Key(buttonName)));
+      await tester.pumpAndSettle();
+
+      // then
+      expect(observer.pushCount, initialPushCount);
+      expect(find.byType(BottomNavigationBarScreen), findsNothing);
+    });
   });
 }
