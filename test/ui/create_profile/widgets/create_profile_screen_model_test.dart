@@ -95,7 +95,7 @@ void main() {
         (WidgetTester tester) async {
       // given
       final model = CreateProfileScreenModel();
-      model.nameTextController.text = 'ab';
+      model.nameTextController.text = Uuid().v4();
       model.updateActivites(model.activities.keys.first, true);
 
       final observer = TestNavigatorObserver();

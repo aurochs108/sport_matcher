@@ -5,7 +5,7 @@ import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation
 import 'package:test/test.dart';
 
 void main() {
-  group('EmailAuthenticationScreenModel', () {
+  group('BottomNavigationBarScreenModel', () {
     late int onStateChangedCallsCount;
     late BottomNavigationBarScreenModel sut;
 
