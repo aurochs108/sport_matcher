@@ -35,43 +35,50 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Create profile"),
-      ),
-      body: Padding(
-        padding: AppTheme.horizontalAndBottomPadding(context),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    PlainTextField(
-                      controller: widget._viewModel.nameTextController,
-                      title: "Name",
-                      validator: widget._viewModel.nameValidator,
-                      textCapitalization: TextCapitalization.words,
-                    ),
-                    const SizedBox(height: AppTheme.columnSpacingMedium),
-                    const TitleMediumText(text: "Select your favorite sports"),
-                    const SizedBox(height: AppTheme.columnSpacingMedium),
-                    ChipsCollectionView(
-                      items: widget._viewModel.activities,
-                      onSelectionChanged: (activity, isSelected) {
-                        widget._viewModel.updateActivites(activity, isSelected);
-                      },
-                    ),
-                    const SizedBox(height: AppTheme.columnSpacingMedium),
-                  ],
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const Text("Create profile"),
+        ),
+        body: Padding(
+          padding: AppTheme.horizontalAndBottomPadding(context),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PlainTextField(
+                        controller: widget._viewModel.nameTextController,
+                        title: "Name",
+                        validator: widget._viewModel.nameValidator,
+                        textCapitalization: TextCapitalization.words,
+                      ),
+                      const SizedBox(height: AppTheme.columnSpacingMedium),
+                      const TitleMediumText(
+                          text: "Select your favorite sports"),
+                      const SizedBox(height: AppTheme.columnSpacingMedium),
+                      ChipsCollectionView(
+                        items: widget._viewModel.activities,
+                        onSelectionChanged: (activity, isSelected) {
+                          widget._viewModel
+                              .updateActivites(activity, isSelected);
+                        },
+                      ),
+                      const SizedBox(height: AppTheme.columnSpacingMedium),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            RoundedButton(
+              RoundedButton(
                 buttonTitle: "Next",
-                onPressed: widget._viewModel.getNextButtonAction()),
-          ],
+                onPressed: widget._viewModel.getNextButtonAction(context),
+              ),
+            ],
+          ),
         ),
       ),
     );

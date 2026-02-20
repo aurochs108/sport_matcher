@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/minimum_text_length_validator.dart';
 
@@ -40,10 +41,14 @@ class CreateProfileScreenModel extends ChangeNotifier {
     return activities.values.firstWhere((isSelected) => isSelected, orElse: () => false);
   }
 
-  VoidCallback? getNextButtonAction() {
+  VoidCallback? getNextButtonAction(BuildContext buildContext) {
     if (isNextButtonActive) {
       return () {
-        print("Next");
+        Navigator.of(buildContext).push(
+          MaterialPageRoute(
+            builder: (_) => BottomNavigationBarScreen(),
+          ),
+        );
       };
     } else {
       return null;
