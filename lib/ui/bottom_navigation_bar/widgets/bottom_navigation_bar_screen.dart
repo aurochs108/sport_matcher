@@ -27,7 +27,13 @@ class _BottomNavigationBarScreen extends State<BottomNavigationBarScreen> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        body: const Center(child: Text("")),
+        body: IndexedStack(
+          index: widget._viewModel.currentIndex.index,
+          children: const [
+            Center(child: Text('Matcher')),
+            Center(child: Text('Profile')),
+          ],
+        ),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
