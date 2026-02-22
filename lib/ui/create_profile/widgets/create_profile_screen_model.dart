@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sport_matcher/data/profile/persistence/database/profile_database.dart';
 import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/minimum_text_length_validator.dart';
@@ -18,6 +19,7 @@ class CreateProfileScreenModel extends ChangeNotifier {
   };
   Map<String, bool> get activities => Map.unmodifiable(_activities);
   var isNextButtonActive = false;
+  final _profileDatabase = ProfileDatabase();
   Function()? onStateChanged;
 
   CreateProfileScreenModel({
@@ -44,6 +46,8 @@ class CreateProfileScreenModel extends ChangeNotifier {
   VoidCallback? getNextButtonAction(BuildContext buildContext) {
     if (isNextButtonActive) {
       return () {
+        _saveProfileDate();
+
         Navigator.of(buildContext).push(
           MaterialPageRoute(
             builder: (_) => BottomNavigationBarScreen(),
@@ -53,6 +57,10 @@ class CreateProfileScreenModel extends ChangeNotifier {
     } else {
       return null;
     }
+  }
+
+  void _saveProfileDate() {
+    _profileDatabase.insertProfile(nameTextController.text);
   }
 
   void disposeControllers() {

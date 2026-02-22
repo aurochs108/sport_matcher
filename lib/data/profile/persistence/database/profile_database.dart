@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sport_matcher/data/database/profile/table/profiles_table.dart';
+import 'package:sport_matcher/data/profile/persistence/table/profiles_table.dart';
 
 part 'profile_database.g.dart';
 
