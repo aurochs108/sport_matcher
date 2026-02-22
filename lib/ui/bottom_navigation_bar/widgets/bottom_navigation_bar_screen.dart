@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen_model.dart';
+import 'package:sport_matcher/ui/profile/widgets/profile_screen.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
   final BottomNavigationBarScreenModel _viewModel;
@@ -31,7 +32,7 @@ class _BottomNavigationBarScreen extends State<BottomNavigationBarScreen> {
           index: widget._viewModel.currentIndex.index,
           children: const [
             Center(child: Text('Matcher')),
-            Center(child: Text('Profile')),
+            ProfileScreen(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
