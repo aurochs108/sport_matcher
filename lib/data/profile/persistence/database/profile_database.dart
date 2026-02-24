@@ -1,12 +1,13 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sport_matcher/data/profile/persistence/table/profiles_table.dart';
+import 'package:sport_matcher/data/profile/persistence/entity/profile_entity.dart';
+import 'abstract_profile_database.dart';
 
 part 'profile_database.g.dart';
 
-@DriftDatabase(tables: [ProfilesTable])
-class ProfileDatabase extends _$ProfileDatabase {
+@DriftDatabase(tables: [ProfileEntity])
+class ProfileDatabase extends _$ProfileDatabase implements AbstractProfileDatabase {
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
   // These are described in the getting started guide: https://drift.simonbinder.eu/setup/
@@ -15,8 +16,9 @@ class ProfileDatabase extends _$ProfileDatabase {
   @override
   int get schemaVersion => 1;
 
-  Future<int> insertProfile(String name) async {
-    return await into(profilesTable).insert(ProfilesTableCompanion.insert(name: name));
+  @override
+  Future<int> insertProfile(ProfileEntityCompanion profile) async {
+    return await into(profileEntity).insert(profile);
   }
 
   static QueryExecutor _openConnection() {

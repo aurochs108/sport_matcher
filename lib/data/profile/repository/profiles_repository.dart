@@ -1,10 +1,21 @@
-import 'package:sport_matcher/data/database/profile/database/profile_database.dart';
+import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
+import 'package:sport_matcher/data/profile/mapper/profile_mapper.dart';
+import 'package:sport_matcher/data/profile/persistence/database/abstract_profile_database.dart';
+import 'package:sport_matcher/data/profile/persistence/database/profile_database.dart';
 import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
 
 class ProfilesRepository extends AbstractProfilesRepository {
-  final _profileDatabase = ProfileDatabase();
+  final AbstractProfileDatabase _profileDatabase;
+  final ProfileMapper _mapper;
 
-  Future<void> addProfile(String name) {
-    return _profileDatabase.insertProfile(name);
+  ProfilesRepository(
+      {AbstractProfileDatabase? profileDatabase, ProfileMapper? mapper})
+      : _profileDatabase = profileDatabase ?? ProfileDatabase(),
+        _mapper = mapper ?? ProfileMapper();
+
+  @override
+  Future<void> addProfile(ProfileDomain profile) {
+    final profileEntity = _mapper.toEntity(profile);
+    return _profileDatabase.insertProfile(profileEntity);
   }
 }

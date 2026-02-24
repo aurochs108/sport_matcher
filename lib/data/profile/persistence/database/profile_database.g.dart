@@ -3,12 +3,12 @@
 part of 'profile_database.dart';
 
 // ignore_for_file: type=lint
-class $ProfilesTableTable extends ProfilesTable
-    with TableInfo<$ProfilesTableTable, ProfilesTableData> {
+class $ProfileEntityTable extends ProfileEntity
+    with TableInfo<$ProfileEntityTable, ProfileEntityData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ProfilesTableTable(this.attachedDatabase, [this._alias]);
+  $ProfileEntityTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -32,9 +32,9 @@ class $ProfilesTableTable extends ProfilesTable
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'profiles_table';
+  static const String $name = 'profile_entity';
   @override
-  VerificationContext validateIntegrity(Insertable<ProfilesTableData> instance,
+  VerificationContext validateIntegrity(Insertable<ProfileEntityData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -53,9 +53,9 @@ class $ProfilesTableTable extends ProfilesTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ProfilesTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ProfileEntityData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ProfilesTableData(
+    return ProfileEntityData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
@@ -64,16 +64,16 @@ class $ProfilesTableTable extends ProfilesTable
   }
 
   @override
-  $ProfilesTableTable createAlias(String alias) {
-    return $ProfilesTableTable(attachedDatabase, alias);
+  $ProfileEntityTable createAlias(String alias) {
+    return $ProfileEntityTable(attachedDatabase, alias);
   }
 }
 
-class ProfilesTableData extends DataClass
-    implements Insertable<ProfilesTableData> {
+class ProfileEntityData extends DataClass
+    implements Insertable<ProfileEntityData> {
   final int id;
   final String name;
-  const ProfilesTableData({required this.id, required this.name});
+  const ProfileEntityData({required this.id, required this.name});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -82,17 +82,17 @@ class ProfilesTableData extends DataClass
     return map;
   }
 
-  ProfilesTableCompanion toCompanion(bool nullToAbsent) {
-    return ProfilesTableCompanion(
+  ProfileEntityCompanion toCompanion(bool nullToAbsent) {
+    return ProfileEntityCompanion(
       id: Value(id),
       name: Value(name),
     );
   }
 
-  factory ProfilesTableData.fromJson(Map<String, dynamic> json,
+  factory ProfileEntityData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ProfilesTableData(
+    return ProfileEntityData(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
     );
@@ -106,12 +106,12 @@ class ProfilesTableData extends DataClass
     };
   }
 
-  ProfilesTableData copyWith({int? id, String? name}) => ProfilesTableData(
+  ProfileEntityData copyWith({int? id, String? name}) => ProfileEntityData(
         id: id ?? this.id,
         name: name ?? this.name,
       );
-  ProfilesTableData copyWithCompanion(ProfilesTableCompanion data) {
-    return ProfilesTableData(
+  ProfileEntityData copyWithCompanion(ProfileEntityCompanion data) {
+    return ProfileEntityData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
     );
@@ -119,7 +119,7 @@ class ProfilesTableData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('ProfilesTableData(')
+    return (StringBuffer('ProfileEntityData(')
           ..write('id: $id, ')
           ..write('name: $name')
           ..write(')'))
@@ -131,23 +131,23 @@ class ProfilesTableData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ProfilesTableData &&
+      (other is ProfileEntityData &&
           other.id == this.id &&
           other.name == this.name);
 }
 
-class ProfilesTableCompanion extends UpdateCompanion<ProfilesTableData> {
+class ProfileEntityCompanion extends UpdateCompanion<ProfileEntityData> {
   final Value<int> id;
   final Value<String> name;
-  const ProfilesTableCompanion({
+  const ProfileEntityCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
   });
-  ProfilesTableCompanion.insert({
+  ProfileEntityCompanion.insert({
     this.id = const Value.absent(),
     required String name,
   }) : name = Value(name);
-  static Insertable<ProfilesTableData> custom({
+  static Insertable<ProfileEntityData> custom({
     Expression<int>? id,
     Expression<String>? name,
   }) {
@@ -157,8 +157,8 @@ class ProfilesTableCompanion extends UpdateCompanion<ProfilesTableData> {
     });
   }
 
-  ProfilesTableCompanion copyWith({Value<int>? id, Value<String>? name}) {
-    return ProfilesTableCompanion(
+  ProfileEntityCompanion copyWith({Value<int>? id, Value<String>? name}) {
+    return ProfileEntityCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
     );
@@ -178,7 +178,7 @@ class ProfilesTableCompanion extends UpdateCompanion<ProfilesTableData> {
 
   @override
   String toString() {
-    return (StringBuffer('ProfilesTableCompanion(')
+    return (StringBuffer('ProfileEntityCompanion(')
           ..write('id: $id, ')
           ..write('name: $name')
           ..write(')'))
@@ -189,28 +189,28 @@ class ProfilesTableCompanion extends UpdateCompanion<ProfilesTableData> {
 abstract class _$ProfileDatabase extends GeneratedDatabase {
   _$ProfileDatabase(QueryExecutor e) : super(e);
   $ProfileDatabaseManager get managers => $ProfileDatabaseManager(this);
-  late final $ProfilesTableTable profilesTable = $ProfilesTableTable(this);
+  late final $ProfileEntityTable profileEntity = $ProfileEntityTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [profilesTable];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [profileEntity];
 }
 
-typedef $$ProfilesTableTableCreateCompanionBuilder = ProfilesTableCompanion
+typedef $$ProfileEntityTableCreateCompanionBuilder = ProfileEntityCompanion
     Function({
   Value<int> id,
   required String name,
 });
-typedef $$ProfilesTableTableUpdateCompanionBuilder = ProfilesTableCompanion
+typedef $$ProfileEntityTableUpdateCompanionBuilder = ProfileEntityCompanion
     Function({
   Value<int> id,
   Value<String> name,
 });
 
-class $$ProfilesTableTableFilterComposer
-    extends Composer<_$ProfileDatabase, $ProfilesTableTable> {
-  $$ProfilesTableTableFilterComposer({
+class $$ProfileEntityTableFilterComposer
+    extends Composer<_$ProfileDatabase, $ProfileEntityTable> {
+  $$ProfileEntityTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -224,9 +224,9 @@ class $$ProfilesTableTableFilterComposer
       column: $table.name, builder: (column) => ColumnFilters(column));
 }
 
-class $$ProfilesTableTableOrderingComposer
-    extends Composer<_$ProfileDatabase, $ProfilesTableTable> {
-  $$ProfilesTableTableOrderingComposer({
+class $$ProfileEntityTableOrderingComposer
+    extends Composer<_$ProfileDatabase, $ProfileEntityTable> {
+  $$ProfileEntityTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -240,9 +240,9 @@ class $$ProfilesTableTableOrderingComposer
       column: $table.name, builder: (column) => ColumnOrderings(column));
 }
 
-class $$ProfilesTableTableAnnotationComposer
-    extends Composer<_$ProfileDatabase, $ProfilesTableTable> {
-  $$ProfilesTableTableAnnotationComposer({
+class $$ProfileEntityTableAnnotationComposer
+    extends Composer<_$ProfileDatabase, $ProfileEntityTable> {
+  $$ProfileEntityTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -256,37 +256,37 @@ class $$ProfilesTableTableAnnotationComposer
       $composableBuilder(column: $table.name, builder: (column) => column);
 }
 
-class $$ProfilesTableTableTableManager extends RootTableManager<
+class $$ProfileEntityTableTableManager extends RootTableManager<
     _$ProfileDatabase,
-    $ProfilesTableTable,
-    ProfilesTableData,
-    $$ProfilesTableTableFilterComposer,
-    $$ProfilesTableTableOrderingComposer,
-    $$ProfilesTableTableAnnotationComposer,
-    $$ProfilesTableTableCreateCompanionBuilder,
-    $$ProfilesTableTableUpdateCompanionBuilder,
+    $ProfileEntityTable,
+    ProfileEntityData,
+    $$ProfileEntityTableFilterComposer,
+    $$ProfileEntityTableOrderingComposer,
+    $$ProfileEntityTableAnnotationComposer,
+    $$ProfileEntityTableCreateCompanionBuilder,
+    $$ProfileEntityTableUpdateCompanionBuilder,
     (
-      ProfilesTableData,
-      BaseReferences<_$ProfileDatabase, $ProfilesTableTable, ProfilesTableData>
+      ProfileEntityData,
+      BaseReferences<_$ProfileDatabase, $ProfileEntityTable, ProfileEntityData>
     ),
-    ProfilesTableData,
+    ProfileEntityData,
     PrefetchHooks Function()> {
-  $$ProfilesTableTableTableManager(
-      _$ProfileDatabase db, $ProfilesTableTable table)
+  $$ProfileEntityTableTableManager(
+      _$ProfileDatabase db, $ProfileEntityTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ProfilesTableTableFilterComposer($db: db, $table: table),
+              $$ProfileEntityTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ProfilesTableTableOrderingComposer($db: db, $table: table),
+              $$ProfileEntityTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ProfilesTableTableAnnotationComposer($db: db, $table: table),
+              $$ProfileEntityTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<String> name = const Value.absent(),
           }) =>
-              ProfilesTableCompanion(
+              ProfileEntityCompanion(
             id: id,
             name: name,
           ),
@@ -294,7 +294,7 @@ class $$ProfilesTableTableTableManager extends RootTableManager<
             Value<int> id = const Value.absent(),
             required String name,
           }) =>
-              ProfilesTableCompanion.insert(
+              ProfileEntityCompanion.insert(
             id: id,
             name: name,
           ),
@@ -305,25 +305,25 @@ class $$ProfilesTableTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$ProfilesTableTableProcessedTableManager = ProcessedTableManager<
+typedef $$ProfileEntityTableProcessedTableManager = ProcessedTableManager<
     _$ProfileDatabase,
-    $ProfilesTableTable,
-    ProfilesTableData,
-    $$ProfilesTableTableFilterComposer,
-    $$ProfilesTableTableOrderingComposer,
-    $$ProfilesTableTableAnnotationComposer,
-    $$ProfilesTableTableCreateCompanionBuilder,
-    $$ProfilesTableTableUpdateCompanionBuilder,
+    $ProfileEntityTable,
+    ProfileEntityData,
+    $$ProfileEntityTableFilterComposer,
+    $$ProfileEntityTableOrderingComposer,
+    $$ProfileEntityTableAnnotationComposer,
+    $$ProfileEntityTableCreateCompanionBuilder,
+    $$ProfileEntityTableUpdateCompanionBuilder,
     (
-      ProfilesTableData,
-      BaseReferences<_$ProfileDatabase, $ProfilesTableTable, ProfilesTableData>
+      ProfileEntityData,
+      BaseReferences<_$ProfileDatabase, $ProfileEntityTable, ProfileEntityData>
     ),
-    ProfilesTableData,
+    ProfileEntityData,
     PrefetchHooks Function()>;
 
 class $ProfileDatabaseManager {
   final _$ProfileDatabase _db;
   $ProfileDatabaseManager(this._db);
-  $$ProfilesTableTableTableManager get profilesTable =>
-      $$ProfilesTableTableTableManager(_db, _db.profilesTable);
+  $$ProfileEntityTableTableManager get profileEntity =>
+      $$ProfileEntityTableTableManager(_db, _db.profileEntity);
 }
