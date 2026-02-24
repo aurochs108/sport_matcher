@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/texts/title_medium_text.dart';
+import 'profile_screen_model.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -12,6 +14,14 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final viewModel = ProfileScreenModel();
+  late final Future<ProfileDomain?> _profileFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _profileFuture = viewModel.loadProfile();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +41,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const TitleMediumText(
-                          text: "Profile"),
-                      
+                      const TitleMediumText(text: "Profile"),
+                      FutureBuilder<ProfileDomain?>(
+                        future: _profileFuture,
+                        builder: (context, snapshot) {
+                          final profileName = snapshot.data?.name;
+                          return TitleMediumText(
+                              text: profileName ?? "No profile yet");
+                        },
+                      ),
                     ],
                   ),
                 ),

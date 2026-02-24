@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
-import 'package:sport_matcher/data/profile/persistence/database/profile_database.dart';
 import 'package:sport_matcher/data/profile/repository/profiles_repository.dart';
 import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
@@ -37,33 +36,35 @@ class CreateProfileScreenModel extends ChangeNotifier {
   }
 
   void _updateSaveButtonState() {
-    isNextButtonActive = nameTextController.text.length > 1 && _hasSelectedActivities();
+    isNextButtonActive =
+        nameTextController.text.length > 1 && _hasSelectedActivities();
     onStateChanged?.call();
   }
 
   bool _hasSelectedActivities() {
-    return activities.values.firstWhere((isSelected) => isSelected, orElse: () => false);
+    return activities.values
+        .firstWhere((isSelected) => isSelected, orElse: () => false);
   }
 
   VoidCallback? getNextButtonAction(BuildContext buildContext) {
     if (isNextButtonActive) {
       return () {
-        _saveProfileDate();
-
-        Navigator.of(buildContext).push(
-          MaterialPageRoute(
-            builder: (_) => BottomNavigationBarScreen(),
-          ),
-        );
+        _saveProfileDate().then((_) {
+          Navigator.of(buildContext).push(
+            MaterialPageRoute(
+              builder: (_) => BottomNavigationBarScreen(),
+            ),
+          );
+        });
       };
     } else {
       return null;
     }
   }
 
-  void _saveProfileDate() {
+  Future<void> _saveProfileDate() async {
     final profile = ProfileDomain(nameTextController.text);
-    _profileRepository.addProfile(profile);
+    await _profileRepository.addProfile(profile);
   }
 
   void disposeControllers() {

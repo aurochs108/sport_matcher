@@ -7,18 +7,30 @@ import 'abstract_profile_database.dart';
 part 'profile_database.g.dart';
 
 @DriftDatabase(tables: [ProfileEntity])
-class ProfileDatabase extends _$ProfileDatabase implements AbstractProfileDatabase {
+class ProfileDatabase extends _$ProfileDatabase
+    implements AbstractProfileDatabase {
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
   // These are described in the getting started guide: https://drift.simonbinder.eu/setup/
-  ProfileDatabase({QueryExecutor? executor}) : super(executor ?? _openConnection());
+  ProfileDatabase({QueryExecutor? executor})
+      : super(executor ?? _openConnection());
 
   @override
   int get schemaVersion => 1;
 
   @override
   Future<int> insertProfile(ProfileEntityCompanion profile) async {
-    return await into(profileEntity).insert(profile);
+    final singletonProfile = ProfileEntityCompanion(
+      id: const Value(1),
+      name: profile.name,
+    );
+
+    return await into(profileEntity).insertOnConflictUpdate(singletonProfile);
+  }
+
+  @override
+  Future<ProfileEntityData?> loadProfile() async {
+    return await select(profileEntity).getSingleOrNull();
   }
 
   static QueryExecutor _openConnection() {

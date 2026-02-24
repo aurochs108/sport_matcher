@@ -6,4 +6,8 @@ class ProfileMapper {
   ProfileEntityCompanion toEntity(ProfileDomain domain) {
     return ProfileEntityCompanion(name: Value(domain.name));
   }
+
+  ProfileDomain toDomain(ProfileEntityData entity) {
+    return ProfileDomain(entity.name);
+  }
 }

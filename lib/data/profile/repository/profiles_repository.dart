@@ -18,4 +18,10 @@ class ProfilesRepository extends AbstractProfilesRepository {
     final profileEntity = _mapper.toEntity(profile);
     return _profileDatabase.insertProfile(profileEntity);
   }
+
+  @override
+  Future<ProfileDomain?> loadProfile() async {
+    final profileEntity = await _profileDatabase.loadProfile();
+    return profileEntity == null ? null : _mapper.toDomain(profileEntity);
+  }
 }
