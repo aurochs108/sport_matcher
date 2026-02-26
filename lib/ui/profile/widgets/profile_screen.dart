@@ -41,13 +41,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const TitleMediumText(text: "Profile"),
                       FutureBuilder<ProfileDomain?>(
                         future: _profileFuture,
                         builder: (context, snapshot) {
                           final profileName = snapshot.data?.name;
                           return TitleMediumText(
-                              text: profileName ?? "No profile yet");
+                              text: profileName ?? "Missing profile data");
                         },
                       ),
                     ],
