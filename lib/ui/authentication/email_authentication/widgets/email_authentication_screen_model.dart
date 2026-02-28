@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/email_validator.dart';
-import 'package:sport_matcher/ui/core/utilities/validators/minimum_text_length_validator.dart';
+import 'package:sport_matcher/ui/core/utilities/validators/text_length_validator.dart';
 
 class EmailAuthenticationScreenModel extends ChangeNotifier {
   final String title;
@@ -23,7 +23,7 @@ class EmailAuthenticationScreenModel extends ChangeNotifier {
     required VoidCallback onFinishProcessButtonAction,
   })  : emailValidator = emailValidator ?? EmailValidator(),
         passwordValidator = passwordValidator ??
-           MinimumTextLengthValidator(minimumLength: 12),
+           TextLengthValidator(minimumLength: 12, maximumLength: 255),
            _onFinishProcessButtonAction = onFinishProcessButtonAction {
     emailTextController.addListener(_updateButtonState);
     passwordTextController.addListener(_updateButtonState);

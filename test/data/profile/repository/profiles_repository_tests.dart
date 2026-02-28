@@ -20,6 +20,8 @@ void main() {
       sut = ProfilesRepository(profileDatabase: profileDatabase);
     });
 
+    // MARK: - addProfile
+
     test('addProfile inserts mapped companion', () async {
       // given
       final profile = ProfileDomain(Uuid().v4().toString());
@@ -38,6 +40,8 @@ void main() {
       expect(captured.id.present, isFalse);
     });
 
+    // MARK: - loadProfile
+
     test('loadProfile returns null when database returns null', () async {
       // given
       when(profileDatabase.loadProfile()).thenAnswer((_) async => null);
@@ -52,7 +56,7 @@ void main() {
 
     test('loadProfile maps entity to domain when database returns entity', () async {
       // given
-      const entity = ProfileEntityData(id: 1, name: 'Alice');
+      final entity = ProfileEntityData(id: 1, name: Uuid().v4().toString());
       when(profileDatabase.loadProfile()).thenAnswer((_) async => entity);
 
       // when
