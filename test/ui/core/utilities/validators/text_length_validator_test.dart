@@ -22,8 +22,7 @@ void main() {
 
     test('should return error message when text is shorter than the minimum length', () {
       final uuid = Uuid();
-      final numberToSubstract = max(random.nextInt(minimumLength) - 1, 1);
-      final text = uuid.v4().characters.take(minimumLength - numberToSubstract).string;
+      final text = uuid.v4().characters.take(minimumLength - 1).string;
 
       expect(sut.validate(text), "Cannot be less than $minimumLength characters");
     });

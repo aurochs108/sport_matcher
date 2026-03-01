@@ -42,7 +42,7 @@ void main() {
       expect(expectedProfile, captured);
     });
 
-    //MARK: - loadProfile
+    // MARK: - loadProfile
 
     test('loadProfile returns null when database returns null', () async {
       // given
