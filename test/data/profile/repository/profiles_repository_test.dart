@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -7,7 +8,7 @@ import 'package:sport_matcher/data/profile/persistence/database/profile_database
 import 'package:sport_matcher/data/profile/repository/profiles_repository.dart';
 import 'package:uuid/uuid.dart';
 
-import 'profiles_repository_tests.mocks.dart';
+import 'profiles_repository_test.mocks.dart';
 
 @GenerateMocks([AbstractProfileDatabase])
 void main() {
@@ -35,12 +36,13 @@ void main() {
           .captured
           .single as ProfileEntityCompanion;
 
-      expect(captured.name.present, isTrue);
-      expect(captured.name.value, profile.name);
-      expect(captured.id.present, isFalse);
+      final expectedProfile = ProfileEntityCompanion(
+        name: Value(profile.name),
+      );
+      expect(expectedProfile, captured);
     });
 
-    // MARK: - loadProfile
+    //MARK: - loadProfile
 
     test('loadProfile returns null when database returns null', () async {
       // given
@@ -54,7 +56,8 @@ void main() {
       verify(profileDatabase.loadProfile()).called(1);
     });
 
-    test('loadProfile maps entity to domain when database returns entity', () async {
+    test('loadProfile maps entity to domain when database returns entity',
+        () async {
       // given
       final entity = ProfileEntityData(id: 1, name: Uuid().v4().toString());
       when(profileDatabase.loadProfile()).thenAnswer((_) async => entity);
@@ -67,5 +70,5 @@ void main() {
       expect(result!.name, entity.name);
       verify(profileDatabase.loadProfile()).called(1);
     });
-	});
+  });
 }

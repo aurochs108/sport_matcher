@@ -14,13 +14,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final viewModel = ProfileScreenModel();
+  final _viewModel = ProfileScreenModel();
   late final Future<ProfileDomain?> _profileFuture;
 
   @override
   void initState() {
     super.initState();
-    _profileFuture = viewModel.loadProfile();
+    _profileFuture = _viewModel.loadProfile();
   }
 
   @override

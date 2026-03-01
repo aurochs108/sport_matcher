@@ -20,8 +20,7 @@ class $ProfileEntityTable extends ProfileEntity
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 2, maxTextLength: 255),
+      additionalChecks: GeneratedColumn.checkTextLength(),
       type: DriftSqlType.string,
       requiredDuringInsert: true);
   @override

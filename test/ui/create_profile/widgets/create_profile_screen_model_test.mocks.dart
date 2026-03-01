@@ -3,7 +3,12 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'dart:async' as _i4;
+
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:sport_matcher/data/profile/domain/profile_domain.dart' as _i5;
+import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart'
+    as _i3;
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart'
     as _i2;
 
@@ -30,4 +35,34 @@ class MockAbstractTextValidator extends _i1.Mock
   MockAbstractTextValidator() {
     _i1.throwOnMissingStub(this);
   }
+}
+
+/// A class which mocks [AbstractProfilesRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAbstractProfilesRepository extends _i1.Mock
+    implements _i3.AbstractProfilesRepository {
+  MockAbstractProfilesRepository() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<void> addProfile(_i5.ProfileDomain? profile) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #addProfile,
+          [profile],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<_i5.ProfileDomain?> loadProfile() => (super.noSuchMethod(
+        Invocation.method(
+          #loadProfile,
+          [],
+        ),
+        returnValue: _i4.Future<_i5.ProfileDomain?>.value(),
+      ) as _i4.Future<_i5.ProfileDomain?>);
 }

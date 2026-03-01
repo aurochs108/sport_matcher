@@ -6,7 +6,7 @@ import 'package:sport_matcher/data/profile/repository/abstract_profiles_reposito
 import 'package:sport_matcher/ui/profile/widgets/profile_screen_model.dart';
 import 'package:uuid/uuid.dart';
 
-import 'profile_screen_model_tests.mocks.dart';
+import 'profile_screen_model_test.mocks.dart';
 
 @GenerateMocks([AbstractProfilesRepository])
 void main() {

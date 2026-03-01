@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/data/profile/config/profile_config.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
+import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
 import 'package:sport_matcher/data/profile/repository/profiles_repository.dart';
 import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
@@ -21,13 +22,15 @@ class CreateProfileScreenModel extends ChangeNotifier {
   };
   Map<String, bool> get activities => Map.unmodifiable(_activities);
   var isNextButtonActive = false;
-  final _profileRepository = ProfilesRepository();
+  final AbstractProfilesRepository _profileRepository;
   Function()? onStateChanged;
 
   CreateProfileScreenModel({
     AbstractTextValidator? nameValidator,
+    AbstractProfilesRepository? profileRepository,
   }) : nameValidator =
-            nameValidator ?? TextLengthValidator(minimumLength: ProfileConfig.nameMinLength, maximumLength: ProfileConfig.nameMaxLength) {
+            nameValidator ?? TextLengthValidator(minimumLength: ProfileConfig.nameMinLength, maximumLength: ProfileConfig.nameMaxLength),
+        _profileRepository = profileRepository ?? ProfilesRepository() {
     nameTextController.addListener(_updateSaveButtonState);
   }
 
