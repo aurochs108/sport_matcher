@@ -1,5 +1,5 @@
 import 'package:sport_matcher/ui/core/utilities/validators/email_validator.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {
@@ -27,9 +27,19 @@ void main() {
     test('should return null when email is valid', () {
       final uuid = Uuid();
 
+      expect(sut.validate('a@b.c'), null);
       expect(sut.validate('${uuid.v4()}@${uuid.v4()}.com'), null);
       expect(sut.validate('${uuid.v4()}.${uuid.v4()}@${uuid.v4()}.co'), null);
       expect(sut.validate('${uuid.v4()}+${uuid.v4()}@${uuid.v4()}.com'), null);
+    });
+
+    test('should return error message when email is longer than 254 characters', () {
+      final tooLongEmail = '${'a' * 249}@a.com';
+
+      expect(
+        sut.validate(tooLongEmail),
+        'Cannot be more than 254 characters',
+      );
     });
   });
 }

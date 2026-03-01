@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sport_matcher/data/profile/config/profile_config.dart';
+import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
+import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
+import 'package:sport_matcher/data/profile/repository/profiles_repository.dart';
 import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
-import 'package:sport_matcher/ui/core/utilities/validators/minimum_text_length_validator.dart';
+import 'package:sport_matcher/ui/core/utilities/validators/text_length_validator.dart';
 
 class CreateProfileScreenModel extends ChangeNotifier {
   final nameTextController = TextEditingController();
@@ -18,12 +22,15 @@ class CreateProfileScreenModel extends ChangeNotifier {
   };
   Map<String, bool> get activities => Map.unmodifiable(_activities);
   var isNextButtonActive = false;
+  final AbstractProfilesRepository _profileRepository;
   Function()? onStateChanged;
 
   CreateProfileScreenModel({
     AbstractTextValidator? nameValidator,
+    AbstractProfilesRepository? profileRepository,
   }) : nameValidator =
-            nameValidator ?? MinimumTextLengthValidator(minimumLength: 2) {
+            nameValidator ?? TextLengthValidator(minimumLength: ProfileConfig.nameMinLength, maximumLength: ProfileConfig.nameMaxLength),
+        _profileRepository = profileRepository ?? ProfilesRepository() {
     nameTextController.addListener(_updateSaveButtonState);
   }
 
@@ -33,26 +40,36 @@ class CreateProfileScreenModel extends ChangeNotifier {
   }
 
   void _updateSaveButtonState() {
-    isNextButtonActive = nameTextController.text.length > 1 && _hasSelectedActivities();
+    isNextButtonActive =
+      nameValidator.validate(nameTextController.text) == null &&
+        _hasSelectedActivities();
     onStateChanged?.call();
   }
 
   bool _hasSelectedActivities() {
-    return activities.values.firstWhere((isSelected) => isSelected, orElse: () => false);
+    return activities.values
+        .firstWhere((isSelected) => isSelected, orElse: () => false);
   }
 
   VoidCallback? getNextButtonAction(BuildContext buildContext) {
     if (isNextButtonActive) {
       return () {
-        Navigator.of(buildContext).push(
-          MaterialPageRoute(
-            builder: (_) => BottomNavigationBarScreen(),
-          ),
-        );
+        _saveProfileDate().then((_) {
+          Navigator.of(buildContext).push(
+            MaterialPageRoute(
+              builder: (_) => BottomNavigationBarScreen(),
+            ),
+          );
+        });
       };
     } else {
       return null;
     }
+  }
+
+  Future<void> _saveProfileDate() async {
+    final profile = ProfileDomain(nameTextController.text);
+    await _profileRepository.addProfile(profile);
   }
 
   void disposeControllers() {

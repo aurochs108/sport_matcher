@@ -2,7 +2,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sport_matcher/ui/authentication/email_authentication/widgets/email_authentication_screen_model.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:uuid/uuid.dart';
 
 import 'email_authentication_screen_model_test.mocks.dart';
