@@ -52,7 +52,7 @@ dev_dependencies:
   uuid: ^3.0.7
   mockito: ^5.4.6
   build_runner: ^2.10.5
-  drift_dev: ^2.31.0
+  drift_dev: ^2.30.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
