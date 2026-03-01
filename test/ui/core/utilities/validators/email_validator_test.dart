@@ -1,5 +1,5 @@
 import 'package:sport_matcher/ui/core/utilities/validators/email_validator.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {

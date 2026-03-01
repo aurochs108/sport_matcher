@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:sport_matcher/ui/bottom_navigation_bar/logic/tab_item.dart';
 import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen_model.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BottomNavigationBarScreenModel', () {
