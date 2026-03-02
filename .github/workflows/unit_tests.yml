@@ -15,31 +15,30 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
+          channel: stable
           flutter-version: 3.29.3
-        #   channel: stable
-        #   flutter-version-file: pubspec.yaml
-        #   cache: true
+          cache: true
 
       - name: Disable Flutter analytics
         run: flutter config --no-analytics
 
-      # - name: Detect Flutter version
-      #   id: get_flutter_version
-      #   run: |
-      #     ver=$(flutter --version --machine | python3 -c 'import sys,json;print(json.load(sys.stdin)["frameworkVersion"])')
-      #     echo "flutter_version=$ver" >> $GITHUB_OUTPUT
+      - name: Detect Flutter version
+        id: get_flutter_version
+        run: |
+          ver=$(flutter --version --machine | python3 -c 'import sys,json;print(json.load(sys.stdin)["frameworkVersion"])')
+          echo "flutter_version=$ver" >> $GITHUB_OUTPUT
 
-      # - name: Cache Pub packages
-      #   uses: actions/cache@v5
-      #   with:
-      #     path: |
-      #       ~/.pub-cache
-      #       .pub-cache
-      #       .dart_tool
-      #     key: ${{ runner.os }}-flutter-${{ steps.get_flutter_version.outputs.flutter_version }}-pub-${{ hashFiles('**/pubspec.lock') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-flutter-${{ steps.get_flutter_version.outputs.flutter_version }}-pub-
-      #       ${{ runner.os }}-pub-
+      - name: Cache Pub packages
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.pub-cache
+            .pub-cache
+            .dart_tool
+          key: ${{ runner.os }}-flutter-${{ steps.get_flutter_version.outputs.flutter_version }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-${{ steps.get_flutter_version.outputs.flutter_version }}-pub-
+            ${{ runner.os }}-pub-
 
       - name: Install dependencies
         run: flutter pub get
