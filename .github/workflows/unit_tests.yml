@@ -20,15 +20,58 @@ jobs:
       - name: Disable Flutter analytics
         run: flutter config --no-analytics
 
+      - name: Detect Flutter version
+        id: get_flutter_version
+        run: |
+          ver=$(flutter --version --machine | python3 -c 'import sys,json;print(json.load(sys.stdin)["frameworkVersion"])')
+          echo "flutter_version=$ver" >> $GITHUB_OUTPUT
+
+      - name: Restore Flutter SDK cache
+        id: flutter-sdk-cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            $HOME/flutter
+            $HOME/.cache/flutter
+            $HOME/.flutter
+            /opt/hostedtoolcache/flutter
+          key: ${{ runner.os }}-flutter-sdk-${{ steps.get_flutter_version.outputs.flutter_version }}
+
+      - name: Add cached Flutter to PATH
+        if: steps.flutter-sdk-cache.outputs.cache-hit == 'true'
+        run: |
+          echo "$HOME/flutter/bin" >> $GITHUB_PATH
+          echo "$HOME/.cache/flutter/bin" >> $GITHUB_PATH
+          echo "$HOME/.flutter/bin" >> $GITHUB_PATH
+          echo "/opt/hostedtoolcache/flutter/bin" >> $GITHUB_PATH
+
+      - name: Install Flutter (when cache missed)
+        if: steps.flutter-sdk-cache.outputs.cache-hit != 'true'
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.get_flutter_version.outputs.flutter_version }}
+
+      - name: Save Flutter SDK to cache
+        if: steps.flutter-sdk-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@v5
+        with:
+          path: |
+            $HOME/flutter
+            $HOME/.cache/flutter
+            $HOME/.flutter
+            /opt/hostedtoolcache/flutter
+          key: ${{ runner.os }}-flutter-sdk-${{ steps.get_flutter_version.outputs.flutter_version }}
+
       - name: Cache Pub packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.pub-cache
             .pub-cache
             .dart_tool
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          key: ${{ runner.os }}-flutter-${{ steps.get_flutter_version.outputs.flutter_version }}-pub-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: |
+            ${{ runner.os }}-flutter-${{ steps.get_flutter_version.outputs.flutter_version }}-pub-
             ${{ runner.os }}-pub-
 
       - name: Install dependencies
