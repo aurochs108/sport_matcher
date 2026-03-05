@@ -51,6 +51,20 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Center(
+                        child: Container(
+                          height: 120,
+                          width: 120,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 1),
+                          ),
+                          child: Image.network(
+                            '',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: AppTheme.columnSpacingMedium),
                       PlainTextField(
                         controller: widget._viewModel.nameTextController,
                         title: "Name",
