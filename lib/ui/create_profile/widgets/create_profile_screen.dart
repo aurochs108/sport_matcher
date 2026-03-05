@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/collections/chips_screen_view.dart';
@@ -58,9 +59,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 1),
                           ),
-                          child: Image.network(
-                            '',
-                            fit: BoxFit.cover,
+                          child: SvgPicture.asset(
+                            'lib/ui/create_profile/assets/photo_placeholder.svg',
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),
