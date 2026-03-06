@@ -53,23 +53,24 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: AppTheme.columnSpacingMedium),
-                           Padding(
-                             padding: const EdgeInsets.symmetric(horizontal: 30),
-                             child: Center(
-                               child: Container(
-                                 padding: const EdgeInsets.symmetric(horizontal: 60),
-                                 decoration: BoxDecoration(
-                                   shape: BoxShape.rectangle,
-                                   border: Border.all(color: AppTheme.primaryColor, width: 1),
-                                   borderRadius: BorderRadius.zero,
-                                 ),
-                                 child: SvgPicture.asset(
-                                   'lib/ui/create_profile/assets/photo_placeholder.svg',
-                                   fit: BoxFit.contain,
-                                 ),
-                               ),
-                             ),
-                           ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Center(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 60),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              border: Border.all(
+                                  color: AppTheme.primaryColor, width: 1),
+                              borderRadius: BorderRadius.zero,
+                            ),
+                            child: SvgPicture.asset(
+                              'lib/ui/create_profile/assets/photo_placeholder.svg',
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
                       PlainTextField(
                         controller: widget._viewModel.nameTextController,
                         title: "Name",
