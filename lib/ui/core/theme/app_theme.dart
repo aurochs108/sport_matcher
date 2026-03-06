@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
+  // Colors
+  static const Color primaryColor = Color(0xFF34568A);
+
   // Paddings
   static const _horizontalPadding = 24.0;
   static const _verticalPadding = 24.0;

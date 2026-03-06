@@ -52,20 +52,24 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Center(
-                        child: Container(
-                          height: 120,
-                          width: 120,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 1),
-                          ),
-                          child: SvgPicture.asset(
-                            'lib/ui/create_profile/assets/photo_placeholder.svg',
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
                       const SizedBox(height: AppTheme.columnSpacingMedium),
+                           Padding(
+                             padding: const EdgeInsets.symmetric(horizontal: 30),
+                             child: Center(
+                               child: Container(
+                                 padding: const EdgeInsets.symmetric(horizontal: 60),
+                                 decoration: BoxDecoration(
+                                   shape: BoxShape.rectangle,
+                                   border: Border.all(color: AppTheme.primaryColor, width: 1),
+                                   borderRadius: BorderRadius.zero,
+                                 ),
+                                 child: SvgPicture.asset(
+                                   'lib/ui/create_profile/assets/photo_placeholder.svg',
+                                   fit: BoxFit.contain,
+                                 ),
+                               ),
+                             ),
+                           ),
                       PlainTextField(
                         controller: widget._viewModel.nameTextController,
                         title: "Name",
