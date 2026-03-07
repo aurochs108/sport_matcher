@@ -57,16 +57,32 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 30),
                         child: Center(
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 60),
+                            padding: const EdgeInsets.all(48),
                             decoration: BoxDecoration(
                               shape: BoxShape.rectangle,
                               border: Border.all(
                                   color: AppTheme.primaryColor, width: 1),
-                              borderRadius: BorderRadius.zero,
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            child: SvgPicture.asset(
-                              'lib/ui/create_profile/assets/photo_placeholder.svg',
-                              fit: BoxFit.contain,
+                            child: Column(
+                              spacing: AppTheme.columnSpacingSmall,
+                              children: [
+                                SvgPicture.asset(
+                                  'lib/ui/create_profile/assets/photo_placeholder.svg',
+                                  fit: BoxFit.contain,
+                                  height: 48,
+                                  width: 48,
+                                ),
+                                SizedBox(
+                                  width: 120,
+                                  child: Text(
+                                    "Tap to add profile picture",
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    textAlign: TextAlign.center,
+                                    softWrap: true,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
