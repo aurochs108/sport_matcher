@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/collections/chips_screen_view.dart';
@@ -19,6 +20,25 @@ class CreateProfileScreen extends StatefulWidget {
 }
 
 class _CreateProfileScreenState extends State<CreateProfileScreen> {
+  XFile? _pickedImage;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    try {
+      final XFile? picked = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
+      );
+      if (picked != null) {
+        setState(() {
+          _pickedImage = picked;
+        });
+      }
+    } catch (e) {
+      print('Image pick error: $e');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -54,35 +74,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                     children: [
                       const SizedBox(height: AppTheme.columnSpacingMedium),
                       Center(
-                        child: Container(
-                          padding: const EdgeInsets.all(48),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            border: Border.all(
-                                color: AppTheme.primaryColor, width: 1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            spacing: AppTheme.columnSpacingSmall,
-                            children: [
-                              SvgPicture.asset(
-                                'lib/ui/create_profile/assets/photo_placeholder.svg',
-                                fit: BoxFit.contain,
-                                height: 48,
-                                width: 48,
-                              ),
-                              SizedBox(
-                                width: 120,
-                                child: Text(
-                                  "Tap to add profile picture",
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                  textAlign: TextAlign.center,
-                                  softWrap: true,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        child: photoPlaceholder(context),
                       ),
                       PlainTextField(
                         controller: widget._viewModel.nameTextController,
@@ -113,6 +105,39 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget photoPlaceholder(BuildContext context) {
+    return OutlinedButton(
+      onPressed: _pickImage,
+      style: OutlinedButton.styleFrom(
+        padding: const EdgeInsets.all(48),
+        side: BorderSide(color: AppTheme.primaryColor, width: 1),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        minimumSize: Size.zero,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SvgPicture.asset(
+            'lib/ui/create_profile/assets/photo_placeholder.svg',
+            fit: BoxFit.contain,
+            height: 48,
+            width: 48,
+          ),
+          SizedBox(height: AppTheme.columnSpacingSmall),
+          SizedBox(
+            width: 120,
+            child: Text(
+              "Add profile picture",
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+              softWrap: true,
+            ),
+          ),
+        ],
       ),
     );
   }
