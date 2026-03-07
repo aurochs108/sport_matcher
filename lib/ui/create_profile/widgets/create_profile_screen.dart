@@ -53,37 +53,34 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: AppTheme.columnSpacingMedium),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30),
-                        child: Center(
-                          child: Container(
-                            padding: const EdgeInsets.all(48),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              border: Border.all(
-                                  color: AppTheme.primaryColor, width: 1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              spacing: AppTheme.columnSpacingSmall,
-                              children: [
-                                SvgPicture.asset(
-                                  'lib/ui/create_profile/assets/photo_placeholder.svg',
-                                  fit: BoxFit.contain,
-                                  height: 48,
-                                  width: 48,
+                      Center(
+                        child: Container(
+                          padding: const EdgeInsets.all(48),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            border: Border.all(
+                                color: AppTheme.primaryColor, width: 1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Column(
+                            spacing: AppTheme.columnSpacingSmall,
+                            children: [
+                              SvgPicture.asset(
+                                'lib/ui/create_profile/assets/photo_placeholder.svg',
+                                fit: BoxFit.contain,
+                                height: 48,
+                                width: 48,
+                              ),
+                              SizedBox(
+                                width: 120,
+                                child: Text(
+                                  "Tap to add profile picture",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  textAlign: TextAlign.center,
+                                  softWrap: true,
                                 ),
-                                SizedBox(
-                                  width: 120,
-                                  child: Text(
-                                    "Tap to add profile picture",
-                                    style: Theme.of(context).textTheme.bodyMedium,
-                                    textAlign: TextAlign.center,
-                                    softWrap: true,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
