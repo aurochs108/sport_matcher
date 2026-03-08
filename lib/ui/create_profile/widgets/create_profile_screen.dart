@@ -115,6 +115,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   Widget photoPlaceholder(BuildContext context) {
     const double contentSize = 96;
+    const double buttonSize = 192;
     Widget content;
     if (_pickedImage == null) {
       content = SizedBox(
@@ -144,9 +145,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     } else {
       content = ClipRRect(
         borderRadius: BorderRadius.circular(8),
-        child: SizedBox(
-          height: contentSize,
-          width: contentSize,
+        child: SizedBox.expand(
           child: Image.file(
             File(_pickedImage!.path),
             fit: BoxFit.cover,
@@ -158,7 +157,8 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     return OutlinedButton(
       onPressed: _pickImage,
       style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.all(48),
+        fixedSize: const Size(buttonSize, buttonSize),
+        padding: _pickedImage == null ? const EdgeInsets.all(48) : EdgeInsets.zero,
         side: BorderSide(color: AppTheme.primaryColor, width: 1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         minimumSize: Size.zero,
