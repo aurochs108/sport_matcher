@@ -74,7 +74,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.only(top: 0),
+                    padding: AppTheme. columnVerticalPaddings(context),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: AppTheme.columnSpacingMedium,
@@ -119,7 +119,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     Widget content;
     if (_pickedImage == null) {
       content = SizedBox(
-        height: contentSize,
         width: contentSize,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -155,7 +154,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     return OutlinedButton(
       onPressed: _pickImage,
       style: OutlinedButton.styleFrom(
-        fixedSize: const Size(buttonSize, buttonSize),
+        fixedSize: _pickedImage == null ? null : const Size(buttonSize, buttonSize),
         padding: _pickedImage == null ? const EdgeInsets.all(48) : EdgeInsets.zero,
         side: BorderSide(color: AppTheme.primaryColor, width: 1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
