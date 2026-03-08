@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sport_matcher/data/profile/config/profile_config.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
@@ -8,6 +9,8 @@ import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validat
 import 'package:sport_matcher/ui/core/utilities/validators/text_length_validator.dart';
 
 class CreateProfileScreenModel extends ChangeNotifier {
+  final ImagePicker _picker = ImagePicker();
+  XFile? pickedImage;
   final nameTextController = TextEditingController();
   final AbstractTextValidator nameValidator;
   final Map<String, bool> _activities = {
@@ -49,6 +52,30 @@ class CreateProfileScreenModel extends ChangeNotifier {
   bool _hasSelectedActivities() {
     return activities.values
         .firstWhere((isSelected) => isSelected, orElse: () => false);
+  }
+
+  void pickImage() async {
+    pickedImage = null;
+    onStateChanged?.call();
+
+    try {
+      final XFile? picked = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 100,
+      );
+
+      if (picked != null) {
+        pickedImage = picked;
+        onStateChanged?.call();
+      }
+    } catch (e) {
+      // TODO handle error
+      print('Image pick error: $e');
+    }
+  }
+
+  String? getPickedImagePath() {
+    return pickedImage?.path;
   }
 
   VoidCallback? getNextButtonAction(BuildContext buildContext) {

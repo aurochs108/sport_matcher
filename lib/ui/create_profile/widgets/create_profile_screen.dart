@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/collections/chips_screen_view.dart';
@@ -21,28 +20,6 @@ class CreateProfileScreen extends StatefulWidget {
 }
 
 class _CreateProfileScreenState extends State<CreateProfileScreen> {
-  XFile? _pickedImage;
-  final ImagePicker _picker = ImagePicker();
-
-  Future<void> _pickImage() async {
-    setState(() {
-      _pickedImage = null;
-    });
-    try {
-      final XFile? picked = await _picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 100,
-      );
-      if (picked != null) {
-        setState(() {
-          _pickedImage = picked;
-        });
-      }
-    } catch (e) {
-      print('Image pick error: $e');
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -114,10 +91,22 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
   }
 
   Widget photoPlaceholder(BuildContext context) {
+    final viewModel = widget._viewModel;
+    final pickedImagePath = viewModel.getPickedImagePath();
     const double contentSize = 96;
     const double buttonSize = 192;
     Widget content;
-    if (_pickedImage == null) {
+    if (pickedImagePath case final imagePath?) {
+      content = ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: SizedBox.expand(
+          child: Image.file(
+            File(imagePath),
+            fit: BoxFit.cover,
+          ),
+        ),
+      );
+    } else {
       content = SizedBox(
         width: contentSize,
         child: Column(
@@ -139,23 +128,13 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
           ],
         ),
       );
-    } else {
-      content = ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: SizedBox.expand(
-          child: Image.file(
-            File(_pickedImage!.path),
-            fit: BoxFit.cover,
-          ),
-        ),
-      );
     }
 
     return OutlinedButton(
-      onPressed: _pickImage,
+      onPressed: viewModel.pickImage,
       style: OutlinedButton.styleFrom(
-        fixedSize: _pickedImage == null ? null : const Size(buttonSize, buttonSize),
-        padding: _pickedImage == null ? const EdgeInsets.all(48) : EdgeInsets.zero,
+        fixedSize: pickedImagePath == null ? null : const Size(buttonSize, buttonSize),
+        padding: pickedImagePath == null ? const EdgeInsets.all(48) : EdgeInsets.zero,
         side: BorderSide(color: AppTheme.primaryColor, width: 1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         minimumSize: Size.zero,
