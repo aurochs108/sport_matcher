@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
@@ -24,10 +25,13 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
+    setState(() {
+      _pickedImage = null;
+    });
     try {
       final XFile? picked = await _picker.pickImage(
         source: ImageSource.gallery,
-        imageQuality: 85,
+        imageQuality: 100,
       );
       if (picked != null) {
         setState(() {
@@ -110,6 +114,47 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
   }
 
   Widget photoPlaceholder(BuildContext context) {
+    const double contentSize = 96;
+    Widget content;
+    if (_pickedImage == null) {
+      content = SizedBox(
+        height: contentSize,
+        width: contentSize,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              'lib/ui/create_profile/assets/photo_placeholder.svg',
+              fit: BoxFit.contain,
+              height: 48,
+              width: 48,
+            ),
+            SizedBox(height: AppTheme.columnSpacingSmall),
+            Text(
+              "Add profile picture",
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              softWrap: true,
+            ),
+          ],
+        ),
+      );
+    } else {
+      content = ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: SizedBox(
+          height: contentSize,
+          width: contentSize,
+          child: Image.file(
+            File(_pickedImage!.path),
+            fit: BoxFit.cover,
+          ),
+        ),
+      );
+    }
+
     return OutlinedButton(
       onPressed: _pickImage,
       style: OutlinedButton.styleFrom(
@@ -118,27 +163,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         minimumSize: Size.zero,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(
-            'lib/ui/create_profile/assets/photo_placeholder.svg',
-            fit: BoxFit.contain,
-            height: 48,
-            width: 48,
-          ),
-          SizedBox(height: AppTheme.columnSpacingSmall),
-          SizedBox(
-            width: 120,
-            child: Text(
-              "Add profile picture",
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-              softWrap: true,
-            ),
-          ),
-        ],
-      ),
+      child: content,
     );
   }
 }
