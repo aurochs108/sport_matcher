@@ -31,8 +31,10 @@ class CreateProfileScreenModel extends ChangeNotifier {
   CreateProfileScreenModel({
     AbstractTextValidator? nameValidator,
     AbstractProfilesRepository? profileRepository,
-  }) : nameValidator =
-            nameValidator ?? TextLengthValidator(minimumLength: ProfileConfig.nameMinLength, maximumLength: ProfileConfig.nameMaxLength),
+  })  : nameValidator = nameValidator ??
+            TextLengthValidator(
+                minimumLength: ProfileConfig.nameMinLength,
+                maximumLength: ProfileConfig.nameMaxLength),
         _profileRepository = profileRepository ?? ProfilesRepository() {
     nameTextController.addListener(_updateSaveButtonState);
   }
@@ -43,8 +45,8 @@ class CreateProfileScreenModel extends ChangeNotifier {
   }
 
   void _updateSaveButtonState() {
-    isNextButtonActive =
-      nameValidator.validate(nameTextController.text) == null &&
+    isNextButtonActive = pickedImage != null &&
+        nameValidator.validate(nameTextController.text) == null &&
         _hasSelectedActivities();
     onStateChanged?.call();
   }
@@ -57,6 +59,7 @@ class CreateProfileScreenModel extends ChangeNotifier {
   void pickImage() async {
     pickedImage = null;
     onStateChanged?.call();
+    _updateSaveButtonState();
 
     try {
       final XFile? picked = await _picker.pickImage(
@@ -67,6 +70,7 @@ class CreateProfileScreenModel extends ChangeNotifier {
       if (picked != null) {
         pickedImage = picked;
         onStateChanged?.call();
+        _updateSaveButtonState();
       }
     } catch (e) {
       // TODO handle error
