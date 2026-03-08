@@ -51,7 +51,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: AppTheme. columnVerticalPaddings(context),
+                    padding: AppTheme.columnVerticalPaddings(context),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: AppTheme.columnSpacingMedium,
@@ -109,23 +109,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     } else {
       content = SizedBox(
         width: contentSize,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: AppTheme.columnSpacingSmall,
-          children: [
-            SvgPicture.asset(
-              'lib/ui/create_profile/assets/photo_placeholder.svg',
-              fit: BoxFit.contain,
-              height: 48,
-              width: 48,
-            ),
-            Text(
-              "Add profile picture",
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-              softWrap: true,
-            ),
-          ],
+        child: SvgPicture.asset(
+          'lib/ui/create_profile/assets/photo_placeholder.svg',
+          fit: BoxFit.contain,
         ),
       );
     }
@@ -133,8 +119,10 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     return OutlinedButton(
       onPressed: viewModel.pickImage,
       style: OutlinedButton.styleFrom(
-        fixedSize: pickedImagePath == null ? null : const Size(buttonSize, buttonSize),
-        padding: pickedImagePath == null ? const EdgeInsets.all(48) : EdgeInsets.zero,
+        fixedSize: Size(buttonSize, buttonSize),
+        padding: pickedImagePath == null
+            ? const EdgeInsets.all(48)
+            : EdgeInsets.zero,
         side: BorderSide(color: AppTheme.primaryColor, width: 1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         minimumSize: Size.zero,
