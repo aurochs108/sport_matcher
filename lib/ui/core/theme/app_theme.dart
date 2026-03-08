@@ -31,6 +31,10 @@ class AppTheme {
     );
   }
 
+  static EdgeInsets columnVerticalPaddings(BuildContext context) {
+    return EdgeInsets.symmetric(vertical: columnSpacingSmall);
+  }
+
   static EdgeInsets _safeAreaPadding(BuildContext context) {
     return MediaQuery.of(context).padding;
   }

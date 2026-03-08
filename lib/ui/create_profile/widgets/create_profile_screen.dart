@@ -73,32 +73,32 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: AppTheme.columnSpacingMedium),
-                      Center(
-                        child: photoPlaceholder(context),
-                      ),
-                      PlainTextField(
-                        controller: widget._viewModel.nameTextController,
-                        title: "Name",
-                        validator: widget._viewModel.nameValidator,
-                        textCapitalization: TextCapitalization.words,
-                      ),
-                      const SizedBox(height: AppTheme.columnSpacingMedium),
-                      const TitleMediumText(
-                          text: "Select your favorite sports"),
-                      const SizedBox(height: AppTheme.columnSpacingMedium),
-                      ChipsCollectionView(
-                        items: widget._viewModel.activities,
-                        onSelectionChanged: (activity, isSelected) {
-                          widget._viewModel
-                              .updateActivites(activity, isSelected);
-                        },
-                      ),
-                      const SizedBox(height: AppTheme.columnSpacingMedium),
-                    ],
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: AppTheme.columnSpacingMedium,
+                      children: [
+                        Center(
+                          child: photoPlaceholder(context),
+                        ),
+                        PlainTextField(
+                          controller: widget._viewModel.nameTextController,
+                          title: "Name",
+                          validator: widget._viewModel.nameValidator,
+                          textCapitalization: TextCapitalization.words,
+                        ),
+                        const TitleMediumText(
+                            text: "Select your favorite sports"),
+                        ChipsCollectionView(
+                          items: widget._viewModel.activities,
+                          onSelectionChanged: (activity, isSelected) {
+                            widget._viewModel
+                                .updateActivites(activity, isSelected);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -123,6 +123,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         width: contentSize,
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          spacing: AppTheme.columnSpacingSmall,
           children: [
             SvgPicture.asset(
               'lib/ui/create_profile/assets/photo_placeholder.svg',
@@ -130,13 +131,10 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               height: 48,
               width: 48,
             ),
-            SizedBox(height: AppTheme.columnSpacingSmall),
             Text(
               "Add profile picture",
               style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
               softWrap: true,
             ),
           ],
