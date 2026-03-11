@@ -93,8 +93,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
   Widget photoPlaceholder(BuildContext context) {
     final viewModel = widget._viewModel;
     final pickedImagePath = viewModel.getPickedImagePath();
-    const double contentSize = 96;
-    const double buttonSize = 192;
     Widget content;
     if (pickedImagePath case final imagePath?) {
       content = ClipRRect(
@@ -107,27 +105,34 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         ),
       );
     } else {
-      content = SizedBox(
-        width: contentSize,
-        child: SvgPicture.asset(
-          'lib/ui/create_profile/assets/photo_placeholder.svg',
-          fit: BoxFit.contain,
+      content = Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: SizedBox(
+          child: SvgPicture.asset(
+            'lib/ui/create_profile/assets/photo_placeholder.svg',
+            fit: BoxFit.contain,
+          ),
         ),
       );
     }
 
-    return OutlinedButton(
-      onPressed: viewModel.pickImage,
-      style: OutlinedButton.styleFrom(
-        fixedSize: Size(buttonSize, buttonSize),
-        padding: pickedImagePath == null
-            ? const EdgeInsets.all(48)
-            : EdgeInsets.zero,
-        side: BorderSide(color: AppTheme.primaryColor, width: 1),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        minimumSize: Size.zero,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 48.0),
+      child: AspectRatio(
+        aspectRatio: 1.0,
+        child: OutlinedButton(
+          onPressed: viewModel.pickImage,
+          style: OutlinedButton.styleFrom(
+            padding: pickedImagePath == null
+                ? const EdgeInsets.all(48)
+                : EdgeInsets.zero,
+            side: BorderSide(color: AppTheme.primaryColor, width: 1),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            minimumSize: Size.zero,
+          ),
+          child: content,
+        ),
       ),
-      child: content,
     );
   }
 }
