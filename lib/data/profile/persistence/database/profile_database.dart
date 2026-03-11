@@ -23,6 +23,7 @@ class ProfileDatabase extends _$ProfileDatabase
     final singletonProfile = ProfileEntityCompanion(
       id: const Value(1),
       name: profile.name,
+      imagePath: profile.imagePath,
     );
 
     return await into(profileEntity).insertOnConflictUpdate(singletonProfile);

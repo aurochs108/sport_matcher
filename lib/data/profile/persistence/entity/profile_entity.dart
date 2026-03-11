@@ -7,6 +7,7 @@ class ProfileEntity extends Table {
     min: ProfileConfig.nameMinLength,
     max: ProfileConfig.nameMaxLength,
   )();
+  TextColumn get imagePath => text()();
 
   @override
   Set<Column> get primaryKey => {id};

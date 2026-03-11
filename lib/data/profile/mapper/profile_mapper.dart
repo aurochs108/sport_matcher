@@ -4,10 +4,13 @@ import 'package:sport_matcher/data/profile/persistence/database/profile_database
 
 class ProfileMapper {
   ProfileEntityCompanion toEntity(ProfileDomain domain) {
-    return ProfileEntityCompanion(name: Value(domain.name));
+    return ProfileEntityCompanion(
+      name: Value(domain.name),
+      imagePath: Value(domain.imagePath),
+    );
   }
 
   ProfileDomain toDomain(ProfileEntityData entity) {
-    return ProfileDomain(entity.name);
+    return ProfileDomain(entity.name, imagePath: entity.imagePath);
   }
 }

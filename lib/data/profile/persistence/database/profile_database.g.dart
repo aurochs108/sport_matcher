@@ -23,8 +23,14 @@ class $ProfileEntityTable extends ProfileEntity
       additionalChecks: GeneratedColumn.checkTextLength(),
       type: DriftSqlType.string,
       requiredDuringInsert: true);
+  static const VerificationMeta _imagePathMeta =
+      const VerificationMeta('imagePath');
   @override
-  List<GeneratedColumn> get $columns => [id, name];
+  late final GeneratedColumn<String> imagePath = GeneratedColumn<String>(
+      'image_path', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, name, imagePath];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -44,6 +50,12 @@ class $ProfileEntityTable extends ProfileEntity
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
+    if (data.containsKey('image_path')) {
+      context.handle(_imagePathMeta,
+          imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta));
+    } else if (isInserting) {
+      context.missing(_imagePathMeta);
+    }
     return context;
   }
 
@@ -57,6 +69,8 @@ class $ProfileEntityTable extends ProfileEntity
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      imagePath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image_path'])!,
     );
   }
 
@@ -70,12 +84,15 @@ class ProfileEntityData extends DataClass
     implements Insertable<ProfileEntityData> {
   final int id;
   final String name;
-  const ProfileEntityData({required this.id, required this.name});
+  final String imagePath;
+  const ProfileEntityData(
+      {required this.id, required this.name, required this.imagePath});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
+    map['image_path'] = Variable<String>(imagePath);
     return map;
   }
 
@@ -83,6 +100,7 @@ class ProfileEntityData extends DataClass
     return ProfileEntityCompanion(
       id: Value(id),
       name: Value(name),
+      imagePath: Value(imagePath),
     );
   }
 
@@ -92,6 +110,7 @@ class ProfileEntityData extends DataClass
     return ProfileEntityData(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      imagePath: serializer.fromJson<String>(json['imagePath']),
     );
   }
   @override
@@ -100,17 +119,21 @@ class ProfileEntityData extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
+      'imagePath': serializer.toJson<String>(imagePath),
     };
   }
 
-  ProfileEntityData copyWith({int? id, String? name}) => ProfileEntityData(
+  ProfileEntityData copyWith({int? id, String? name, String? imagePath}) =>
+      ProfileEntityData(
         id: id ?? this.id,
         name: name ?? this.name,
+        imagePath: imagePath ?? this.imagePath,
       );
   ProfileEntityData copyWithCompanion(ProfileEntityCompanion data) {
     return ProfileEntityData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
+      imagePath: data.imagePath.present ? data.imagePath.value : this.imagePath,
     );
   }
 
@@ -118,46 +141,56 @@ class ProfileEntityData extends DataClass
   String toString() {
     return (StringBuffer('ProfileEntityData(')
           ..write('id: $id, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('imagePath: $imagePath')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name);
+  int get hashCode => Object.hash(id, name, imagePath);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ProfileEntityData &&
           other.id == this.id &&
-          other.name == this.name);
+          other.name == this.name &&
+          other.imagePath == this.imagePath);
 }
 
 class ProfileEntityCompanion extends UpdateCompanion<ProfileEntityData> {
   final Value<int> id;
   final Value<String> name;
+  final Value<String> imagePath;
   const ProfileEntityCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.imagePath = const Value.absent(),
   });
   ProfileEntityCompanion.insert({
     this.id = const Value.absent(),
     required String name,
-  }) : name = Value(name);
+    required String imagePath,
+  })  : name = Value(name),
+        imagePath = Value(imagePath);
   static Insertable<ProfileEntityData> custom({
     Expression<int>? id,
     Expression<String>? name,
+    Expression<String>? imagePath,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (imagePath != null) 'image_path': imagePath,
     });
   }
 
-  ProfileEntityCompanion copyWith({Value<int>? id, Value<String>? name}) {
+  ProfileEntityCompanion copyWith(
+      {Value<int>? id, Value<String>? name, Value<String>? imagePath}) {
     return ProfileEntityCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
+      imagePath: imagePath ?? this.imagePath,
     );
   }
 
@@ -170,6 +203,9 @@ class ProfileEntityCompanion extends UpdateCompanion<ProfileEntityData> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (imagePath.present) {
+      map['image_path'] = Variable<String>(imagePath.value);
+    }
     return map;
   }
 
@@ -177,7 +213,8 @@ class ProfileEntityCompanion extends UpdateCompanion<ProfileEntityData> {
   String toString() {
     return (StringBuffer('ProfileEntityCompanion(')
           ..write('id: $id, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('imagePath: $imagePath')
           ..write(')'))
         .toString();
   }
@@ -198,11 +235,13 @@ typedef $$ProfileEntityTableCreateCompanionBuilder = ProfileEntityCompanion
     Function({
   Value<int> id,
   required String name,
+  required String imagePath,
 });
 typedef $$ProfileEntityTableUpdateCompanionBuilder = ProfileEntityCompanion
     Function({
   Value<int> id,
   Value<String> name,
+  Value<String> imagePath,
 });
 
 class $$ProfileEntityTableFilterComposer
@@ -219,6 +258,9 @@ class $$ProfileEntityTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get imagePath => $composableBuilder(
+      column: $table.imagePath, builder: (column) => ColumnFilters(column));
 }
 
 class $$ProfileEntityTableOrderingComposer
@@ -235,6 +277,9 @@ class $$ProfileEntityTableOrderingComposer
 
   ColumnOrderings<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get imagePath => $composableBuilder(
+      column: $table.imagePath, builder: (column) => ColumnOrderings(column));
 }
 
 class $$ProfileEntityTableAnnotationComposer
@@ -251,6 +296,9 @@ class $$ProfileEntityTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get imagePath =>
+      $composableBuilder(column: $table.imagePath, builder: (column) => column);
 }
 
 class $$ProfileEntityTableTableManager extends RootTableManager<
@@ -282,18 +330,22 @@ class $$ProfileEntityTableTableManager extends RootTableManager<
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<String> name = const Value.absent(),
+            Value<String> imagePath = const Value.absent(),
           }) =>
               ProfileEntityCompanion(
             id: id,
             name: name,
+            imagePath: imagePath,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
             required String name,
+            required String imagePath,
           }) =>
               ProfileEntityCompanion.insert(
             id: id,
             name: name,
+            imagePath: imagePath,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

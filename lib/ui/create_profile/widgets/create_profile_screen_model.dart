@@ -99,7 +99,10 @@ class CreateProfileScreenModel extends ChangeNotifier {
   }
 
   Future<void> _saveProfileDate() async {
-    final profile = ProfileDomain(nameTextController.text);
+    final profile = ProfileDomain(
+      nameTextController.text,
+      imagePath: pickedImage!.path, // HANDLE ERROR!
+    );
     await _profileRepository.addProfile(profile);
   }
 
