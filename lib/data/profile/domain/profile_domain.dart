@@ -1,6 +1,13 @@
+import 'package:sport_matcher/data/profile/config/activities_config.dart';
+
 class ProfileDomain {
   final String name;
-  final String imagePath;
+  final String profileImagePath;
+  final Map<ActivitiesConfig, bool> activities;
 
-  ProfileDomain(this.name, {required this.imagePath});
+  ProfileDomain({
+    required this.name,
+    required this.profileImagePath,
+    required this.activities,
+  });
 }

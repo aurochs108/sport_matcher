@@ -68,10 +68,10 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                         const TitleMediumText(
                             text: "Select your favorite sports"),
                         ChipsCollectionView(
-                          items: widget._viewModel.activities,
-                          onSelectionChanged: (activity, isSelected) {
-                            widget._viewModel
-                                .updateActivites(activity, isSelected);
+                          items: widget._viewModel.displayActivities,
+                          onSelectionChanged: (activityName, isSelected) {
+                            widget._viewModel.updateActivitiesByDisplayName(
+                                activityName, isSelected);
                           },
                         ),
                       ],
@@ -92,9 +92,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   Widget photoPlaceholder(BuildContext context) {
     final viewModel = widget._viewModel;
-    final pickedImagePath = viewModel.getPickedImagePath();
+    final pickedProfileImagePath = viewModel.getPickedProfileImagePath();
     Widget content;
-    if (pickedImagePath case final imagePath?) {
+    if (pickedProfileImagePath case final imagePath?) {
       content = ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: SizedBox.expand(
@@ -123,7 +123,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         child: OutlinedButton(
           onPressed: viewModel.pickImage,
           style: OutlinedButton.styleFrom(
-            padding: pickedImagePath == null
+            padding: pickedProfileImagePath == null
                 ? const EdgeInsets.all(48)
                 : EdgeInsets.zero,
             side: BorderSide(color: AppTheme.primaryColor, width: 1),

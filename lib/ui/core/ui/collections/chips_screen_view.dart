@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_selectable_button.dart';
 
-
 class ChipsCollectionView extends StatefulWidget {
   final Map<String, bool> items;
   final void Function(String, bool) onSelectionChanged;

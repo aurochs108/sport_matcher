@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sport_matcher/data/profile/config/activities_config.dart';
 import 'package:sport_matcher/data/profile/config/profile_config.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
@@ -13,17 +14,10 @@ class CreateProfileScreenModel extends ChangeNotifier {
   XFile? pickedImage;
   final nameTextController = TextEditingController();
   final AbstractTextValidator nameValidator;
-  final Map<String, bool> _activities = {
-    "Bike": false,
-    "Climbing": false,
-    "Football": false,
-    "Hockey": false,
-    "Ping Pong": false,
-    "Running": false,
-    "Tennis": false,
-    "Voleyball": false,
+  final Map<ActivitiesConfig, bool> _activities = {
+    for (final activity in ProfileConfig.activities) activity: false,
   };
-  Map<String, bool> get activities => Map.unmodifiable(_activities);
+  Map<ActivitiesConfig, bool> get activities => Map.unmodifiable(_activities);
   var isNextButtonActive = false;
   final AbstractProfilesRepository _profileRepository;
   Function()? onStateChanged;
@@ -39,7 +33,43 @@ class CreateProfileScreenModel extends ChangeNotifier {
     nameTextController.addListener(_updateSaveButtonState);
   }
 
-  void updateActivites(String activity, bool isSelected) {
+  Map<String, bool> mapActivitiesToDisplayNames(
+      Map<ActivitiesConfig, bool> activities) {
+    return {
+      for (final entry in activities.entries)
+        _mapActivityToDisplayName(entry.key): entry.value,
+    };
+  }
+
+  String _mapActivityToDisplayName(ActivitiesConfig activity) {
+    switch (activity) {
+      case ActivitiesConfig.bike:
+        return 'Bike';
+      case ActivitiesConfig.climbing:
+        return 'Climbing';
+      case ActivitiesConfig.football:
+        return 'Football';
+      case ActivitiesConfig.hockey:
+        return 'Hockey';
+      case ActivitiesConfig.pingPong:
+        return 'Ping Pong';
+      case ActivitiesConfig.running:
+        return 'Running';
+      case ActivitiesConfig.tennis:
+        return 'Tennis';
+      case ActivitiesConfig.voleyball:
+        return 'Voleyball';
+    }
+  }
+
+  Map<String, bool> get displayActivities =>
+      mapActivitiesToDisplayNames(_activities);
+
+
+  void updateActivitiesByDisplayName(String displayName, bool isSelected) {
+    final activity = _activities.keys.firstWhere(
+      (activity) => _mapActivityToDisplayName(activity) == displayName,
+    );
     _activities[activity] = isSelected;
     _updateSaveButtonState();
   }
@@ -78,7 +108,7 @@ class CreateProfileScreenModel extends ChangeNotifier {
     }
   }
 
-  String? getPickedImagePath() {
+  String? getPickedProfileImagePath() {
     return pickedImage?.path;
   }
 
@@ -100,8 +130,9 @@ class CreateProfileScreenModel extends ChangeNotifier {
 
   Future<void> _saveProfileDate() async {
     final profile = ProfileDomain(
-      nameTextController.text,
-      imagePath: pickedImage!.path, // HANDLE ERROR!
+      name: nameTextController.text,
+      profileImagePath: pickedImage!.path, // TODO: HANDLE ERROR!
+      activities: Map<ActivitiesConfig, bool>.from(_activities),
     );
     await _profileRepository.addProfile(profile);
   }
