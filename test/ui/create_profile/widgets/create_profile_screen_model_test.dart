@@ -1,10 +1,12 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sport_matcher/data/profile/config/activities_config.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
 import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen.dart';
@@ -162,11 +164,17 @@ void main() {
         // given
         when(nameValidator.validate(any)).thenReturn(null);
 
-        imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
+        final profileImagePath = 'path/to/image.jpg';
+        imagePicker.pickedImageReturnValue = XFile(profileImagePath);
         await sut.pickImage();
 
         sut.nameTextController.text = Uuid().v4();
 
+        final activityToSelect = ActivitiesConfig.values.first;
+        final expectedActivities = {
+          for (final activity in ActivitiesConfig.values) activity: false,
+        };
+        expectedActivities[activityToSelect] = true;
         sut.updateActivitiesByDisplayName(sut.displayActivities.keys.first, true);
 
         when(profileRepository.addProfile(any)).thenAnswer((_) async {});
@@ -184,7 +192,10 @@ void main() {
 
         verify(profileRepository.addProfile(argThat(
           predicate<ProfileDomain?>((profile) {
-            return profile != null && profile.name == sut.nameTextController.text;
+            return profile != null 
+            && profile.name == sut.nameTextController.text
+            && profile.profileImagePath == profileImagePath
+            && mapEquals(profile.activities, expectedActivities);
           }),
         ))).called(1);
       });
