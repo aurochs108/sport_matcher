@@ -14,6 +14,7 @@ import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validat
 import 'package:sport_matcher/ui/create_profile/widgets/create_profile_screen_model.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../mocks/mock_image_picker.dart';
 import '../../../mocks/mock_navigator_observer.dart';
 import '../../../utilities/build_context_provider.dart';
 import '../../../utilities/random_string.dart';
@@ -23,24 +24,6 @@ import 'create_profile_screen_model_test.mocks.dart';
   AbstractTextValidator,
   AbstractProfilesRepository,
 ])
-class MockImagePicker extends ImagePicker {
-  MockImagePicker();
-
-  XFile? pickedImageReturnValue;
-
-  @override
-  Future<XFile?> pickImage({
-    required ImageSource source,
-    double? maxWidth,
-    double? maxHeight,
-    int? imageQuality,
-    CameraDevice preferredCameraDevice = CameraDevice.rear,
-    bool requestFullMetadata = true,
-  }) async {
-    return pickedImageReturnValue;
-  }
-}
-
 void main() {
   group('CreateProfileScreenModel', () {
     late MockImagePicker imagePicker;
@@ -50,6 +33,7 @@ void main() {
 
     setUp(() {
       nameValidator = MockAbstractTextValidator();
+      when(nameValidator.validate(any)).thenReturn('Invalid name');
       profileRepository = MockAbstractProfilesRepository();
       imagePicker = MockImagePicker();
       sut = CreateProfileScreenModel(
@@ -57,6 +41,53 @@ void main() {
         profileRepository: profileRepository,
         imagePicker: imagePicker,
       );
+    });
+
+    // MARK: - pickImage
+
+    test('should update picked image path on successful image pick', () async {
+      // given
+      final expectedImagePath = 'path/to/image.jpg';
+      imagePicker.pickedImageReturnValue = XFile(expectedImagePath);
+
+      // when
+      await sut.pickImage();
+
+      // then
+      expect(sut.getPickedProfileImagePath(), expectedImagePath);
+    });
+
+      test('should update picked image path when image is not picked', () async {
+        // given
+        imagePicker.pickedImageReturnValue = null;
+  
+        // when
+        await sut.pickImage();
+  
+        // then
+        expect(sut.getPickedProfileImagePath(), isNull);
+      });
+
+    // MARK: - displayActivities
+
+    test('should map activities to display names', () {
+      // given
+      final expectedDisplayActivities = {
+        'Bike': false,
+        'Climbing': false,
+        'Football': false,
+        'Hockey': false,
+        'Ping Pong': false,
+        'Running': false,
+        'Tennis': false,
+        'Voleyball': false,
+      };
+
+      // when
+      final displayActivities = sut.displayActivities;
+
+      // then
+      expect(displayActivities, expectedDisplayActivities);
     });
 
     // MARK: - updateActivitiesByDisplayName
