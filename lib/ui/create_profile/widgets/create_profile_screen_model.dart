@@ -15,7 +15,7 @@ class CreateProfileScreenModel extends ChangeNotifier {
   final nameTextController = TextEditingController();
   final AbstractTextValidator nameValidator;
   final Map<ActivitiesConfig, bool> _activities = {
-    for (final activity in ProfileConfig.activities) activity: false,
+    for (final activity in ActivitiesConfig.values) activity: false,
   };
   Map<ActivitiesConfig, bool> get activities => Map.unmodifiable(_activities);
   var isNextButtonActive = false;
@@ -33,12 +33,23 @@ class CreateProfileScreenModel extends ChangeNotifier {
     nameTextController.addListener(_updateSaveButtonState);
   }
 
-  Map<String, bool> mapActivitiesToDisplayNames(
+  Map<String, bool> get displayActivities =>
+      _mapActivitiesToDisplayNames(_activities);
+
+  Map<String, bool> _mapActivitiesToDisplayNames(
       Map<ActivitiesConfig, bool> activities) {
     return {
       for (final entry in activities.entries)
         _mapActivityToDisplayName(entry.key): entry.value,
     };
+  }
+
+  void updateActivitiesByDisplayName(String displayName, bool isSelected) {
+    final activity = _activities.keys.firstWhere(
+      (activity) => _mapActivityToDisplayName(activity) == displayName,
+    );
+    _activities[activity] = isSelected;
+    _updateSaveButtonState();
   }
 
   String _mapActivityToDisplayName(ActivitiesConfig activity) {
@@ -60,18 +71,6 @@ class CreateProfileScreenModel extends ChangeNotifier {
       case ActivitiesConfig.voleyball:
         return 'Voleyball';
     }
-  }
-
-  Map<String, bool> get displayActivities =>
-      mapActivitiesToDisplayNames(_activities);
-
-
-  void updateActivitiesByDisplayName(String displayName, bool isSelected) {
-    final activity = _activities.keys.firstWhere(
-      (activity) => _mapActivityToDisplayName(activity) == displayName,
-    );
-    _activities[activity] = isSelected;
-    _updateSaveButtonState();
   }
 
   void _updateSaveButtonState() {

@@ -10,28 +10,13 @@ class ProfileMapper {
       name: Value(domain.name),
       profileImagePath: Value(domain.profileImagePath),
       bike: Value(_isSelected(domain.activities, ActivitiesConfig.bike)),
-      climbing:
-          Value(_isSelected(domain.activities, ActivitiesConfig.climbing)),
-      football:
-          Value(_isSelected(domain.activities, ActivitiesConfig.football)),
+      climbing: Value(_isSelected(domain.activities, ActivitiesConfig.climbing)),
+      football: Value(_isSelected(domain.activities, ActivitiesConfig.football)),
       hockey: Value(_isSelected(domain.activities, ActivitiesConfig.hockey)),
-      pingPong:
-          Value(_isSelected(domain.activities, ActivitiesConfig.pingPong)),
+      pingPong: Value(_isSelected(domain.activities, ActivitiesConfig.pingPong)),
       running: Value(_isSelected(domain.activities, ActivitiesConfig.running)),
       tennis: Value(_isSelected(domain.activities, ActivitiesConfig.tennis)),
-      voleyball:
-          Value(_isSelected(domain.activities, ActivitiesConfig.voleyball)),
-    );
-  }
-
-  ProfileDomain toDomain(ProfileEntityData entity) {
-    return ProfileDomain(
-      name: entity.name,
-      profileImagePath: entity.profileImagePath,
-      activities: {
-        for (final activity in ProfileConfig.activities)
-          activity: _toSelectionMap(entity, activity),
-      },
+      voleyball: Value(_isSelected(domain.activities, ActivitiesConfig.voleyball)),
     );
   }
 
@@ -40,6 +25,18 @@ class ProfileMapper {
     return activities[activity] ?? false;
   }
 
+
+  ProfileDomain toDomain(ProfileEntityData entity) {
+    return ProfileDomain(
+      name: entity.name,
+      profileImagePath: entity.profileImagePath,
+      activities: {
+        for (final activity in ActivitiesConfig.values)
+          activity: _toSelectionMap(entity, activity),
+      },
+    );
+  }
+  
   bool _toSelectionMap(ProfileEntityData entity, ActivitiesConfig activity) {
     switch (activity) {
       case ActivitiesConfig.bike:
