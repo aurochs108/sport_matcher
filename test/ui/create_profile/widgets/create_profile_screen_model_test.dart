@@ -13,6 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../mocks/mock_navigator_observer.dart';
+import '../../../utilities/build_context_provider.dart';
 import '../../../utilities/random_string.dart';
 import 'create_profile_screen_model_test.mocks.dart';
 
@@ -76,10 +77,12 @@ void main() {
 
     // MARK: - next button activation
 
-    test(
+    testWidgets(
         'should activate next button when has selected image, name is valid and has selected activities',
-        () async {
+        (WidgetTester tester) async {
       // given
+      final buildContext = await BuildContextProvider.get(tester);
+
       when(nameValidator.validate(any)).thenReturn(null);
       imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
 
@@ -96,11 +99,14 @@ void main() {
       sut.updateActivitiesByDisplayName(activity, true);
 
       // then
-      expect(sut.isNextButtonActive, isTrue);
+      expect(sut.getNextButtonAction(buildContext), isNotNull);
     });
 
-    test('should deactivate next button when name is invalid', () async {
+    testWidgets('should deactivate next button when name is invalid',
+        (WidgetTester tester) async {
       // given
+      final buildContext = await BuildContextProvider.get(tester);
+
       imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
       await sut.pickImage();
 
@@ -117,13 +123,15 @@ void main() {
           randomString.nextString(length: Random().nextInt(10));
 
       // then
-      expect(sut.isNextButtonActive, isFalse);
+      expect(sut.getNextButtonAction(buildContext), isNull);
     });
 
-    test(
+    testWidgets(
         'should have active next button and when user unselect activity next button should be deactivated',
-        () async {
+        (WidgetTester tester) async {
       // given
+      final buildContext = await BuildContextProvider.get(tester);
+
       imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
       await sut.pickImage();
 
@@ -138,13 +146,13 @@ void main() {
   
       sut.updateActivitiesByDisplayName(activity, true);
 
-      expect(sut.isNextButtonActive, isTrue);
+      expect(sut.getNextButtonAction(buildContext), isNotNull);
 
       // when
       sut.updateActivitiesByDisplayName(activity, false);
 
       // then
-      expect(sut.isNextButtonActive, isFalse);
+      expect(sut.getNextButtonAction(buildContext), isNull);
     });
 
       // MARK: - getNextButtonAction
@@ -231,5 +239,5 @@ void main() {
 
         verifyNever(profileRepository.addProfile(any));
       });
-  });
+   });
 }

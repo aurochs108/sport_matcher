@@ -17,8 +17,7 @@ class CreateProfileScreenModel extends ChangeNotifier {
   final Map<ActivitiesConfig, bool> _activities = {
     for (final activity in ActivitiesConfig.values) activity: false,
   };
-  Map<ActivitiesConfig, bool> get activities => Map.unmodifiable(_activities);
-  var isNextButtonActive = false;
+  var _isNextButtonActive = false;
   final AbstractProfilesRepository _profileRepository;
   Function()? onStateChanged;
 
@@ -102,22 +101,22 @@ class CreateProfileScreenModel extends ChangeNotifier {
   }
 
   void _updateSaveButtonState() {
-    isNextButtonActive = _pickedImage != null &&
+    _isNextButtonActive = _pickedImage != null &&
         nameValidator.validate(nameTextController.text) == null &&
         _hasSelectedActivities();
     onStateChanged?.call();
   }
 
   bool _hasSelectedActivities() {
-    return activities.values
-        .firstWhere((isSelected) => isSelected, orElse: () => false);
+    return _activities.values.any((isSelected) => isSelected);
   }
 
   VoidCallback? getNextButtonAction(BuildContext buildContext) {
-    if (isNextButtonActive) {
+    if (_isNextButtonActive) {
+      final navigator = Navigator.of(buildContext);
       return () {
         _saveProfileDate().then((_) {
-          Navigator.of(buildContext).push(
+          navigator.push(
             MaterialPageRoute(
               builder: (_) => BottomNavigationBarScreen(),
             ),

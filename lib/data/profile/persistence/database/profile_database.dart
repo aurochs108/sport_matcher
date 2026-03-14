@@ -9,11 +9,19 @@ part 'profile_database.g.dart';
 @DriftDatabase(tables: [ProfileEntity])
 class ProfileDatabase extends _$ProfileDatabase
     implements AbstractProfileDatabase {
-  // After generating code, this class needs to define a `schemaVersion` getter
-  // and a constructor telling drift where the database should be stored.
-  // These are described in the getting started guide: https://drift.simonbinder.eu/setup/
-  ProfileDatabase({QueryExecutor? executor})
-      : super(executor ?? _openConnection());
+  static final ProfileDatabase _singleton = ProfileDatabase._internal();
+
+  factory ProfileDatabase({QueryExecutor? executor}) {
+    if (executor != null) {
+      return ProfileDatabase._withExecutor(executor);
+    }
+
+    return _singleton;
+  }
+
+  ProfileDatabase._internal() : super(_openConnection());
+
+  ProfileDatabase._withExecutor(QueryExecutor executor) : super(executor);
 
   @override
   int get schemaVersion => 1;
