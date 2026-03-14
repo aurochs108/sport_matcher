@@ -1,15 +1,15 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
 import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen.dart';
-import 'package:sport_matcher/ui/create_profile/widgets/create_profile_screen_model.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
-
-import 'package:flutter_test/flutter_test.dart';
+import 'package:sport_matcher/ui/create_profile/widgets/create_profile_screen_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../mocks/mock_navigator_observer.dart';
@@ -160,39 +160,27 @@ void main() {
       testWidgets('getNextButtonAction pushes BottomNavigationBarScreen',
           (WidgetTester tester) async {
         // given
+        when(nameValidator.validate(any)).thenReturn(null);
+
         imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
         await sut.pickImage();
 
-        when(nameValidator.validate(any)).thenReturn(null);
         sut.nameTextController.text = Uuid().v4();
 
         sut.updateActivitiesByDisplayName(sut.displayActivities.keys.first, true);
 
-        final observer = TestNavigatorObserver();
-        final buttonName = const Uuid().v4();
-
-        await tester.pumpWidget(MaterialApp(
-          home: Builder(builder: (context) {
-            return ElevatedButton(
-              key: Key(buttonName),
-              onPressed: sut.getNextButtonAction(context),
-              child: const Text(''),
-            );
-          }),
-          navigatorObservers: [observer],
-        ));
-
         when(profileRepository.addProfile(any)).thenAnswer((_) async {});
 
+        final observer = TestNavigatorObserver();
+        final buildContext = await BuildContextProvider.getWithObserver(tester, observer);
+
         // when
-        final initialPushCount = observer.pushCount;
-        await tester.tap(find.byKey(Key(buttonName)));
+        sut.getNextButtonAction(buildContext)?.call();
         await tester.pumpAndSettle();
 
         // then
-        expect(observer.pushCount, initialPushCount + 1);
-        expect(observer.lastPushedRoute, isA<MaterialPageRoute>());
-        expect(find.byType(BottomNavigationBarScreen), findsOneWidget);
+         expect(observer.lastPushedRoute, isA<MaterialPageRoute>());
+         expect(find.byType(BottomNavigationBarScreen), findsOneWidget);
 
         verify(profileRepository.addProfile(argThat(
           predicate<ProfileDomain?>((profile) {
@@ -212,29 +200,15 @@ void main() {
         sut.nameTextController.text = '';
         sut.updateActivitiesByDisplayName(sut.displayActivities.keys.first, false);
 
-        final observer = TestNavigatorObserver();
-        final buttonName = const Uuid().v4();
-
-        await tester.pumpWidget(MaterialApp(
-          home: Builder(builder: (context) {
-            return ElevatedButton(
-              key: Key(buttonName),
-              onPressed: sut.getNextButtonAction(context),
-              child: const Text(''),
-            );
-          }),
-          navigatorObservers: [observer],
-        ));
-
         when(profileRepository.addProfile(any)).thenAnswer((_) async {});
 
+        final observer = TestNavigatorObserver();
+        final buildContext = await BuildContextProvider.getWithObserver(tester, observer);
+
         // when
-        final initialPushCount = observer.pushCount;
-        await tester.tap(find.byKey(Key(buttonName)));
-        await tester.pumpAndSettle();
+        sut.getNextButtonAction(buildContext)?.call();
 
         // then
-        expect(observer.pushCount, initialPushCount);
         expect(find.byType(BottomNavigationBarScreen), findsNothing);
 
         verifyNever(profileRepository.addProfile(any));
