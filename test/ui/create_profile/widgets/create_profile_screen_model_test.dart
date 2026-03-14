@@ -1,23 +1,42 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
 import 'package:sport_matcher/ui/create_profile/widgets/create_profile_screen_model.dart';
-import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../utilities/random_string.dart';
-import '../../../mocks/mock_navigator_observer.dart';
 import 'create_profile_screen_model_test.mocks.dart';
 
-@GenerateMocks([AbstractTextValidator, AbstractProfilesRepository])
+@GenerateMocks([
+  AbstractTextValidator,
+  AbstractProfilesRepository,
+])
+
+class MockImagePicker extends ImagePicker {
+  MockImagePicker();
+
+  XFile? pickedImageReturnValue;
+
+  @override
+  Future<XFile?> pickImage({
+    required ImageSource source,
+    double? maxWidth,
+    double? maxHeight,
+    int? imageQuality,
+    CameraDevice preferredCameraDevice = CameraDevice.rear,
+    bool requestFullMetadata = true,
+  }) async {
+    return pickedImageReturnValue;
+  }
+}
+
 void main() {
   group('CreateProfileScreenModel', () {
+    late MockImagePicker imagePicker;
     late MockAbstractTextValidator nameValidator;
     late MockAbstractProfilesRepository profileRepository;
     late CreateProfileScreenModel sut;
@@ -25,9 +44,11 @@ void main() {
     setUp(() {
       nameValidator = MockAbstractTextValidator();
       profileRepository = MockAbstractProfilesRepository();
+      imagePicker = MockImagePicker();
       sut = CreateProfileScreenModel(
         nameValidator: nameValidator,
         profileRepository: profileRepository,
+        imagePicker: imagePicker,
       );
     });
 
@@ -49,26 +70,30 @@ void main() {
       expect(sut.displayActivities, activitiesCopy);
     });
 
-  //   // MARK: - next button activation
+    // MARK: - next button activation
 
-  //   test(
-  //       'should activate next button when name is valid and has selected activities',
-  //       () {
-  //     // given
-  //     when(nameValidator.validate(any)).thenReturn(null);
+    test(
+        'should activate next button when has selected image, name is valid and has selected activities',
+        () async {
+      // given
+      when(nameValidator.validate(any)).thenReturn(null);
+      imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
 
-  //     // when
-  //     final randomString = RandomString();
-  //     sut.nameTextController.text =
-  //         randomString.nextString(length: Random().nextInt(10));
+      // when
+      await sut.pickImage();
 
-  //     final activitiesKeys = sut.activities.keys.toList();
-  //     final activity = activitiesKeys.first;
-  //     sut.updateActivites(activity, true);
+      final randomString = RandomString();
+      sut.nameTextController.text =
+          randomString.nextString(length: Random().nextInt(10));
 
-  //     // then
-  //     expect(sut.isNextButtonActive, isTrue);
-  //   });
+      final activitiesKeys = sut.displayActivities.keys.toList();
+      activitiesKeys.shuffle();
+      final activity = activitiesKeys.first;
+      sut.updateActivitiesByDisplayName(activity, true);
+
+      // then
+      expect(sut.isNextButtonActive, isTrue);
+    });
 
   //   test('should deactivate next button when name is invalid', () {
   //     // given

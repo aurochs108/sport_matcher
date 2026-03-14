@@ -64,6 +64,8 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                           title: "Name",
                           validator: widget._viewModel.nameValidator,
                           textCapitalization: TextCapitalization.words,
+                          autocorrect: false,
+                          enableSuggestions: false,
                         ),
                         const TitleMediumText(
                             text: "Select your favorite sports"),

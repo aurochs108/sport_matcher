@@ -10,8 +10,8 @@ import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validat
 import 'package:sport_matcher/ui/core/utilities/validators/text_length_validator.dart';
 
 class CreateProfileScreenModel extends ChangeNotifier {
-  final ImagePicker _picker = ImagePicker();
-  XFile? pickedImage;
+  final ImagePicker _picker;
+  XFile? _pickedImage;
   final nameTextController = TextEditingController();
   final AbstractTextValidator nameValidator;
   final Map<ActivitiesConfig, bool> _activities = {
@@ -25,12 +25,40 @@ class CreateProfileScreenModel extends ChangeNotifier {
   CreateProfileScreenModel({
     AbstractTextValidator? nameValidator,
     AbstractProfilesRepository? profileRepository,
+    ImagePicker? imagePicker,
   })  : nameValidator = nameValidator ??
             TextLengthValidator(
                 minimumLength: ProfileConfig.nameMinLength,
                 maximumLength: ProfileConfig.nameMaxLength),
-        _profileRepository = profileRepository ?? ProfilesRepository() {
+        _profileRepository = profileRepository ?? ProfilesRepository(),
+        _picker = imagePicker ?? ImagePicker() {
     nameTextController.addListener(_updateSaveButtonState);
+  }
+
+  Future<void> pickImage() async {
+    _pickedImage = null;
+    onStateChanged?.call();
+    _updateSaveButtonState();
+
+    try {
+      final XFile? picked = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 100,
+      );
+
+      if (picked != null) {
+        _pickedImage = picked;
+        onStateChanged?.call();
+        _updateSaveButtonState();
+      }
+    } catch (e) {
+      // TODO handle error
+      print('Image pick error: $e');
+    }
+  }
+
+  String? getPickedProfileImagePath() {
+    return _pickedImage?.path;
   }
 
   Map<String, bool> get displayActivities =>
@@ -74,7 +102,7 @@ class CreateProfileScreenModel extends ChangeNotifier {
   }
 
   void _updateSaveButtonState() {
-    isNextButtonActive = pickedImage != null &&
+    isNextButtonActive = _pickedImage != null &&
         nameValidator.validate(nameTextController.text) == null &&
         _hasSelectedActivities();
     onStateChanged?.call();
@@ -83,32 +111,6 @@ class CreateProfileScreenModel extends ChangeNotifier {
   bool _hasSelectedActivities() {
     return activities.values
         .firstWhere((isSelected) => isSelected, orElse: () => false);
-  }
-
-  void pickImage() async {
-    pickedImage = null;
-    onStateChanged?.call();
-    _updateSaveButtonState();
-
-    try {
-      final XFile? picked = await _picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 100,
-      );
-
-      if (picked != null) {
-        pickedImage = picked;
-        onStateChanged?.call();
-        _updateSaveButtonState();
-      }
-    } catch (e) {
-      // TODO handle error
-      print('Image pick error: $e');
-    }
-  }
-
-  String? getPickedProfileImagePath() {
-    return pickedImage?.path;
   }
 
   VoidCallback? getNextButtonAction(BuildContext buildContext) {
@@ -130,7 +132,7 @@ class CreateProfileScreenModel extends ChangeNotifier {
   Future<void> _saveProfileDate() async {
     final profile = ProfileDomain(
       name: nameTextController.text,
-      profileImagePath: pickedImage!.path, // TODO: HANDLE ERROR!
+      profileImagePath: _pickedImage!.path, // TODO: HANDLE ERROR!
       activities: Map<ActivitiesConfig, bool>.from(_activities),
     );
     await _profileRepository.addProfile(profile);

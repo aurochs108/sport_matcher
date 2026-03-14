@@ -1,6 +1,5 @@
 import 'package:drift/drift.dart';
 import 'package:sport_matcher/data/profile/config/activities_config.dart';
-import 'package:sport_matcher/data/profile/config/profile_config.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/data/profile/persistence/database/profile_database.dart';
 
