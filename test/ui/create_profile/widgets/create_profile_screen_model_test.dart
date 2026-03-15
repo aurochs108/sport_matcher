@@ -1,83 +1,173 @@
 import 'dart:math';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sport_matcher/data/profile/config/activities_config.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
-import 'package:sport_matcher/ui/create_profile/widgets/create_profile_screen_model.dart';
 import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
-
-import 'package:flutter_test/flutter_test.dart';
+import 'package:sport_matcher/ui/create_profile/widgets/create_profile_screen_model.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../utilities/random_string.dart';
+import '../../../mocks/mock_image_picker.dart';
 import '../../../mocks/mock_navigator_observer.dart';
+import '../../../utilities/build_context_provider.dart';
+import '../../../utilities/random_string.dart';
 import 'create_profile_screen_model_test.mocks.dart';
 
-@GenerateMocks([AbstractTextValidator, AbstractProfilesRepository])
+@GenerateMocks([
+  AbstractTextValidator,
+  AbstractProfilesRepository,
+])
 void main() {
   group('CreateProfileScreenModel', () {
+    late MockImagePicker imagePicker;
     late MockAbstractTextValidator nameValidator;
     late MockAbstractProfilesRepository profileRepository;
+    var onStateChangedCallCount = 0;
     late CreateProfileScreenModel sut;
 
     setUp(() {
       nameValidator = MockAbstractTextValidator();
+      when(nameValidator.validate(any)).thenReturn('Invalid name');
       profileRepository = MockAbstractProfilesRepository();
+      imagePicker = MockImagePicker();
       sut = CreateProfileScreenModel(
         nameValidator: nameValidator,
         profileRepository: profileRepository,
+        imagePicker: imagePicker,
       );
+      sut.onStateChanged = () {
+        onStateChangedCallCount++;
+      };
     });
 
-    // MARK: - updateActivites
+    // MARK: - pickImage
 
-    test('should update activities', () {
+    test('should update picked image path on successful image pick', () async {
       // given
-      when(nameValidator.validate(any)).thenReturn(null);
+      final expectedImagePath = 'path/to/image.jpg';
+      imagePicker.pickedImageReturnValue = XFile(expectedImagePath);
 
-      final activitiesKeys = sut.activities.keys.toList();
+      final actualOnStateChangedCallCount = onStateChangedCallCount;
+
+      // when
+      await sut.pickImage();
+
+      // then
+      expect(sut.getPickedProfileImagePath(), expectedImagePath);
+      expect(actualOnStateChangedCallCount + 4, onStateChangedCallCount);
+    });
+
+    test('should update picked image path when image is not picked', () async {
+      // given
+      imagePicker.pickedImageReturnValue = null;
+
+      final actualOnStateChangedCallCount = onStateChangedCallCount;
+
+      // when
+      await sut.pickImage();
+
+      // then
+      expect(sut.getPickedProfileImagePath(), isNull);
+      expect(actualOnStateChangedCallCount + 2, onStateChangedCallCount);
+    });
+
+    // MARK: - displayActivities
+
+    test('should map activities to display names', () {
+      // given
+      final expectedDisplayActivities = {
+        'Bike': false,
+        'Climbing': false,
+        'Football': false,
+        'Hockey': false,
+        'Ping Pong': false,
+        'Running': false,
+        'Tennis': false,
+        'Voleyball': false,
+      };
+
+      // when
+      final displayActivities = sut.displayActivities;
+
+      // then
+      expect(displayActivities, expectedDisplayActivities);
+    });
+
+    // MARK: - updateActivitiesByDisplayName
+
+    test('should update activities by display name', () {
+      // given
+      final activitiesKeys = sut.displayActivities.keys.toList();
       activitiesKeys.shuffle();
       final activity = activitiesKeys.first;
       final expectedIsSelected = Random().nextBool();
-      var activitiesCopy = Map<String, bool>.from(sut.activities);
+      var activitiesCopy = Map<String, bool>.from(sut.displayActivities);
+
+      final actualOnStateChangedCallCount = onStateChangedCallCount;
 
       // when
-      sut.updateActivites(activity, expectedIsSelected);
+      sut.updateActivitiesByDisplayName(activity, expectedIsSelected);
 
       // then
       activitiesCopy[activity] = expectedIsSelected;
-      expect(sut.activities, activitiesCopy);
+      expect(sut.displayActivities, activitiesCopy);
+      expect(actualOnStateChangedCallCount + 1, onStateChangedCallCount);
     });
 
     // MARK: - next button activation
 
-    test(
-        'should activate next button when name is valid and has selected activities',
-        () {
+    testWidgets(
+        'should activate next button when has selected image, name is valid and has selected activities',
+        (WidgetTester tester) async {
       // given
+      final buildContext = await BuildContextProvider.get(tester);
+
       when(nameValidator.validate(any)).thenReturn(null);
+      imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
+
+      final actualOnStateChangedCallCount = onStateChangedCallCount;
 
       // when
+      await sut.pickImage();
+
       final randomString = RandomString();
       sut.nameTextController.text =
           randomString.nextString(length: Random().nextInt(10));
 
-      final activitiesKeys = sut.activities.keys.toList();
+      final activitiesKeys = sut.displayActivities.keys.toList();
+      activitiesKeys.shuffle();
       final activity = activitiesKeys.first;
-      sut.updateActivites(activity, true);
+      sut.updateActivitiesByDisplayName(activity, true);
 
       // then
-      expect(sut.isNextButtonActive, isTrue);
+      expect(sut.getNextButtonAction(buildContext), isNotNull);
+      expect(
+          onStateChangedCallCount, greaterThan(actualOnStateChangedCallCount));
     });
 
-    test('should deactivate next button when name is invalid', () {
+    testWidgets('should deactivate next button when name is invalid',
+        (WidgetTester tester) async {
       // given
+      final buildContext = await BuildContextProvider.get(tester);
+
+      imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
+      await sut.pickImage();
+
       when(nameValidator.validate(any)).thenReturn('Invalid name');
-      final activitiesKeys = sut.activities.keys.toList();
+
+      final activitiesKeys = sut.displayActivities.keys.toList();
+      activitiesKeys.shuffle();
       final activity = activitiesKeys.first;
-      sut.updateActivites(activity, true);
+      sut.updateActivitiesByDisplayName(activity, true);
+
+      final actualOnStateChangedCallCount = onStateChangedCallCount;
 
       // when
       final randomString = RandomString();
@@ -85,29 +175,40 @@ void main() {
           randomString.nextString(length: Random().nextInt(10));
 
       // then
-      expect(sut.isNextButtonActive, isFalse);
+      expect(sut.getNextButtonAction(buildContext), isNull);
+      expect(actualOnStateChangedCallCount + 1, onStateChangedCallCount);
     });
 
-    test(
-        'should have active next button and when user unselect acitivity next button should be deactivated',
-        () {
+    testWidgets(
+        'should have active next button and when user unselect activity next button should be deactivated',
+        (WidgetTester tester) async {
       // given
+      final buildContext = await BuildContextProvider.get(tester);
+
+      imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
+      await sut.pickImage();
+
       when(nameValidator.validate(any)).thenReturn(null);
       final randomString = RandomString();
       sut.nameTextController.text =
           randomString.nextString(length: Random().nextInt(10));
 
-      final activitiesKeys = sut.activities.keys.toList();
+      final activitiesKeys = sut.displayActivities.keys.toList();
+      activitiesKeys.shuffle();
       final activity = activitiesKeys.first;
-      sut.updateActivites(activity, true);
 
-      expect(sut.isNextButtonActive, isTrue);
+      sut.updateActivitiesByDisplayName(activity, true);
+
+      expect(sut.getNextButtonAction(buildContext), isNotNull);
+
+      final actualOnStateChangedCallCount = onStateChangedCallCount;
 
       // when
-      sut.updateActivites(activity, false);
+      sut.updateActivitiesByDisplayName(activity, false);
 
       // then
-      expect(sut.isNextButtonActive, isFalse);
+      expect(sut.getNextButtonAction(buildContext), isNull);
+      expect(actualOnStateChangedCallCount + 1, onStateChangedCallCount);
     });
 
     // MARK: - getNextButtonAction
@@ -116,39 +217,40 @@ void main() {
         (WidgetTester tester) async {
       // given
       when(nameValidator.validate(any)).thenReturn(null);
+
+      final profileImagePath = 'path/to/image.jpg';
+      imagePicker.pickedImageReturnValue = XFile(profileImagePath);
+      await sut.pickImage();
+
       sut.nameTextController.text = Uuid().v4();
 
-      sut.updateActivites(sut.activities.keys.first, true);
-
-      final observer = TestNavigatorObserver();
-      final buttonName = const Uuid().v4();
-
-      await tester.pumpWidget(MaterialApp(
-        home: Builder(builder: (context) {
-          return ElevatedButton(
-            key: Key(buttonName),
-            onPressed: sut.getNextButtonAction(context),
-            child: const Text(''),
-          );
-        }),
-        navigatorObservers: [observer],
-      ));
+      final activityToSelect = ActivitiesConfig.values.first;
+      final expectedActivities = {
+        for (final activity in ActivitiesConfig.values) activity: false,
+      };
+      expectedActivities[activityToSelect] = true;
+      sut.updateActivitiesByDisplayName(sut.displayActivities.keys.first, true);
 
       when(profileRepository.addProfile(any)).thenAnswer((_) async {});
 
+      final observer = TestNavigatorObserver();
+      final buildContext =
+          await BuildContextProvider.getWithObserver(tester, observer);
+
       // when
-      final initialPushCount = observer.pushCount;
-      await tester.tap(find.byKey(Key(buttonName)));
+      sut.getNextButtonAction(buildContext)?.call();
       await tester.pumpAndSettle();
 
       // then
-      expect(observer.pushCount, initialPushCount + 1);
       expect(observer.lastPushedRoute, isA<MaterialPageRoute>());
       expect(find.byType(BottomNavigationBarScreen), findsOneWidget);
 
       verify(profileRepository.addProfile(argThat(
         predicate<ProfileDomain?>((profile) {
-          return profile != null && profile.name == sut.nameTextController.text;
+          return profile != null &&
+              profile.name == sut.nameTextController.text &&
+              profile.profileImagePath == profileImagePath &&
+              mapEquals(profile.activities, expectedActivities);
         }),
       ))).called(1);
     });
@@ -156,35 +258,25 @@ void main() {
     testWidgets('getNextButtonAction does nothing when button is inactive',
         (WidgetTester tester) async {
       // given
+      imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
+      await sut.pickImage();
 
       when(nameValidator.validate(any)).thenReturn(null);
 
       sut.nameTextController.text = '';
-      sut.updateActivites(sut.activities.keys.first, false);
-
-      final observer = TestNavigatorObserver();
-      final buttonName = const Uuid().v4();
-
-      await tester.pumpWidget(MaterialApp(
-        home: Builder(builder: (context) {
-          return ElevatedButton(
-            key: Key(buttonName),
-            onPressed: sut.getNextButtonAction(context),
-            child: const Text(''),
-          );
-        }),
-        navigatorObservers: [observer],
-      ));
+      sut.updateActivitiesByDisplayName(
+          sut.displayActivities.keys.first, false);
 
       when(profileRepository.addProfile(any)).thenAnswer((_) async {});
 
+      final observer = TestNavigatorObserver();
+      final buildContext =
+          await BuildContextProvider.getWithObserver(tester, observer);
+
       // when
-      final initialPushCount = observer.pushCount;
-      await tester.tap(find.byKey(Key(buttonName)));
-      await tester.pumpAndSettle();
+      sut.getNextButtonAction(buildContext)?.call();
 
       // then
-      expect(observer.pushCount, initialPushCount);
       expect(find.byType(BottomNavigationBarScreen), findsNothing);
 
       verifyNever(profileRepository.addProfile(any));

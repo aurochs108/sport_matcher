@@ -7,6 +7,8 @@ class PlainTextField extends StatelessWidget {
   final String _title;
   final AbstractTextValidator? _validator;
   final TextCapitalization _textCapitalization;
+  final bool _autocorrect;
+  final bool _enableSuggestions;
 
   const PlainTextField({
     super.key,
@@ -15,15 +17,21 @@ class PlainTextField extends StatelessWidget {
     required String title,
     AbstractTextValidator? validator,
     TextCapitalization textCapitalization = TextCapitalization.none,
+    bool autocorrect = true,
+    bool enableSuggestions = true,
   })  : _keyboardType = keyboardType,
         _controller = controller,
         _title = title,
         _validator = validator,
-        _textCapitalization = textCapitalization;
+        _textCapitalization = textCapitalization,
+        _autocorrect = autocorrect,
+        _enableSuggestions = enableSuggestions;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autocorrect: _autocorrect,
+      enableSuggestions: _enableSuggestions,
       textCapitalization: _textCapitalization,
       keyboardType: _keyboardType,
       controller: _controller,

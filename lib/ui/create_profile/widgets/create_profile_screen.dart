@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:io';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/collections/chips_screen_view.dart';
@@ -48,28 +50,34 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      PlainTextField(
-                        controller: widget._viewModel.nameTextController,
-                        title: "Name",
-                        validator: widget._viewModel.nameValidator,
-                        textCapitalization: TextCapitalization.words,
-                      ),
-                      const SizedBox(height: AppTheme.columnSpacingMedium),
-                      const TitleMediumText(
-                          text: "Select your favorite sports"),
-                      const SizedBox(height: AppTheme.columnSpacingMedium),
-                      ChipsCollectionView(
-                        items: widget._viewModel.activities,
-                        onSelectionChanged: (activity, isSelected) {
-                          widget._viewModel
-                              .updateActivites(activity, isSelected);
-                        },
-                      ),
-                      const SizedBox(height: AppTheme.columnSpacingMedium),
-                    ],
+                  child: Padding(
+                    padding: AppTheme.columnVerticalPaddings(context),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: AppTheme.columnSpacingMedium,
+                      children: [
+                        Center(
+                          child: photoPlaceholder(context),
+                        ),
+                        PlainTextField(
+                          controller: widget._viewModel.nameTextController,
+                          title: "Name",
+                          validator: widget._viewModel.nameValidator,
+                          textCapitalization: TextCapitalization.words,
+                          autocorrect: false,
+                          enableSuggestions: false,
+                        ),
+                        const TitleMediumText(
+                            text: "Select your favorite sports"),
+                        ChipsCollectionView(
+                          items: widget._viewModel.displayActivities,
+                          onSelectionChanged: (activityName, isSelected) {
+                            widget._viewModel.updateActivitiesByDisplayName(
+                                activityName, isSelected);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -79,6 +87,52 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget photoPlaceholder(BuildContext context) {
+    final viewModel = widget._viewModel;
+    final pickedProfileImagePath = viewModel.getPickedProfileImagePath();
+    Widget content;
+    if (pickedProfileImagePath case final imagePath?) {
+      content = ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: SizedBox.expand(
+          child: Image.file(
+            File(imagePath),
+            fit: BoxFit.cover,
+          ),
+        ),
+      );
+    } else {
+      content = Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: SizedBox(
+          child: SvgPicture.asset(
+            'lib/ui/create_profile/assets/photo_placeholder.svg',
+            fit: BoxFit.contain,
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 48.0),
+      child: AspectRatio(
+        aspectRatio: 1.0,
+        child: OutlinedButton(
+          onPressed: viewModel.pickImage,
+          style: OutlinedButton.styleFrom(
+            padding: pickedProfileImagePath == null
+                ? const EdgeInsets.all(48)
+                : EdgeInsets.zero,
+            side: BorderSide(color: AppTheme.primaryColor, width: 1),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            minimumSize: Size.zero,
+          ),
+          child: content,
         ),
       ),
     );

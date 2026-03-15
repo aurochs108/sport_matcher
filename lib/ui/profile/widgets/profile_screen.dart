@@ -46,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         builder: (context, snapshot) {
                           final profileName = snapshot.data?.name;
                           return TitleMediumText(
-                              text: profileName ?? "Missing profile data");
+                              text: profileName ?? "Missing profile data"); // TODO: add error handling with error logging
                         },
                       ),
                     ],
