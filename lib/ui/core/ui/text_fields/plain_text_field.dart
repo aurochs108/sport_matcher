@@ -23,9 +23,9 @@ class PlainTextField extends StatelessWidget {
         _controller = controller,
         _title = title,
         _validator = validator,
-      _textCapitalization = textCapitalization,
-      _autocorrect = autocorrect,
-      _enableSuggestions = enableSuggestions;
+        _textCapitalization = textCapitalization,
+        _autocorrect = autocorrect,
+        _enableSuggestions = enableSuggestions;
 
   @override
   Widget build(BuildContext context) {
