@@ -4,6 +4,9 @@ class AppTheme {
   // Colors
   static const Color primaryColor = Color(0xFF34568A);
 
+  // Corners
+  static const double borderRadius = 8.0;
+
   // Paddings
   static const _horizontalPadding = 24.0;
   static const _verticalPadding = 24.0;

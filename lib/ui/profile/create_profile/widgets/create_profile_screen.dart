@@ -7,6 +7,7 @@ import 'package:sport_matcher/ui/core/ui/collections/chips_screen_view.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
 import 'package:sport_matcher/ui/core/ui/texts/title_medium_text.dart';
 import 'package:sport_matcher/ui/profile/create_profile/widgets/create_profile_screen_model.dart';
+import 'package:sport_matcher/ui/profile/profile_photo/widgets/profile_photo_screen.dart';
 
 class CreateProfileScreen extends StatefulWidget {
   final CreateProfileScreenModel _viewModel;
@@ -97,15 +98,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     final pickedProfileImagePath = viewModel.getPickedProfileImagePath();
     Widget content;
     if (pickedProfileImagePath case final imagePath?) {
-      content = ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: SizedBox.expand(
-          child: Image.file(
-            File(imagePath),
-            fit: BoxFit.cover,
-          ),
-        ),
-      );
+      content = ProfilePhotoView(imagePath: imagePath);
     } else {
       content = Padding(
         padding: const EdgeInsets.all(24.0),
