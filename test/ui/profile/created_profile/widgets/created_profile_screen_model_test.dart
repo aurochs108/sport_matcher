@@ -2,20 +2,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
-import 'package:sport_matcher/ui/profile/widgets/profile_screen_model.dart';
+import 'package:sport_matcher/ui/profile/created_profile/widgets/created_profile_screen_model.dart';
 
-import '../../../random/profile_domain_random.dart';
-import 'profile_screen_model_test.mocks.dart';
+import '../../../../random/profile_domain_random.dart';
+import 'created_profile_screen_model_test.mocks.dart';
 
 @GenerateMocks([AbstractProfilesRepository])
 void main() {
-  group('ProfileScreenModel', () {
+  group('CreatedProfileScreenModel', () {
     late MockAbstractProfilesRepository mockProfilesRepository;
-    late ProfileScreenModel sut;
+    late CreatedProfileScreenModel sut;
 
     setUp(() {
       mockProfilesRepository = MockAbstractProfilesRepository();
-      sut = ProfileScreenModel(profilesRepository: mockProfilesRepository);
+      sut = CreatedProfileScreenModel(profilesRepository: mockProfilesRepository);
     });
 
     test('loadProfile returns profile from repository', () async {

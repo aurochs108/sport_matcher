@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/texts/title_medium_text.dart';
-import 'profile_screen_model.dart';
+import 'created_profile_screen_model.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class CreatedProfileScreen extends StatefulWidget {
+  const CreatedProfileScreen({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _ProfileScreenState();
+    return _CreatedProfileScreenState();
   }
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  final _viewModel = ProfileScreenModel();
+class _CreatedProfileScreenState extends State<CreatedProfileScreen> {
+  final _viewModel = CreatedProfileScreenModel();
   late final Future<ProfileDomain?> _profileFuture;
 
   @override

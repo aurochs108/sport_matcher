@@ -11,13 +11,13 @@ import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
 import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
-import 'package:sport_matcher/ui/create_profile/widgets/create_profile_screen_model.dart';
+import 'package:sport_matcher/ui/profile/create_profile/widgets/create_profile_screen_model.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../mocks/mock_image_picker.dart';
-import '../../../mocks/mock_navigator_observer.dart';
-import '../../../utilities/build_context_provider.dart';
-import '../../../utilities/random_string.dart';
+import '../../../../mocks/mock_image_picker.dart';
+import '../../../../mocks/mock_navigator_observer.dart';
+import '../../../../utilities/build_context_provider.dart';
+import '../../../../utilities/random_string.dart';
 import 'create_profile_screen_model_test.mocks.dart';
 
 @GenerateMocks([

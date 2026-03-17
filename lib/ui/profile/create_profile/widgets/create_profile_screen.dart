@@ -6,7 +6,7 @@ import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/collections/chips_screen_view.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
 import 'package:sport_matcher/ui/core/ui/texts/title_medium_text.dart';
-import 'package:sport_matcher/ui/create_profile/widgets/create_profile_screen_model.dart';
+import 'package:sport_matcher/ui/profile/create_profile/widgets/create_profile_screen_model.dart';
 
 class CreateProfileScreen extends StatefulWidget {
   final CreateProfileScreenModel _viewModel;

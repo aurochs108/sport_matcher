@@ -12,122 +12,172 @@ class $ProfileEntityTable extends ProfileEntity
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultValue: const Constant(1));
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      additionalChecks: GeneratedColumn.checkTextLength(),
-      type: DriftSqlType.string,
-      requiredDuringInsert: true);
-  static const VerificationMeta _profileImagePathMeta =
-      const VerificationMeta('profileImagePath');
+    'name',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _profileImagePathMeta = const VerificationMeta(
+    'profileImagePath',
+  );
   @override
   late final GeneratedColumn<String> profileImagePath = GeneratedColumn<String>(
-      'profile_image_path', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+    'profile_image_path',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _bikeMeta = const VerificationMeta('bike');
   @override
   late final GeneratedColumn<bool> bike = GeneratedColumn<bool>(
-      'bike', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("bike" IN (0, 1))'),
-      defaultValue: const Constant(false));
-  static const VerificationMeta _climbingMeta =
-      const VerificationMeta('climbing');
+    'bike',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("bike" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _climbingMeta = const VerificationMeta(
+    'climbing',
+  );
   @override
   late final GeneratedColumn<bool> climbing = GeneratedColumn<bool>(
-      'climbing', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("climbing" IN (0, 1))'),
-      defaultValue: const Constant(false));
-  static const VerificationMeta _footballMeta =
-      const VerificationMeta('football');
+    'climbing',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("climbing" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _footballMeta = const VerificationMeta(
+    'football',
+  );
   @override
   late final GeneratedColumn<bool> football = GeneratedColumn<bool>(
-      'football', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("football" IN (0, 1))'),
-      defaultValue: const Constant(false));
+    'football',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("football" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _hockeyMeta = const VerificationMeta('hockey');
   @override
   late final GeneratedColumn<bool> hockey = GeneratedColumn<bool>(
-      'hockey', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("hockey" IN (0, 1))'),
-      defaultValue: const Constant(false));
-  static const VerificationMeta _pingPongMeta =
-      const VerificationMeta('pingPong');
+    'hockey',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("hockey" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _pingPongMeta = const VerificationMeta(
+    'pingPong',
+  );
   @override
   late final GeneratedColumn<bool> pingPong = GeneratedColumn<bool>(
-      'ping_pong', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("ping_pong" IN (0, 1))'),
-      defaultValue: const Constant(false));
-  static const VerificationMeta _runningMeta =
-      const VerificationMeta('running');
+    'ping_pong',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("ping_pong" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _runningMeta = const VerificationMeta(
+    'running',
+  );
   @override
   late final GeneratedColumn<bool> running = GeneratedColumn<bool>(
-      'running', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("running" IN (0, 1))'),
-      defaultValue: const Constant(false));
+    'running',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("running" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _tennisMeta = const VerificationMeta('tennis');
   @override
   late final GeneratedColumn<bool> tennis = GeneratedColumn<bool>(
-      'tennis', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("tennis" IN (0, 1))'),
-      defaultValue: const Constant(false));
-  static const VerificationMeta _voleyballMeta =
-      const VerificationMeta('voleyball');
+    'tennis',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("tennis" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _voleyballMeta = const VerificationMeta(
+    'voleyball',
+  );
   @override
   late final GeneratedColumn<bool> voleyball = GeneratedColumn<bool>(
-      'voleyball', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("voleyball" IN (0, 1))'),
-      defaultValue: const Constant(false));
+    'voleyball',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("voleyball" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
-        id,
-        name,
-        profileImagePath,
-        bike,
-        climbing,
-        football,
-        hockey,
-        pingPong,
-        running,
-        tennis,
-        voleyball
-      ];
+    id,
+    name,
+    profileImagePath,
+    bike,
+    climbing,
+    football,
+    hockey,
+    pingPong,
+    running,
+    tennis,
+    voleyball,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'profile_entity';
   @override
-  VerificationContext validateIntegrity(Insertable<ProfileEntityData> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<ProfileEntityData> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -135,49 +185,70 @@ class $ProfileEntityTable extends ProfileEntity
     }
     if (data.containsKey('name')) {
       context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (data.containsKey('profile_image_path')) {
       context.handle(
+        _profileImagePathMeta,
+        profileImagePath.isAcceptableOrUnknown(
+          data['profile_image_path']!,
           _profileImagePathMeta,
-          profileImagePath.isAcceptableOrUnknown(
-              data['profile_image_path']!, _profileImagePathMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_profileImagePathMeta);
     }
     if (data.containsKey('bike')) {
       context.handle(
-          _bikeMeta, bike.isAcceptableOrUnknown(data['bike']!, _bikeMeta));
+        _bikeMeta,
+        bike.isAcceptableOrUnknown(data['bike']!, _bikeMeta),
+      );
     }
     if (data.containsKey('climbing')) {
-      context.handle(_climbingMeta,
-          climbing.isAcceptableOrUnknown(data['climbing']!, _climbingMeta));
+      context.handle(
+        _climbingMeta,
+        climbing.isAcceptableOrUnknown(data['climbing']!, _climbingMeta),
+      );
     }
     if (data.containsKey('football')) {
-      context.handle(_footballMeta,
-          football.isAcceptableOrUnknown(data['football']!, _footballMeta));
+      context.handle(
+        _footballMeta,
+        football.isAcceptableOrUnknown(data['football']!, _footballMeta),
+      );
     }
     if (data.containsKey('hockey')) {
-      context.handle(_hockeyMeta,
-          hockey.isAcceptableOrUnknown(data['hockey']!, _hockeyMeta));
+      context.handle(
+        _hockeyMeta,
+        hockey.isAcceptableOrUnknown(data['hockey']!, _hockeyMeta),
+      );
     }
     if (data.containsKey('ping_pong')) {
-      context.handle(_pingPongMeta,
-          pingPong.isAcceptableOrUnknown(data['ping_pong']!, _pingPongMeta));
+      context.handle(
+        _pingPongMeta,
+        pingPong.isAcceptableOrUnknown(data['ping_pong']!, _pingPongMeta),
+      );
     }
     if (data.containsKey('running')) {
-      context.handle(_runningMeta,
-          running.isAcceptableOrUnknown(data['running']!, _runningMeta));
+      context.handle(
+        _runningMeta,
+        running.isAcceptableOrUnknown(data['running']!, _runningMeta),
+      );
     }
     if (data.containsKey('tennis')) {
-      context.handle(_tennisMeta,
-          tennis.isAcceptableOrUnknown(data['tennis']!, _tennisMeta));
+      context.handle(
+        _tennisMeta,
+        tennis.isAcceptableOrUnknown(data['tennis']!, _tennisMeta),
+      );
     }
     if (data.containsKey('voleyball')) {
-      context.handle(_voleyballMeta,
-          voleyball.isAcceptableOrUnknown(data['voleyball']!, _voleyballMeta));
+      context.handle(
+        _voleyballMeta,
+        voleyball.isAcceptableOrUnknown(data['voleyball']!, _voleyballMeta),
+      );
     }
     return context;
   }
@@ -188,28 +259,61 @@ class $ProfileEntityTable extends ProfileEntity
   ProfileEntityData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ProfileEntityData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      profileImagePath: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}profile_image_path'])!,
-      bike: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}bike'])!,
-      climbing: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}climbing'])!,
-      football: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}football'])!,
-      hockey: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}hockey'])!,
-      pingPong: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}ping_pong'])!,
-      running: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}running'])!,
-      tennis: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}tennis'])!,
-      voleyball: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}voleyball'])!,
+      id:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}id'],
+          )!,
+      name:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}name'],
+          )!,
+      profileImagePath:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}profile_image_path'],
+          )!,
+      bike:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.bool,
+            data['${effectivePrefix}bike'],
+          )!,
+      climbing:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.bool,
+            data['${effectivePrefix}climbing'],
+          )!,
+      football:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.bool,
+            data['${effectivePrefix}football'],
+          )!,
+      hockey:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.bool,
+            data['${effectivePrefix}hockey'],
+          )!,
+      pingPong:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.bool,
+            data['${effectivePrefix}ping_pong'],
+          )!,
+      running:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.bool,
+            data['${effectivePrefix}running'],
+          )!,
+      tennis:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.bool,
+            data['${effectivePrefix}tennis'],
+          )!,
+      voleyball:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.bool,
+            data['${effectivePrefix}voleyball'],
+          )!,
     );
   }
 
@@ -232,18 +336,19 @@ class ProfileEntityData extends DataClass
   final bool running;
   final bool tennis;
   final bool voleyball;
-  const ProfileEntityData(
-      {required this.id,
-      required this.name,
-      required this.profileImagePath,
-      required this.bike,
-      required this.climbing,
-      required this.football,
-      required this.hockey,
-      required this.pingPong,
-      required this.running,
-      required this.tennis,
-      required this.voleyball});
+  const ProfileEntityData({
+    required this.id,
+    required this.name,
+    required this.profileImagePath,
+    required this.bike,
+    required this.climbing,
+    required this.football,
+    required this.hockey,
+    required this.pingPong,
+    required this.running,
+    required this.tennis,
+    required this.voleyball,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -277,8 +382,10 @@ class ProfileEntityData extends DataClass
     );
   }
 
-  factory ProfileEntityData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory ProfileEntityData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ProfileEntityData(
       id: serializer.fromJson<int>(json['id']),
@@ -312,38 +419,39 @@ class ProfileEntityData extends DataClass
     };
   }
 
-  ProfileEntityData copyWith(
-          {int? id,
-          String? name,
-          String? profileImagePath,
-          bool? bike,
-          bool? climbing,
-          bool? football,
-          bool? hockey,
-          bool? pingPong,
-          bool? running,
-          bool? tennis,
-          bool? voleyball}) =>
-      ProfileEntityData(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        profileImagePath: profileImagePath ?? this.profileImagePath,
-        bike: bike ?? this.bike,
-        climbing: climbing ?? this.climbing,
-        football: football ?? this.football,
-        hockey: hockey ?? this.hockey,
-        pingPong: pingPong ?? this.pingPong,
-        running: running ?? this.running,
-        tennis: tennis ?? this.tennis,
-        voleyball: voleyball ?? this.voleyball,
-      );
+  ProfileEntityData copyWith({
+    int? id,
+    String? name,
+    String? profileImagePath,
+    bool? bike,
+    bool? climbing,
+    bool? football,
+    bool? hockey,
+    bool? pingPong,
+    bool? running,
+    bool? tennis,
+    bool? voleyball,
+  }) => ProfileEntityData(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    profileImagePath: profileImagePath ?? this.profileImagePath,
+    bike: bike ?? this.bike,
+    climbing: climbing ?? this.climbing,
+    football: football ?? this.football,
+    hockey: hockey ?? this.hockey,
+    pingPong: pingPong ?? this.pingPong,
+    running: running ?? this.running,
+    tennis: tennis ?? this.tennis,
+    voleyball: voleyball ?? this.voleyball,
+  );
   ProfileEntityData copyWithCompanion(ProfileEntityCompanion data) {
     return ProfileEntityData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
-      profileImagePath: data.profileImagePath.present
-          ? data.profileImagePath.value
-          : this.profileImagePath,
+      profileImagePath:
+          data.profileImagePath.present
+              ? data.profileImagePath.value
+              : this.profileImagePath,
       bike: data.bike.present ? data.bike.value : this.bike,
       climbing: data.climbing.present ? data.climbing.value : this.climbing,
       football: data.football.present ? data.football.value : this.football,
@@ -374,8 +482,19 @@ class ProfileEntityData extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(id, name, profileImagePath, bike, climbing,
-      football, hockey, pingPong, running, tennis, voleyball);
+  int get hashCode => Object.hash(
+    id,
+    name,
+    profileImagePath,
+    bike,
+    climbing,
+    football,
+    hockey,
+    pingPong,
+    running,
+    tennis,
+    voleyball,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -430,8 +549,8 @@ class ProfileEntityCompanion extends UpdateCompanion<ProfileEntityData> {
     this.running = const Value.absent(),
     this.tennis = const Value.absent(),
     this.voleyball = const Value.absent(),
-  })  : name = Value(name),
-        profileImagePath = Value(profileImagePath);
+  }) : name = Value(name),
+       profileImagePath = Value(profileImagePath);
   static Insertable<ProfileEntityData> custom({
     Expression<int>? id,
     Expression<String>? name,
@@ -460,18 +579,19 @@ class ProfileEntityCompanion extends UpdateCompanion<ProfileEntityData> {
     });
   }
 
-  ProfileEntityCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? name,
-      Value<String>? profileImagePath,
-      Value<bool>? bike,
-      Value<bool>? climbing,
-      Value<bool>? football,
-      Value<bool>? hockey,
-      Value<bool>? pingPong,
-      Value<bool>? running,
-      Value<bool>? tennis,
-      Value<bool>? voleyball}) {
+  ProfileEntityCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<String>? profileImagePath,
+    Value<bool>? bike,
+    Value<bool>? climbing,
+    Value<bool>? football,
+    Value<bool>? hockey,
+    Value<bool>? pingPong,
+    Value<bool>? running,
+    Value<bool>? tennis,
+    Value<bool>? voleyball,
+  }) {
     return ProfileEntityCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -556,34 +676,34 @@ abstract class _$ProfileDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [profileEntity];
 }
 
-typedef $$ProfileEntityTableCreateCompanionBuilder = ProfileEntityCompanion
-    Function({
-  Value<int> id,
-  required String name,
-  required String profileImagePath,
-  Value<bool> bike,
-  Value<bool> climbing,
-  Value<bool> football,
-  Value<bool> hockey,
-  Value<bool> pingPong,
-  Value<bool> running,
-  Value<bool> tennis,
-  Value<bool> voleyball,
-});
-typedef $$ProfileEntityTableUpdateCompanionBuilder = ProfileEntityCompanion
-    Function({
-  Value<int> id,
-  Value<String> name,
-  Value<String> profileImagePath,
-  Value<bool> bike,
-  Value<bool> climbing,
-  Value<bool> football,
-  Value<bool> hockey,
-  Value<bool> pingPong,
-  Value<bool> running,
-  Value<bool> tennis,
-  Value<bool> voleyball,
-});
+typedef $$ProfileEntityTableCreateCompanionBuilder =
+    ProfileEntityCompanion Function({
+      Value<int> id,
+      required String name,
+      required String profileImagePath,
+      Value<bool> bike,
+      Value<bool> climbing,
+      Value<bool> football,
+      Value<bool> hockey,
+      Value<bool> pingPong,
+      Value<bool> running,
+      Value<bool> tennis,
+      Value<bool> voleyball,
+    });
+typedef $$ProfileEntityTableUpdateCompanionBuilder =
+    ProfileEntityCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<String> profileImagePath,
+      Value<bool> bike,
+      Value<bool> climbing,
+      Value<bool> football,
+      Value<bool> hockey,
+      Value<bool> pingPong,
+      Value<bool> running,
+      Value<bool> tennis,
+      Value<bool> voleyball,
+    });
 
 class $$ProfileEntityTableFilterComposer
     extends Composer<_$ProfileDatabase, $ProfileEntityTable> {
@@ -595,38 +715,59 @@ class $$ProfileEntityTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnFilters(column));
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get profileImagePath => $composableBuilder(
-      column: $table.profileImagePath,
-      builder: (column) => ColumnFilters(column));
+    column: $table.profileImagePath,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get bike => $composableBuilder(
-      column: $table.bike, builder: (column) => ColumnFilters(column));
+    column: $table.bike,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get climbing => $composableBuilder(
-      column: $table.climbing, builder: (column) => ColumnFilters(column));
+    column: $table.climbing,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get football => $composableBuilder(
-      column: $table.football, builder: (column) => ColumnFilters(column));
+    column: $table.football,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get hockey => $composableBuilder(
-      column: $table.hockey, builder: (column) => ColumnFilters(column));
+    column: $table.hockey,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get pingPong => $composableBuilder(
-      column: $table.pingPong, builder: (column) => ColumnFilters(column));
+    column: $table.pingPong,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get running => $composableBuilder(
-      column: $table.running, builder: (column) => ColumnFilters(column));
+    column: $table.running,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get tennis => $composableBuilder(
-      column: $table.tennis, builder: (column) => ColumnFilters(column));
+    column: $table.tennis,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get voleyball => $composableBuilder(
-      column: $table.voleyball, builder: (column) => ColumnFilters(column));
+    column: $table.voleyball,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$ProfileEntityTableOrderingComposer
@@ -639,38 +780,59 @@ class $$ProfileEntityTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnOrderings(column));
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get profileImagePath => $composableBuilder(
-      column: $table.profileImagePath,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.profileImagePath,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get bike => $composableBuilder(
-      column: $table.bike, builder: (column) => ColumnOrderings(column));
+    column: $table.bike,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get climbing => $composableBuilder(
-      column: $table.climbing, builder: (column) => ColumnOrderings(column));
+    column: $table.climbing,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get football => $composableBuilder(
-      column: $table.football, builder: (column) => ColumnOrderings(column));
+    column: $table.football,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get hockey => $composableBuilder(
-      column: $table.hockey, builder: (column) => ColumnOrderings(column));
+    column: $table.hockey,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get pingPong => $composableBuilder(
-      column: $table.pingPong, builder: (column) => ColumnOrderings(column));
+    column: $table.pingPong,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get running => $composableBuilder(
-      column: $table.running, builder: (column) => ColumnOrderings(column));
+    column: $table.running,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get tennis => $composableBuilder(
-      column: $table.tennis, builder: (column) => ColumnOrderings(column));
+    column: $table.tennis,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get voleyball => $composableBuilder(
-      column: $table.voleyball, builder: (column) => ColumnOrderings(column));
+    column: $table.voleyball,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$ProfileEntityTableAnnotationComposer
@@ -689,7 +851,9 @@ class $$ProfileEntityTableAnnotationComposer
       $composableBuilder(column: $table.name, builder: (column) => column);
 
   GeneratedColumn<String> get profileImagePath => $composableBuilder(
-      column: $table.profileImagePath, builder: (column) => column);
+    column: $table.profileImagePath,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<bool> get bike =>
       $composableBuilder(column: $table.bike, builder: (column) => column);
@@ -716,106 +880,133 @@ class $$ProfileEntityTableAnnotationComposer
       $composableBuilder(column: $table.voleyball, builder: (column) => column);
 }
 
-class $$ProfileEntityTableTableManager extends RootTableManager<
-    _$ProfileDatabase,
-    $ProfileEntityTable,
-    ProfileEntityData,
-    $$ProfileEntityTableFilterComposer,
-    $$ProfileEntityTableOrderingComposer,
-    $$ProfileEntityTableAnnotationComposer,
-    $$ProfileEntityTableCreateCompanionBuilder,
-    $$ProfileEntityTableUpdateCompanionBuilder,
-    (
-      ProfileEntityData,
-      BaseReferences<_$ProfileDatabase, $ProfileEntityTable, ProfileEntityData>
-    ),
-    ProfileEntityData,
-    PrefetchHooks Function()> {
+class $$ProfileEntityTableTableManager
+    extends
+        RootTableManager<
+          _$ProfileDatabase,
+          $ProfileEntityTable,
+          ProfileEntityData,
+          $$ProfileEntityTableFilterComposer,
+          $$ProfileEntityTableOrderingComposer,
+          $$ProfileEntityTableAnnotationComposer,
+          $$ProfileEntityTableCreateCompanionBuilder,
+          $$ProfileEntityTableUpdateCompanionBuilder,
+          (
+            ProfileEntityData,
+            BaseReferences<
+              _$ProfileDatabase,
+              $ProfileEntityTable,
+              ProfileEntityData
+            >,
+          ),
+          ProfileEntityData,
+          PrefetchHooks Function()
+        > {
   $$ProfileEntityTableTableManager(
-      _$ProfileDatabase db, $ProfileEntityTable table)
-      : super(TableManagerState(
+    _$ProfileDatabase db,
+    $ProfileEntityTable table,
+  ) : super(
+        TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () =>
-              $$ProfileEntityTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$ProfileEntityTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$ProfileEntityTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String> name = const Value.absent(),
-            Value<String> profileImagePath = const Value.absent(),
-            Value<bool> bike = const Value.absent(),
-            Value<bool> climbing = const Value.absent(),
-            Value<bool> football = const Value.absent(),
-            Value<bool> hockey = const Value.absent(),
-            Value<bool> pingPong = const Value.absent(),
-            Value<bool> running = const Value.absent(),
-            Value<bool> tennis = const Value.absent(),
-            Value<bool> voleyball = const Value.absent(),
-          }) =>
-              ProfileEntityCompanion(
-            id: id,
-            name: name,
-            profileImagePath: profileImagePath,
-            bike: bike,
-            climbing: climbing,
-            football: football,
-            hockey: hockey,
-            pingPong: pingPong,
-            running: running,
-            tennis: tennis,
-            voleyball: voleyball,
-          ),
-          createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            required String name,
-            required String profileImagePath,
-            Value<bool> bike = const Value.absent(),
-            Value<bool> climbing = const Value.absent(),
-            Value<bool> football = const Value.absent(),
-            Value<bool> hockey = const Value.absent(),
-            Value<bool> pingPong = const Value.absent(),
-            Value<bool> running = const Value.absent(),
-            Value<bool> tennis = const Value.absent(),
-            Value<bool> voleyball = const Value.absent(),
-          }) =>
-              ProfileEntityCompanion.insert(
-            id: id,
-            name: name,
-            profileImagePath: profileImagePath,
-            bike: bike,
-            climbing: climbing,
-            football: football,
-            hockey: hockey,
-            pingPong: pingPong,
-            running: running,
-            tennis: tennis,
-            voleyball: voleyball,
-          ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
+          createFilteringComposer:
+              () => $$ProfileEntityTableFilterComposer($db: db, $table: table),
+          createOrderingComposer:
+              () =>
+                  $$ProfileEntityTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer:
+              () => $$ProfileEntityTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> profileImagePath = const Value.absent(),
+                Value<bool> bike = const Value.absent(),
+                Value<bool> climbing = const Value.absent(),
+                Value<bool> football = const Value.absent(),
+                Value<bool> hockey = const Value.absent(),
+                Value<bool> pingPong = const Value.absent(),
+                Value<bool> running = const Value.absent(),
+                Value<bool> tennis = const Value.absent(),
+                Value<bool> voleyball = const Value.absent(),
+              }) => ProfileEntityCompanion(
+                id: id,
+                name: name,
+                profileImagePath: profileImagePath,
+                bike: bike,
+                climbing: climbing,
+                football: football,
+                hockey: hockey,
+                pingPong: pingPong,
+                running: running,
+                tennis: tennis,
+                voleyball: voleyball,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                required String profileImagePath,
+                Value<bool> bike = const Value.absent(),
+                Value<bool> climbing = const Value.absent(),
+                Value<bool> football = const Value.absent(),
+                Value<bool> hockey = const Value.absent(),
+                Value<bool> pingPong = const Value.absent(),
+                Value<bool> running = const Value.absent(),
+                Value<bool> tennis = const Value.absent(),
+                Value<bool> voleyball = const Value.absent(),
+              }) => ProfileEntityCompanion.insert(
+                id: id,
+                name: name,
+                profileImagePath: profileImagePath,
+                bike: bike,
+                climbing: climbing,
+                football: football,
+                hockey: hockey,
+                pingPong: pingPong,
+                running: running,
+                tennis: tennis,
+                voleyball: voleyball,
+              ),
+          withReferenceMapper:
+              (p0) =>
+                  p0
+                      .map(
+                        (e) => (
+                          e.readTable(table),
+                          BaseReferences(db, table, e),
+                        ),
+                      )
+                      .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$ProfileEntityTableProcessedTableManager = ProcessedTableManager<
-    _$ProfileDatabase,
-    $ProfileEntityTable,
-    ProfileEntityData,
-    $$ProfileEntityTableFilterComposer,
-    $$ProfileEntityTableOrderingComposer,
-    $$ProfileEntityTableAnnotationComposer,
-    $$ProfileEntityTableCreateCompanionBuilder,
-    $$ProfileEntityTableUpdateCompanionBuilder,
-    (
+typedef $$ProfileEntityTableProcessedTableManager =
+    ProcessedTableManager<
+      _$ProfileDatabase,
+      $ProfileEntityTable,
       ProfileEntityData,
-      BaseReferences<_$ProfileDatabase, $ProfileEntityTable, ProfileEntityData>
-    ),
-    ProfileEntityData,
-    PrefetchHooks Function()>;
+      $$ProfileEntityTableFilterComposer,
+      $$ProfileEntityTableOrderingComposer,
+      $$ProfileEntityTableAnnotationComposer,
+      $$ProfileEntityTableCreateCompanionBuilder,
+      $$ProfileEntityTableUpdateCompanionBuilder,
+      (
+        ProfileEntityData,
+        BaseReferences<
+          _$ProfileDatabase,
+          $ProfileEntityTable,
+          ProfileEntityData
+        >,
+      ),
+      ProfileEntityData,
+      PrefetchHooks Function()
+    >;
 
 class $ProfileDatabaseManager {
   final _$ProfileDatabase _db;

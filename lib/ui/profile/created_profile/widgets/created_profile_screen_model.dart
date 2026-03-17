@@ -3,10 +3,10 @@ import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
 import 'package:sport_matcher/data/profile/repository/profiles_repository.dart';
 
-class ProfileScreenModel extends ChangeNotifier {
+class CreatedProfileScreenModel extends ChangeNotifier {
   final AbstractProfilesRepository _profilesRepository;
 
-  ProfileScreenModel({AbstractProfilesRepository? profilesRepository})
+  CreatedProfileScreenModel({AbstractProfilesRepository? profilesRepository})
       : _profilesRepository = profilesRepository ?? ProfilesRepository();
 
   Future<ProfileDomain?> loadProfile() async {
