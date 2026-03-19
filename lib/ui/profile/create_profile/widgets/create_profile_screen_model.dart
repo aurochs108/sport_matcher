@@ -67,37 +67,16 @@ class CreateProfileScreenModel extends ChangeNotifier {
       Map<ActivitiesConfig, bool> activities) {
     return {
       for (final entry in activities.entries)
-        _mapActivityToDisplayName(entry.key): entry.value,
+        entry.key.displayName: entry.value,
     };
   }
 
   void updateActivitiesByDisplayName(String displayName, bool isSelected) {
     final activity = _activities.keys.firstWhere(
-      (activity) => _mapActivityToDisplayName(activity) == displayName,
+      (activity) => activity.displayName == displayName,
     );
     _activities[activity] = isSelected;
     _updateSaveButtonState();
-  }
-
-  String _mapActivityToDisplayName(ActivitiesConfig activity) {
-    switch (activity) {
-      case ActivitiesConfig.bike:
-        return 'Bike';
-      case ActivitiesConfig.climbing:
-        return 'Climbing';
-      case ActivitiesConfig.football:
-        return 'Football';
-      case ActivitiesConfig.hockey:
-        return 'Hockey';
-      case ActivitiesConfig.pingPong:
-        return 'Ping Pong';
-      case ActivitiesConfig.running:
-        return 'Running';
-      case ActivitiesConfig.tennis:
-        return 'Tennis';
-      case ActivitiesConfig.voleyball:
-        return 'Voleyball';
-    }
   }
 
   void _updateSaveButtonState() {

@@ -17,7 +17,7 @@ class CreatedProfileScreenModel extends ChangeNotifier {
     return Map.fromEntries(
       profile?.activities.entries
               .where((e) => e.value)
-              .map((e) => MapEntry(e.key.name, true)) ??
+              .map((e) => MapEntry(e.key.displayName, true)) ??
           [],
     );
   }
