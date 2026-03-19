@@ -60,9 +60,8 @@ class _CreatedProfileScreenState extends State<CreatedProfileScreen> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 48.0),
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  height: 200,
+                                child: AspectRatio(
+                                  aspectRatio: 1.0,
                                   child: ProfilePhotoView(imagePath: imagePath),
                                 ),
                               ),
