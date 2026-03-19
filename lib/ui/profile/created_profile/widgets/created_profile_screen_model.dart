@@ -12,4 +12,13 @@ class CreatedProfileScreenModel extends ChangeNotifier {
   Future<ProfileDomain?> loadProfile() async {
     return await _profilesRepository.loadProfile();
   }
+
+  Map<String, bool> selectedActivities(ProfileDomain? profile) {
+    return Map.fromEntries(
+      profile?.activities.entries
+              .where((e) => e.value)
+              .map((e) => MapEntry(e.key.name, true)) ??
+          [],
+    );
+  }
 }

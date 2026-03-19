@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class RoundedSelectableButton extends StatefulWidget {
   final String title;
-  final ValueChanged<bool> onSelectionChanged;
+  final ValueChanged<bool>? onSelectionChanged;
 
   const RoundedSelectableButton(
-      {super.key, required this.title, required this.onSelectionChanged});
+      {super.key, required this.title, this.onSelectionChanged});
 
   @override
   State<StatefulWidget> createState() {
@@ -19,12 +19,14 @@ class _RoundedSelectableButtonState extends State<RoundedSelectableButton> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          isSelected = !isSelected;
-        });
-        widget.onSelectionChanged(isSelected);
-      },
+      onPressed: widget.onSelectionChanged != null
+          ? () {
+              setState(() {
+                isSelected = !isSelected;
+              });
+              widget.onSelectionChanged!(isSelected);
+            }
+          : null,
       style: _getButtonStyle(),
       child: Text(
         widget.title,

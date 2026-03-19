@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:io';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/collections/chips_screen_view.dart';
@@ -57,9 +56,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: AppTheme.columnSpacingMedium,
                       children: [
-                        Center(
-                          child: photoPlaceholder(context),
-                        ),
+                        Center(child: photoPlaceholder(context)),
                         PlainTextField(
                           controller: widget._viewModel.nameTextController,
                           title: "Name",
@@ -69,12 +66,15 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                           enableSuggestions: false,
                         ),
                         const TitleMediumText(
-                            text: "Select your favorite sports"),
+                          text: "Select your favorite sports",
+                        ),
                         ChipsCollectionView(
                           items: widget._viewModel.displayActivities,
                           onSelectionChanged: (activityName, isSelected) {
                             widget._viewModel.updateActivitiesByDisplayName(
-                                activityName, isSelected);
+                              activityName,
+                              isSelected,
+                            );
                           },
                         ),
                       ],
@@ -104,7 +104,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         padding: const EdgeInsets.all(24.0),
         child: SizedBox(
           child: SvgPicture.asset(
-            'lib/ui/create_profile/assets/photo_placeholder.svg',
+            'lib/ui/profile/create_profile/assets/photo_placeholder.svg',
             fit: BoxFit.contain,
           ),
         ),
@@ -118,11 +118,14 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         child: OutlinedButton(
           onPressed: viewModel.pickImage,
           style: OutlinedButton.styleFrom(
-            padding: pickedProfileImagePath == null
-                ? const EdgeInsets.all(48)
-                : EdgeInsets.zero,
+            padding:
+                pickedProfileImagePath == null
+                    ? const EdgeInsets.all(48)
+                    : EdgeInsets.zero,
             side: BorderSide(color: AppTheme.primaryColor, width: 1),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
             minimumSize: Size.zero,
           ),
           child: content,

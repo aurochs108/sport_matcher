@@ -4,12 +4,12 @@ import 'package:sport_matcher/ui/core/ui/buttons/rounded_selectable_button.dart'
 
 class ChipsCollectionView extends StatefulWidget {
   final Map<String, bool> items;
-  final void Function(String, bool) onSelectionChanged;
+  final void Function(String, bool)? onSelectionChanged;
 
   ChipsCollectionView({
     super.key,
     required Map<String, bool> items,
-    required this.onSelectionChanged,
+    this.onSelectionChanged,
   }) : items = Map<String, bool>.from(items);
 
   @override
@@ -33,14 +33,17 @@ class _ChipsCollectionViewState extends State<ChipsCollectionView> {
   }
 
   Widget _activityButton(String item) {
+    final callback = widget.onSelectionChanged;
     return RoundedSelectableButton(
       title: item,
-      onSelectionChanged: (isSelected) {
-        setState(() {
-          widget.items[item] = isSelected;
-        });
-        widget.onSelectionChanged(item, isSelected);
-      },
+      onSelectionChanged: callback != null
+          ? (isSelected) {
+              setState(() {
+                widget.items[item] = isSelected;
+              });
+              callback(item, isSelected);
+            }
+          : null,
     );
   }
 }
