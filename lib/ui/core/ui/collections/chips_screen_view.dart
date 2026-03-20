@@ -36,6 +36,7 @@ class _ChipsCollectionViewState extends State<ChipsCollectionView> {
     final callback = widget.onSelectionChanged;
     return RoundedSelectableButton(
       title: item,
+      initiallySelected: widget.items[item] ?? false,
       onSelectionChanged: callback != null
           ? (isSelected) {
               setState(() {

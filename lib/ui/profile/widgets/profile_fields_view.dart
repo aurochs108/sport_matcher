@@ -43,7 +43,7 @@ class ProfileFieldsView extends StatelessWidget {
             border: InputBorder.none,
           ),
           child: ChipsCollectionView(
-            items: selectedActivities,
+            items: {for (final key in selectedActivities.keys) key: false},
           ),
         ),
       ],

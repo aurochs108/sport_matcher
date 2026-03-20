@@ -56,8 +56,19 @@ class CreateProfileScreenModel extends ChangeNotifier {
     }
   }
 
+  String? _existingImagePath;
+
   String? getPickedProfileImagePath() {
-    return _pickedImage?.path;
+    return _pickedImage?.path ?? _existingImagePath;
+  }
+
+  void loadFromProfile(ProfileDomain profile) {
+    nameTextController.text = profile.name;
+    _existingImagePath = profile.profileImagePath;
+    for (final entry in profile.activities.entries) {
+      _activities[entry.key] = entry.value;
+    }
+    _updateSaveButtonState();
   }
 
   Map<String, bool> get displayActivities =>

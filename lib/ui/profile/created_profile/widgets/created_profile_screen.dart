@@ -36,45 +36,48 @@ class _CreatedProfileScreenState extends State<CreatedProfileScreen> {
         ),
         body: Padding(
           padding: AppTheme.horizontalAndBottomPadding(context),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FutureBuilder<ProfileDomain?>(
-                        future: _profileFuture,
-                        builder: (context, snapshot) {
-                          final profile = snapshot.data;
-                          final profileName = profile?.name;
-                          final imagePath = profile?.profileImagePath ?? '';
+          child: FutureBuilder<ProfileDomain?>(
+            future: _profileFuture,
+            builder: (context, snapshot) {
+              final profile = snapshot.data;
+              final profileName = profile?.name;
+              final imagePath = profile?.profileImagePath ?? '';
 
-                          final selectedActivities = _viewModel
-                              .selectedActivities(profile);
+              final selectedActivities = _viewModel
+                  .selectedActivities(profile);
 
-                          return ProfileFieldsView(
+              return Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ProfileFieldsView(
                             imagePath: imagePath,
                             profileName: profileName ?? "Missing profile data",
                             selectedActivities: selectedActivities,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              RoundedButton(
-                buttonTitle: "Update",
-                onPressed:
-                    () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const EditProfileScreen(),
+                          ),
+                        ],
                       ),
                     ),
-              ),
-            ],
+                  ),
+                  RoundedButton(
+                    buttonTitle: "Update",
+                    onPressed: profile != null
+                        ? () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => EditProfileScreen(
+                                  profile: profile,
+                                ),
+                              ),
+                            )
+                        : null,
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
