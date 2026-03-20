@@ -35,10 +35,6 @@ class CreateProfileScreenModel extends ChangeNotifier {
   }
 
   Future<void> pickImage() async {
-    _pickedImage = null;
-    onStateChanged?.call();
-    _updateSaveButtonState();
-
     try {
       final XFile? picked = await _picker.pickImage(
         source: ImageSource.gallery,
