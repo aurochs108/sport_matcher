@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
-import 'package:sport_matcher/ui/profile/create_profile/widgets/create_profile_screen_model.dart';
+import 'package:sport_matcher/ui/profile/edit_profile/widgets/edit_profile_screen_model.dart';
 import 'package:sport_matcher/ui/profile/widgets/profile_form_fields.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -15,7 +15,7 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final _viewModel = CreateProfileScreenModel();
+  final _viewModel = EditProfileScreenModel();
 
   @override
   void initState() {
@@ -49,7 +49,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     imagePath: _viewModel.getPickedProfileImagePath(),
                     onPickImage: _viewModel.pickImage,
                     nameController: _viewModel.nameTextController,
-                    nameValidator: _viewModel.nameValidator,
+                    nameValidator: null,
                     activities: _viewModel.displayActivities,
                     onActivityChanged: (activityName, isSelected) {
                       _viewModel.updateActivitiesByDisplayName(
@@ -63,9 +63,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             RoundedButton(
               buttonTitle: "Save",
-              onPressed: () {
-                Navigator.pop(context);
-              },
+              onPressed: _viewModel.getSaveButtonAction(context),
             ),
           ],
         ),

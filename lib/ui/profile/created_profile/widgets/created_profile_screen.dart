@@ -17,12 +17,18 @@ class CreatedProfileScreen extends StatefulWidget {
 
 class _CreatedProfileScreenState extends State<CreatedProfileScreen> {
   final _viewModel = CreatedProfileScreenModel();
-  late final Future<ProfileDomain?> _profileFuture;
+  late Future<ProfileDomain?> _profileFuture;
 
   @override
   void initState() {
     super.initState();
     _profileFuture = _viewModel.loadProfile();
+  }
+
+  void _reloadProfile() {
+    setState(() {
+      _profileFuture = _viewModel.loadProfile();
+    });
   }
 
   @override
@@ -63,16 +69,19 @@ class _CreatedProfileScreenState extends State<CreatedProfileScreen> {
                     ),
                   ),
                   RoundedButton(
-                    buttonTitle: "Update",
+                    buttonTitle: "Edit",
                     onPressed: profile != null
-                        ? () => Navigator.push(
+                        ? () async {
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (_) => EditProfileScreen(
                                   profile: profile,
                                 ),
                               ),
-                            )
+                            );
+                            _reloadProfile();
+                          }
                         : null,
                   ),
                 ],
