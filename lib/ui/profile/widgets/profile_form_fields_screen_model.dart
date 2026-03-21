@@ -4,23 +4,32 @@ import 'package:sport_matcher/data/profile/config/activities_config.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
 import 'package:sport_matcher/data/profile/repository/profiles_repository.dart';
+import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
 
-class EditProfileScreenModel extends ChangeNotifier {
+class ProfileFormFieldsScreenModel extends ChangeNotifier {
   final ImagePicker _picker;
   XFile? _pickedImage;
   String? _existingImagePath;
   final nameTextController = TextEditingController();
+  final AbstractTextValidator? nameValidator;
   final Map<ActivitiesConfig, bool> _activities = {
     for (final activity in ActivitiesConfig.values) activity: false,
   };
   final AbstractProfilesRepository _profileRepository;
   Function()? onStateChanged;
 
-  EditProfileScreenModel({
+  ProfileFormFieldsScreenModel({
+    this.nameValidator,
     AbstractProfilesRepository? profileRepository,
     ImagePicker? imagePicker,
   })  : _profileRepository = profileRepository ?? ProfilesRepository(),
-        _picker = imagePicker ?? ImagePicker();
+        _picker = imagePicker ?? ImagePicker() {
+    nameTextController.addListener(_onStateChanged);
+  }
+
+  void _onStateChanged() {
+    onStateChanged?.call();
+  }
 
   Future<void> pickImage() async {
     try {
@@ -49,6 +58,7 @@ class EditProfileScreenModel extends ChangeNotifier {
     for (final entry in profile.activities.entries) {
       _activities[entry.key] = entry.value;
     }
+    onStateChanged?.call();
   }
 
   Map<String, bool> get displayActivities {
@@ -66,25 +76,26 @@ class EditProfileScreenModel extends ChangeNotifier {
     onStateChanged?.call();
   }
 
-  VoidCallback getSaveButtonAction(BuildContext buildContext) {
-    final navigator = Navigator.of(buildContext);
-    return () {
-      _updateProfile().then((_) {
-        navigator.pop();
-      });
-    };
-  }
+  bool get hasPickedImage => _pickedImage != null;
 
-  Future<void> _updateProfile() async {
-    final updatedProfile = ProfileDomain(
+  bool get hasImage =>
+      _pickedImage != null || _existingImagePath != null;
+
+  bool get hasSelectedActivities =>
+      _activities.values.any((isSelected) => isSelected);
+
+  Future<void> saveProfile() async {
+    final imagePath = _pickedImage?.path ?? _existingImagePath;
+    final profile = ProfileDomain(
       name: nameTextController.text,
-      profileImagePath: _pickedImage?.path ?? _existingImagePath!,
+      profileImagePath: imagePath!,
       activities: Map<ActivitiesConfig, bool>.from(_activities),
     );
-    await _profileRepository.addProfile(updatedProfile);
+    await _profileRepository.addProfile(profile);
   }
 
   void disposeControllers() {
+    nameTextController.removeListener(_onStateChanged);
     nameTextController.dispose();
   }
 }
