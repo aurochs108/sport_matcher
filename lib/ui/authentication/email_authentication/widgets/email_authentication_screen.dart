@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/ui/authentication/email_authentication/widgets/email_authentication_screen_model.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
-import 'package:sport_matcher/ui/core/ui/buttons/rounded_button.dart';
+import 'package:sport_matcher/ui/core/ui/buttons/rounded_button/rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/password_text_field.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
 
 class EmailAuthenticationScreen extends StatefulWidget {
   final EmailAuthenticationScreenModel _viewModel;
 
-  EmailAuthenticationScreen(
-      {super.key, required String title, required onFinishProcessButtonAction})
-      : _viewModel = EmailAuthenticationScreenModel(
-            title: title,
-            onFinishProcessButtonAction: onFinishProcessButtonAction);
+  EmailAuthenticationScreen({
+    super.key,
+    required String title,
+    required onFinishProcessButtonAction,
+  }) : _viewModel = EmailAuthenticationScreenModel(
+         title: title,
+         onFinishProcessButtonAction: onFinishProcessButtonAction,
+       );
 
   @override
   State<EmailAuthenticationScreen> createState() {
@@ -39,9 +42,7 @@ class _EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget._viewModel.title),
-      ),
+      appBar: AppBar(title: Text(widget._viewModel.title)),
       body: Padding(
         padding: AppTheme.allPaddings(context),
         child: Column(
@@ -59,13 +60,14 @@ class _EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
                   PasswordTextField(
                     controller: widget._viewModel.passwordTextController,
                     validator: widget._viewModel.passwordValidator,
-                  )
+                  ),
                 ],
               ),
             ),
             RoundedButton(
-                buttonTitle: widget._viewModel.title,
-                onPressed: widget._viewModel.getFinishProcessButtonAction())
+              buttonTitle: widget._viewModel.title,
+              onPressed: widget._viewModel.getFinishProcessButtonAction(),
+            ),
           ],
         ),
       ),

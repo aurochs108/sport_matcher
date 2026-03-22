@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
-import 'package:sport_matcher/ui/core/ui/buttons/rounded_selectable_button.dart';
+import 'package:sport_matcher/ui/core/ui/buttons/rounded_selectable_button/rounded_selectable_button.dart';
 
 class ChipsCollectionView extends StatefulWidget {
   final Map<String, bool> items;
@@ -25,9 +25,10 @@ class _ChipsCollectionViewState extends State<ChipsCollectionView> {
         spacing: AppTheme.columnSpacingSmall,
         runSpacing: AppTheme.rowSpacingSmall,
         alignment: WrapAlignment.center,
-        children: widget.items.keys.map((item) {
-          return _activityButton(item);
-        }).toList(),
+        children:
+            widget.items.keys.map((item) {
+              return _activityButton(item);
+            }).toList(),
       ),
     );
   }
@@ -37,14 +38,15 @@ class _ChipsCollectionViewState extends State<ChipsCollectionView> {
     return RoundedSelectableButton(
       title: item,
       initiallySelected: widget.items[item] ?? false,
-      onSelectionChanged: callback != null
-          ? (isSelected) {
-              setState(() {
-                widget.items[item] = isSelected;
-              });
-              callback(item, isSelected);
-            }
-          : null,
+      onSelectionChanged:
+          callback != null
+              ? (isSelected) {
+                setState(() {
+                  widget.items[item] = isSelected;
+                });
+                callback(item, isSelected);
+              }
+              : null,
     );
   }
 }

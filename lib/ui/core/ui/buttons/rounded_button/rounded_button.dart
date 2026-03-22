@@ -1,33 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:sport_matcher/ui/core/ui/buttons/rounded_button/rounded_button_screen_model.dart';
 
 class RoundedButton extends StatelessWidget {
-  final String buttonTitle;
-  final VoidCallback? onPressed;
+  final String _buttonTitle;
+  final RoundedButtonScreenModel _viewModel;
 
-  const RoundedButton({
+  RoundedButton({
     super.key,
-    required this.buttonTitle,
-    required this.onPressed,
-  });
+    required String buttonTitle,
+    VoidCallback? onPressed,
+  })  : _buttonTitle = buttonTitle,
+        _viewModel = RoundedButtonScreenModel(onPressed: onPressed);
 
   @override
   Widget build(BuildContext context) {
     double borderRadius = 30;
 
-    Color getBackgroundColor() {
-      if (onPressed == null) {
-        return Colors.grey;
-      } else {
-        return Colors.blue;
-      }
-    }
-
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: _viewModel.onPressedAction,
         style: ElevatedButton.styleFrom(
-          backgroundColor: getBackgroundColor(),
+          backgroundColor: _viewModel.backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
@@ -36,7 +30,7 @@ class RoundedButton extends StatelessWidget {
           ),
         ),
         child: Text(
-          buttonTitle,
+          _buttonTitle,
           style: const TextStyle(
             fontSize: 16.0,
             color: Colors.white,
