@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button/rounded_button_screen_model.dart';
 
 class RoundedButton extends StatelessWidget {
@@ -14,8 +15,6 @@ class RoundedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double borderRadius = 30;
-
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -23,10 +22,10 @@ class RoundedButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: _viewModel.backgroundColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
+            borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
           ),
           padding: EdgeInsets.symmetric(
-            horizontal: borderRadius,
+            horizontal: AppTheme.buttonBorderRadius,
           ),
         ),
         child: Text(

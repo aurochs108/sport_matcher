@@ -6,6 +6,7 @@ class AppTheme {
 
   // Corners
   static const double borderRadius = 8.0;
+  static const double buttonBorderRadius = 30.0;
 
   // Paddings
   static const _horizontalPadding = 24.0;
