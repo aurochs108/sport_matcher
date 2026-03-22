@@ -20,11 +20,15 @@ class ProfileFormFieldsScreenModel extends ChangeNotifier {
 
   ProfileFormFieldsScreenModel({
     this.nameValidator,
+    ProfileDomain? initialProfile,
     AbstractProfilesRepository? profileRepository,
     ImagePicker? imagePicker,
   })  : _profileRepository = profileRepository ?? ProfilesRepository(),
         _picker = imagePicker ?? ImagePicker() {
     nameTextController.addListener(_onStateChanged);
+    if (initialProfile != null) {
+      loadFromProfile(initialProfile);
+    }
   }
 
   void _onStateChanged() {
@@ -94,6 +98,10 @@ class ProfileFormFieldsScreenModel extends ChangeNotifier {
         onSaved();
       });
     };
+  }
+
+  VoidCallback? getSaveAndPopAction(NavigatorState navigator) {
+    return getSaveButtonAction(() => navigator.pop());
   }
 
   Future<void> saveProfile() async {

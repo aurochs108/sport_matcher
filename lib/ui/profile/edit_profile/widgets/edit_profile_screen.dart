@@ -13,7 +13,9 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final _viewModel = ProfileFormFieldsScreenModel();
+  late final _viewModel = ProfileFormFieldsScreenModel(
+    initialProfile: widget.profile,
+  );
 
   @override
   void initState() {
@@ -21,7 +23,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _viewModel.onStateChanged = () {
       setState(() {});
     };
-    _viewModel.loadFromProfile(widget.profile);
   }
 
   @override
@@ -48,8 +49,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           );
         },
         buttonTitle: "Save",
-        onButtonPressed: _viewModel.getSaveButtonAction(
-          () => Navigator.of(context).pop(),
+        onButtonPressed: _viewModel.getSaveAndPopAction(
+          Navigator.of(context),
         ),
       ),
     );
