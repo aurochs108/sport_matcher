@@ -84,6 +84,18 @@ class ProfileFormFieldsScreenModel extends ChangeNotifier {
   bool get hasSelectedActivities =>
       _activities.values.any((isSelected) => isSelected);
 
+  VoidCallback? getSaveButtonAction(VoidCallback onSaved) {
+    final hasName = nameTextController.text.trim().isNotEmpty;
+
+    if (!hasImage || !hasName || !hasSelectedActivities) return null;
+
+    return () {
+      saveProfile().then((_) {
+        onSaved();
+      });
+    };
+  }
+
   Future<void> saveProfile() async {
     final imagePath = _pickedImage?.path ?? _existingImagePath;
     final profile = ProfileDomain(

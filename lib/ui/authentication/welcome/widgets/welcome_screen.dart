@@ -1,23 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button/rounded_button.dart';
-import 'package:sport_matcher/ui/authentication/sign_in/widgets/sign_in_screen.dart';
-import 'package:sport_matcher/ui/authentication/sign_up/widgets/sign_up_screen.dart';
+import 'package:sport_matcher/ui/authentication/welcome/widgets/welcome_screen_model.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+  final WelcomeScreenModel _viewModel;
 
-  void _navigateToSignIn(BuildContext buildContext) {
-    Navigator.of(
-      buildContext,
-    ).push(MaterialPageRoute(builder: (buildContext) => SignInScreen()));
-  }
-
-  void _navigateToSignUp(BuildContext buildContext) {
-    Navigator.of(
-      buildContext,
-    ).push(MaterialPageRoute(builder: (buildContext) => SignUpScreen()));
-  }
+  WelcomeScreen({super.key}) : _viewModel = WelcomeScreenModel();
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +24,13 @@ class WelcomeScreen extends StatelessWidget {
             RoundedButton(
               buttonTitle: "Sign in",
               onPressed: () {
-                _navigateToSignIn(context);
+                _viewModel.navigateToSignIn(context);
               },
             ),
             RoundedButton(
               buttonTitle: "Sign up",
               onPressed: () {
-                _navigateToSignUp(context);
+                _viewModel.navigateToSignUp(context);
               },
             ),
           ],

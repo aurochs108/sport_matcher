@@ -59,30 +59,15 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
             );
           },
           buttonTitle: "Next",
-          onButtonPressed: _getNextButtonAction(),
+          onButtonPressed: _viewModel.getSaveButtonAction(
+            () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => BottomNavigationBarScreen(),
+              ),
+            ),
+          ),
         ),
       ),
     );
-  }
-
-  VoidCallback? _getNextButtonAction() {
-    final isActive = _viewModel.hasPickedImage &&
-        _viewModel.nameValidator
-                ?.validate(_viewModel.nameTextController.text) ==
-            null &&
-        _viewModel.hasSelectedActivities;
-
-    if (!isActive) return null;
-
-    final navigator = Navigator.of(context);
-    return () {
-      _viewModel.saveProfile().then((_) {
-        navigator.push(
-          MaterialPageRoute(
-            builder: (_) => BottomNavigationBarScreen(),
-          ),
-        );
-      });
-    };
   }
 }

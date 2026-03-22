@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button/rounded_button.dart';
-import 'package:sport_matcher/ui/profile/edit_profile/widgets/edit_profile_screen.dart';
 import 'package:sport_matcher/ui/profile/widgets/profile_fields_view.dart';
 import 'created_profile_screen_model.dart';
 
@@ -17,18 +16,13 @@ class CreatedProfileScreen extends StatefulWidget {
 
 class _CreatedProfileScreenState extends State<CreatedProfileScreen> {
   final _viewModel = CreatedProfileScreenModel();
-  late Future<ProfileDomain?> _profileFuture;
 
   @override
   void initState() {
     super.initState();
-    _profileFuture = _viewModel.loadProfile();
-  }
-
-  void _reloadProfile() {
-    setState(() {
-      _profileFuture = _viewModel.loadProfile();
-    });
+    _viewModel.onStateChanged = () {
+      setState(() {});
+    };
   }
 
   @override
@@ -43,7 +37,7 @@ class _CreatedProfileScreenState extends State<CreatedProfileScreen> {
         body: Padding(
           padding: AppTheme.horizontalAndBottomPadding(context),
           child: FutureBuilder<ProfileDomain?>(
-            future: _profileFuture,
+            future: _viewModel.profileFuture,
             builder: (context, snapshot) {
               final profile = snapshot.data;
               final profileName = profile?.name;
@@ -69,20 +63,10 @@ class _CreatedProfileScreenState extends State<CreatedProfileScreen> {
                   ),
                   RoundedButton(
                     buttonTitle: "Edit",
-                    onPressed:
-                        profile != null
-                            ? () async {
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (_) =>
-                                          EditProfileScreen(profile: profile),
-                                ),
-                              );
-                              _reloadProfile();
-                            }
-                            : null,
+                    onPressed: _viewModel.getEditButtonAction(
+                      profile,
+                      Navigator.of(context),
+                    ),
                   ),
                 ],
               );

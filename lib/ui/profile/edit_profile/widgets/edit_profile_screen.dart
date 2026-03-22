@@ -33,7 +33,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final navigator = Navigator.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text("Edit Profile")),
       body: ProfileFormFieldsView(
@@ -49,11 +48,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           );
         },
         buttonTitle: "Save",
-        onButtonPressed: () {
-          _viewModel.saveProfile().then((_) {
-            navigator.pop();
-          });
-        },
+        onButtonPressed: _viewModel.getSaveButtonAction(
+          () => Navigator.of(context).pop(),
+        ),
       ),
     );
   }
