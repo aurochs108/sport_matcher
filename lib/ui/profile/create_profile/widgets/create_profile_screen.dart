@@ -5,7 +5,7 @@ import 'package:sport_matcher/ui/profile/widgets/profile_form_fields_view.dart';
 class CreateProfileScreen extends StatelessWidget {
   CreateProfileScreen({super.key});
 
-  final viewModel = CreateProfileScreenModel();
+  final _viewModel = CreateProfileScreenModel();
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class CreateProfileScreen extends StatelessWidget {
           buttonTitle: "Next",
           getButtonAction:
               (formModel) => formModel.getSaveButtonAction(
-                viewModel.navigateToHomeAction(Navigator.of(context)),
+                _viewModel.navigateToHomeAction(Navigator.of(context)),
               ),
         ),
       ),

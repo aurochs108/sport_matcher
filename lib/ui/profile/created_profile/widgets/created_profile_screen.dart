@@ -40,9 +40,8 @@ class _CreatedProfileScreenState extends State<CreatedProfileScreen> {
             future: _viewModel.profileFuture,
             builder: (context, snapshot) {
               final profile = snapshot.data;
-              final profileName = profile?.name;
               final imagePath = profile?.profileImagePath ?? '';
-
+              final profileName = profile?.name;
               final selectedActivities = _viewModel.selectedActivities(profile);
 
               return Column(

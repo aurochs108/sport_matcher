@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mockito/annotations.dart';
@@ -13,6 +14,7 @@ import 'package:sport_matcher/ui/profile/widgets/profile_form_fields_view_model.
 import 'package:uuid/uuid.dart';
 
 import '../../../mocks/mock_image_picker.dart';
+import '../../../utilities/build_context_provider.dart';
 import 'profile_form_fields_view_model_test.mocks.dart';
 
 @GenerateMocks([AbstractTextValidator, AbstractProfilesRepository])
@@ -26,6 +28,7 @@ void main() {
 
     setUp(() {
       nameValidator = MockAbstractTextValidator();
+      when(nameValidator.validate(any)).thenReturn(null);
       profileRepository = MockAbstractProfilesRepository();
       imagePicker = MockImagePicker();
       sut = ProfileFormFieldsViewModel(
@@ -77,14 +80,8 @@ void main() {
     test('should map activities to display names', () {
       // given
       final expectedDisplayActivities = {
-        'Bike': false,
-        'Climbing': false,
-        'Football': false,
-        'Hockey': false,
-        'Ping Pong': false,
-        'Running': false,
-        'Tennis': false,
-        'Voleyball': false,
+        for (final activity in ActivitiesConfig.values)
+          activity.displayName: false,
       };
 
       // when
@@ -131,6 +128,40 @@ void main() {
     test('hasImage returns false when no image picked', () {
       // then
       expect(sut.hasImage, false);
+    });
+
+    // MARK: - hasPickedImage
+
+    test('hasPickedImage returns true after picking image', () async {
+      // given
+      imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
+
+      // when
+      await sut.pickImage();
+
+      // then
+      expect(sut.hasPickedImage, true);
+    });
+
+    test('hasPickedImage returns false when no image picked', () {
+      // then
+      expect(sut.hasPickedImage, false);
+    });
+
+    test('hasPickedImage returns false when only existing image path', () {
+      // given
+      final profile = ProfileDomain(
+        name: Uuid().v4(),
+        profileImagePath: 'path/to/image.jpg',
+        activities: {
+          for (final activity in ActivitiesConfig.values) activity: false,
+        },
+      );
+      sut.loadFromProfile(profile);
+
+      // then
+      expect(sut.hasPickedImage, false);
+      expect(sut.hasImage, true);
     });
 
     // MARK: - hasSelectedActivities
@@ -181,12 +212,13 @@ void main() {
       expect(sut.getSaveButtonAction(() {}), isNull);
     });
 
-    test('getSaveButtonAction returns null when no name', () async {
+    test('getSaveButtonAction returns null when name is invalid', () async {
       // given
       imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
       await sut.pickImage();
 
-      sut.nameTextController.text = '';
+      when(nameValidator.validate(any)).thenReturn('Name too short');
+      sut.nameTextController.text = 'A';
       sut.updateActivitiesByDisplayName(sut.displayActivities.keys.first, true);
 
       // then
@@ -246,6 +278,38 @@ void main() {
         ),
       ).called(1);
     });
+
+    // MARK: - getSaveAndPopAction
+
+    testWidgets(
+      'getSaveAndPopAction returns null when conditions not met',
+      (WidgetTester tester) async {
+        // given
+        final buildContext = await BuildContextProvider.get(tester);
+        final navigator = Navigator.of(buildContext);
+
+        // then
+        expect(sut.getSaveAndPopAction(navigator), isNull);
+      },
+    );
+
+    testWidgets(
+      'getSaveAndPopAction returns callback when conditions met',
+      (WidgetTester tester) async {
+        // given
+        imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
+        await sut.pickImage();
+        sut.nameTextController.text = Uuid().v4();
+        sut.updateActivitiesByDisplayName(
+            sut.displayActivities.keys.first, true);
+
+        final buildContext = await BuildContextProvider.get(tester);
+        final navigator = Navigator.of(buildContext);
+
+        // then
+        expect(sut.getSaveAndPopAction(navigator), isNotNull);
+      },
+    );
 
     // MARK: - loadFromProfile
 

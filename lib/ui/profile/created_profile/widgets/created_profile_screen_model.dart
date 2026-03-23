@@ -10,7 +10,7 @@ class CreatedProfileScreenModel extends ChangeNotifier {
   Function()? onStateChanged;
 
   CreatedProfileScreenModel({AbstractProfilesRepository? profilesRepository})
-      : _profilesRepository = profilesRepository ?? ProfilesRepository() {
+    : _profilesRepository = profilesRepository ?? ProfilesRepository() {
     profileFuture = _loadProfile();
   }
 
@@ -26,8 +26,8 @@ class CreatedProfileScreenModel extends ChangeNotifier {
   Map<String, bool> selectedActivities(ProfileDomain? profile) {
     return Map.fromEntries(
       profile?.activities.entries
-              .where((e) => e.value)
-              .map((e) => MapEntry(e.key.displayName, true)) ??
+              .where((activity) => activity.value)
+              .map((activity) => MapEntry(activity.key.displayName, true)) ??
           [],
     );
   }
@@ -40,9 +40,7 @@ class CreatedProfileScreenModel extends ChangeNotifier {
 
     return () async {
       await navigator.push(
-        MaterialPageRoute(
-          builder: (_) => EditProfileScreen(profile: profile),
-        ),
+        MaterialPageRoute(builder: (_) => EditProfileScreen(profile: profile)),
       );
       reloadProfile();
     };
