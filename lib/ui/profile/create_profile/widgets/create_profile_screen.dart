@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/data/profile/config/profile_config.dart';
-import 'package:sport_matcher/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_screen.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/text_length_validator.dart';
+import 'package:sport_matcher/ui/profile/create_profile/widgets/create_profile_screen_model.dart';
 import 'package:sport_matcher/ui/profile/widgets/profile_form_fields_screen_model.dart';
 import 'package:sport_matcher/ui/profile/widgets/profile_form_fields_view.dart';
 
@@ -15,25 +15,26 @@ class CreateProfileScreen extends StatefulWidget {
 }
 
 class _CreateProfileScreenState extends State<CreateProfileScreen> {
-  final _viewModel = ProfileFormFieldsScreenModel(
+  final _formModel = ProfileFormFieldsScreenModel(
     nameValidator: TextLengthValidator(
       minimumLength: ProfileConfig.nameMinLength,
       maximumLength: ProfileConfig.nameMaxLength,
     ),
   );
+  final _viewModel = CreateProfileScreenModel();
 
   @override
   void initState() {
     super.initState();
-    _viewModel.onStateChanged = () {
+    _formModel.onStateChanged = () {
       setState(() {});
     };
   }
 
   @override
   void dispose() {
-    _viewModel.disposeControllers();
-    _viewModel.dispose();
+    _formModel.disposeControllers();
+    _formModel.dispose();
     super.dispose();
   }
 
@@ -47,24 +48,17 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
           title: const Text("Create profile"),
         ),
         body: ProfileFormFieldsView(
-          imagePath: _viewModel.getPickedProfileImagePath(),
-          onPickImage: _viewModel.pickImage,
-          nameController: _viewModel.nameTextController,
-          nameValidator: _viewModel.nameValidator,
-          activities: _viewModel.displayActivities,
+          imagePath: _formModel.getPickedProfileImagePath(),
+          onPickImage: _formModel.pickImage,
+          nameController: _formModel.nameTextController,
+          nameValidator: _formModel.nameValidator,
+          activities: _formModel.displayActivities,
           onActivityChanged: (activityName, isSelected) {
-            _viewModel.updateActivitiesByDisplayName(
-              activityName,
-              isSelected,
-            );
+            _formModel.updateActivitiesByDisplayName(activityName, isSelected);
           },
           buttonTitle: "Next",
-          onButtonPressed: _viewModel.getSaveButtonAction(
-            () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => BottomNavigationBarScreen(),
-              ),
-            ),
+          onButtonPressed: _formModel.getSaveButtonAction(
+            _viewModel.navigateToHomeAction(Navigator.of(context)),
           ),
         ),
       ),
