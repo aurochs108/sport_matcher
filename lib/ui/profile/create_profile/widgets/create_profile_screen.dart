@@ -3,12 +3,12 @@ import 'package:sport_matcher/ui/profile/create_profile/widgets/create_profile_s
 import 'package:sport_matcher/ui/profile/widgets/profile_form_fields_view.dart';
 
 class CreateProfileScreen extends StatelessWidget {
-  const CreateProfileScreen({super.key});
+  CreateProfileScreen({super.key});
+
+  final viewModel = CreateProfileScreenModel();
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = CreateProfileScreenModel();
-
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -18,9 +18,10 @@ class CreateProfileScreen extends StatelessWidget {
         ),
         body: ProfileFormFieldsView(
           buttonTitle: "Next",
-          getButtonAction: (formModel) => formModel.getSaveButtonAction(
-            viewModel.navigateToHomeAction(Navigator.of(context)),
-          ),
+          getButtonAction:
+              (formModel) => formModel.getSaveButtonAction(
+                viewModel.navigateToHomeAction(Navigator.of(context)),
+              ),
         ),
       ),
     );
