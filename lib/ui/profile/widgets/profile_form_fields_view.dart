@@ -1,34 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button/rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/collections/chips_collection_view.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
 import 'package:sport_matcher/ui/core/ui/texts/title_medium_text.dart';
-import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
 import 'package:sport_matcher/ui/profile/profile_photo/widgets/profile_photo_screen.dart';
+import 'package:sport_matcher/ui/profile/widgets/profile_form_fields_view_model.dart';
 
-class ProfileFormFieldsView extends StatelessWidget {
-  final String? imagePath;
-  final VoidCallback onPickImage;
-  final TextEditingController nameController;
-  final AbstractTextValidator? nameValidator;
-  final Map<String, bool> activities;
-  final void Function(String, bool) onActivityChanged;
+class ProfileFormFieldsView extends StatefulWidget {
   final String buttonTitle;
-  final VoidCallback? onButtonPressed;
+  final VoidCallback? Function(ProfileFormFieldsViewModel model)? getButtonAction;
+  final ProfileDomain? initialProfile;
 
   const ProfileFormFieldsView({
     super.key,
-    required this.imagePath,
-    required this.onPickImage,
-    required this.nameController,
-    required this.nameValidator,
-    required this.activities,
-    required this.onActivityChanged,
     required this.buttonTitle,
-    required this.onButtonPressed,
+    this.getButtonAction,
+    this.initialProfile,
   });
+
+  @override
+  State<ProfileFormFieldsView> createState() => _ProfileFormFieldsViewState();
+}
+
+class _ProfileFormFieldsViewState extends State<ProfileFormFieldsView> {
+  late final _formModel = ProfileFormFieldsViewModel(
+    initialProfile: widget.initialProfile,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _formModel.onStateChanged = () {
+      setState(() {});
+    };
+  }
+
+  @override
+  void dispose() {
+    _formModel.disposeControllers();
+    _formModel.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,30 +61,34 @@ class ProfileFormFieldsView extends StatelessWidget {
                   children: [
                     Center(child: _photoPlaceholder()),
                     PlainTextField(
-                      controller: nameController,
+                      controller: _formModel.nameTextController,
                       title: "Name",
-                      validator: nameValidator,
+                      validator: _formModel.nameValidator,
                       textCapitalization: TextCapitalization.words,
                       autocorrect: false,
                       enableSuggestions: false,
                     ),
                     const TitleMediumText(text: "Select your favorite sports"),
                     ChipsCollectionView(
-                      items: activities,
-                      onSelectionChanged: onActivityChanged,
+                      items: _formModel.displayActivities,
+                      onSelectionChanged: _formModel.updateActivitiesByDisplayName,
                     ),
                   ],
                 ),
               ),
             ),
           ),
-          RoundedButton(buttonTitle: buttonTitle, onPressed: onButtonPressed),
+          RoundedButton(
+            buttonTitle: widget.buttonTitle,
+            onPressed: widget.getButtonAction?.call(_formModel),
+          ),
         ],
       ),
     );
   }
 
   Widget _photoPlaceholder() {
+    final imagePath = _formModel.getPickedProfileImagePath();
     Widget content;
     if (imagePath case final path?) {
       content = ProfilePhotoView(imagePath: path);
@@ -88,7 +107,7 @@ class ProfileFormFieldsView extends StatelessWidget {
       child: AspectRatio(
         aspectRatio: 1.0,
         child: OutlinedButton(
-          onPressed: onPickImage,
+          onPressed: _formModel.pickImage,
           style: OutlinedButton.styleFrom(
             padding:
                 imagePath == null ? const EdgeInsets.all(48) : EdgeInsets.zero,

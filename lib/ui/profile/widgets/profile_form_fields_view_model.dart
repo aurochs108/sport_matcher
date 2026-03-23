@@ -4,26 +4,33 @@ import 'package:sport_matcher/data/profile/config/activities_config.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
 import 'package:sport_matcher/data/profile/repository/profiles_repository.dart';
+import 'package:sport_matcher/data/profile/config/profile_config.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
+import 'package:sport_matcher/ui/core/utilities/validators/text_length_validator.dart';
 
-class ProfileFormFieldsScreenModel extends ChangeNotifier {
+class ProfileFormFieldsViewModel extends ChangeNotifier {
   final ImagePicker _picker;
   XFile? _pickedImage;
   String? _existingImagePath;
   final nameTextController = TextEditingController();
-  final AbstractTextValidator? nameValidator;
+  final AbstractTextValidator nameValidator;
   final Map<ActivitiesConfig, bool> _activities = {
     for (final activity in ActivitiesConfig.values) activity: false,
   };
   final AbstractProfilesRepository _profileRepository;
   Function()? onStateChanged;
 
-  ProfileFormFieldsScreenModel({
-    this.nameValidator,
+  ProfileFormFieldsViewModel({
+    AbstractTextValidator? nameValidator,
     ProfileDomain? initialProfile,
     AbstractProfilesRepository? profileRepository,
     ImagePicker? imagePicker,
-  })  : _profileRepository = profileRepository ?? ProfilesRepository(),
+  })  : nameValidator = nameValidator ??
+            TextLengthValidator(
+              minimumLength: ProfileConfig.nameMinLength,
+              maximumLength: ProfileConfig.nameMaxLength,
+            ),
+        _profileRepository = profileRepository ?? ProfilesRepository(),
         _picker = imagePicker ?? ImagePicker() {
     nameTextController.addListener(_onStateChanged);
     if (initialProfile != null) {
@@ -89,7 +96,7 @@ class ProfileFormFieldsScreenModel extends ChangeNotifier {
       _activities.values.any((isSelected) => isSelected);
 
   VoidCallback? getSaveButtonAction(VoidCallback onSaved) {
-    final hasName = nameTextController.text.trim().isNotEmpty;
+    final hasName = nameValidator.validate(nameTextController.text) == null;
 
     if (!hasImage || !hasName || !hasSelectedActivities) return null;
 

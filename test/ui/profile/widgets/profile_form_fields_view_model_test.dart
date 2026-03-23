@@ -9,26 +9,26 @@ import 'package:sport_matcher/data/profile/config/activities_config.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
 import 'package:sport_matcher/data/profile/repository/abstract_profiles_repository.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
-import 'package:sport_matcher/ui/profile/widgets/profile_form_fields_screen_model.dart';
+import 'package:sport_matcher/ui/profile/widgets/profile_form_fields_view_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../mocks/mock_image_picker.dart';
-import 'profile_form_fields_screen_model_test.mocks.dart';
+import 'profile_form_fields_view_model_test.mocks.dart';
 
 @GenerateMocks([AbstractTextValidator, AbstractProfilesRepository])
 void main() {
-  group('ProfileFormFieldsScreenModel', () {
+  group('ProfileFormFieldsViewModel', () {
     late MockImagePicker imagePicker;
     late MockAbstractTextValidator nameValidator;
     late MockAbstractProfilesRepository profileRepository;
     var onStateChangedCallCount = 0;
-    late ProfileFormFieldsScreenModel sut;
+    late ProfileFormFieldsViewModel sut;
 
     setUp(() {
       nameValidator = MockAbstractTextValidator();
       profileRepository = MockAbstractProfilesRepository();
       imagePicker = MockImagePicker();
-      sut = ProfileFormFieldsScreenModel(
+      sut = ProfileFormFieldsViewModel(
         nameValidator: nameValidator,
         profileRepository: profileRepository,
         imagePicker: imagePicker,
