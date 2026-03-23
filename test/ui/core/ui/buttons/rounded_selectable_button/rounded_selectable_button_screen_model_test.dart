@@ -24,42 +24,45 @@ void main() {
 
     // MARK: - onPressedAction
 
-    test('onPressedAction returns null when onSelectionChanged is not provided',
-        () {
-      // given
-      var onStateChangedCallCount = 0;
-      final sut = RoundedSelectableButtonScreenModel();
-      sut.onStateChanged = () => onStateChangedCallCount++;
-
-      // when
-      sut.onPressedAction?.call();
-
-      // then
-      expect(sut.onPressedAction, isNull);
-      expect(onStateChangedCallCount, 0);
-    });
-
-    for (final initiallySelected in [true, false]) {
-      test(
-          'onPressedAction toggles isSelected from $initiallySelected to ${!initiallySelected}',
-          () {
+    test(
+      'onPressedAction returns null when onSelectionChanged is not provided',
+      () {
         // given
-        var onSelectionChangedCallCount = 0;
+        final sut = RoundedSelectableButtonScreenModel();
         var onStateChangedCallCount = 0;
-        final sut = RoundedSelectableButtonScreenModel(
-          initiallySelected: initiallySelected,
-          onSelectionChanged: (_) => onSelectionChangedCallCount++,
-        );
         sut.onStateChanged = () => onStateChangedCallCount++;
 
         // when
         sut.onPressedAction?.call();
 
         // then
-        expect(sut.isSelected, !initiallySelected);
-        expect(onSelectionChangedCallCount, 1);
-        expect(onStateChangedCallCount, 1);
-      });
+        expect(sut.onPressedAction, isNull);
+        expect(onStateChangedCallCount, 0);
+      },
+    );
+
+    for (final initiallySelected in [true, false]) {
+      test(
+        'onPressedAction toggles isSelected from $initiallySelected to ${!initiallySelected}',
+        () {
+          // given
+          var onSelectionChangedCallCount = 0;
+          final sut = RoundedSelectableButtonScreenModel(
+            initiallySelected: initiallySelected,
+            onSelectionChanged: (_) => onSelectionChangedCallCount++,
+          );
+          var onStateChangedCallCount = 0;
+          sut.onStateChanged = () => onStateChangedCallCount++;
+
+          // when
+          sut.onPressedAction?.call();
+
+          // then
+          expect(sut.isSelected, !initiallySelected);
+          expect(onSelectionChangedCallCount, 1);
+          expect(onStateChangedCallCount, 1);
+        },
+      );
     }
 
     // MARK: - backgroundColor

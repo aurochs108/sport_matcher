@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sport_matcher/ui/core/ui/collections/chips_screen_view.dart';
+import 'package:sport_matcher/ui/core/ui/collections/chips_collection_view.dart';
 import 'package:sport_matcher/ui/profile/profile_photo/widgets/profile_photo_screen.dart';
 
 class ProfileFieldsView extends StatelessWidget {

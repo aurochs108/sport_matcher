@@ -1,22 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_selectable_button/rounded_selectable_button.dart';
+import 'package:sport_matcher/ui/core/ui/collections/chips_collection_view_model.dart';
 
 class ChipsCollectionView extends StatefulWidget {
-  final Map<String, bool> items;
-  final void Function(String, bool)? onSelectionChanged;
+  final ChipsCollectionViewModel viewModel;
 
   ChipsCollectionView({
     super.key,
     required Map<String, bool> items,
-    this.onSelectionChanged,
-  }) : items = Map<String, bool>.from(items);
+    void Function(String, bool)? onSelectionChanged,
+  }) : viewModel = ChipsCollectionViewModel(
+          items: items,
+          onSelectionChanged: onSelectionChanged,
+        );
 
   @override
   State<ChipsCollectionView> createState() => _ChipsCollectionViewState();
 }
 
 class _ChipsCollectionViewState extends State<ChipsCollectionView> {
+  @override
+  void initState() {
+    super.initState();
+    widget.viewModel.onStateChanged = () => setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,7 +35,7 @@ class _ChipsCollectionViewState extends State<ChipsCollectionView> {
         runSpacing: AppTheme.rowSpacingSmall,
         alignment: WrapAlignment.center,
         children:
-            widget.items.keys.map((item) {
+            widget.viewModel.itemKeys.map((item) {
               return _activityButton(item);
             }).toList(),
       ),
@@ -34,19 +43,10 @@ class _ChipsCollectionViewState extends State<ChipsCollectionView> {
   }
 
   Widget _activityButton(String item) {
-    final callback = widget.onSelectionChanged;
     return RoundedSelectableButton(
       title: item,
-      initiallySelected: widget.items[item] ?? false,
-      onSelectionChanged:
-          callback != null
-              ? (isSelected) {
-                setState(() {
-                  widget.items[item] = isSelected;
-                });
-                callback(item, isSelected);
-              }
-              : null,
+      initiallySelected: widget.viewModel.isSelected(item),
+      onSelectionChanged: widget.viewModel.getOnSelectionChanged(item),
     );
   }
 }

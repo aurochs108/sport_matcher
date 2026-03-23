@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/rounded_button/rounded_button.dart';
-import 'package:sport_matcher/ui/core/ui/collections/chips_screen_view.dart';
+import 'package:sport_matcher/ui/core/ui/collections/chips_collection_view.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
 import 'package:sport_matcher/ui/core/ui/texts/title_medium_text.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
