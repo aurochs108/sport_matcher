@@ -27,7 +27,7 @@ void main() {
 
     // MARK: - profileFuture
 
-    test('profileFuture loads profile on construction', () async {
+    test('profileFuture loads profile on init', () async {
       // given
       clearInteractions(mockProfilesRepository);
 
