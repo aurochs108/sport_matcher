@@ -10,7 +10,7 @@ import 'package:sport_matcher/ui/core/utilities/validators/text_length_validator
 
 class ProfileFormFieldsViewModel {
   final String buttonTitle;
-  final VoidCallback? onSaved;
+  final VoidCallback? _onSaved;
   final ImagePicker _picker;
   XFile? _pickedImage;
   final nameTextController = TextEditingController();
@@ -23,12 +23,13 @@ class ProfileFormFieldsViewModel {
 
   ProfileFormFieldsViewModel({
     required this.buttonTitle,
-    this.onSaved,
+    VoidCallback? onSaved,
     AbstractTextValidator? nameValidator,
     ProfileDomain? initialProfile,
     AbstractProfilesRepository? profileRepository,
     ImagePicker? imagePicker,
-  })  : nameValidator = nameValidator ??
+  })  : _onSaved = onSaved,
+        nameValidator = nameValidator ??
             TextLengthValidator(
               minimumLength: ProfileConfig.nameMinLength,
               maximumLength: ProfileConfig.nameMaxLength,
@@ -89,12 +90,12 @@ class ProfileFormFieldsViewModel {
   }
 
   VoidCallback? get buttonAction {
-    final saved = onSaved;
+    final saved = _onSaved;
     if (saved == null) return null;
-    return getSaveButtonAction(saved);
+    return _getSaveButtonAction(saved);
   }
 
-  VoidCallback? getSaveButtonAction(VoidCallback onSaved) {
+  VoidCallback? _getSaveButtonAction(VoidCallback onSaved) {
     final hasName = nameValidator.validate(nameTextController.text) == null;
 
     if (!_hasImage || !hasName || !_hasSelectedActivities) return null;
@@ -119,10 +120,6 @@ class ProfileFormFieldsViewModel {
       activities: Map<ActivitiesConfig, bool>.from(_activities),
     );
     await _profileRepository.addProfile(profile);
-  }
-
-  VoidCallback? getSaveAndPopAction(NavigatorState navigator) {
-    return getSaveButtonAction(() => navigator.pop());
   }
 
   void dispose() {

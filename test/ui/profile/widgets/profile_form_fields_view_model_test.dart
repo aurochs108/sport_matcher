@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mockito/annotations.dart';
@@ -14,7 +11,6 @@ import 'package:sport_matcher/ui/profile/widgets/profile_form_fields_view_model.
 import 'package:uuid/uuid.dart';
 
 import '../../../mocks/mock_image_picker.dart';
-import '../../../utilities/build_context_provider.dart';
 import 'profile_form_fields_view_model_test.mocks.dart';
 
 @GenerateMocks([AbstractTextValidator, AbstractProfilesRepository])
@@ -44,6 +40,39 @@ void main() {
       };
     });
 
+    // MARK: - initialProfile
+
+    test('initialProfile populates fields from profile', () {
+      // given
+      final profile = ProfileDomain(
+        name: Uuid().v4(),
+        profileImagePath: 'path/to/image.jpg',
+        activities: {
+          for (final activity in ActivitiesConfig.values) activity: false,
+          ActivitiesConfig.values.first: true,
+        },
+      );
+
+      final expectedDisplayActivities = {
+        for (final entry in profile.activities.entries)
+          entry.key.displayName: entry.value,
+      };
+
+      // when
+      final sut = ProfileFormFieldsViewModel(
+        buttonTitle: buttonTitle,
+        nameValidator: nameValidator,
+        profileRepository: profileRepository,
+        imagePicker: imagePicker,
+        initialProfile: profile,
+      );
+
+      // then
+      expect(sut.nameTextController.text, profile.name);
+      expect(sut.profileImagePath, profile.profileImagePath);
+      expect(sut.displayActivities, expectedDisplayActivities);
+    });
+
     // MARK: - buttonTitle
 
     test('buttonTitle returns provided value', () {
@@ -51,26 +80,11 @@ void main() {
       expect(sut.buttonTitle, buttonTitle);
     });
 
-    // MARK: - getButtonAction
+    // MARK: - buttonAction
 
-    test('getButtonAction returns null when not provided', () {
+    test('buttonAction returns null when onSaved not provided', () {
       // then
-      expect(sut.getButtonAction, isNull);
-    });
-
-    test('getButtonAction returns provided callback', () {
-      // given
-      final sut = ProfileFormFieldsViewModel(
-        buttonTitle: buttonTitle,
-        getButtonAction: (model) => () {},
-        nameValidator: nameValidator,
-        profileRepository: profileRepository,
-        imagePicker: imagePicker,
-      );
-
-      // then
-      expect(sut.getButtonAction, isNotNull);
-      expect(sut.getButtonAction?.call(sut), isNotNull);
+      expect(sut.buttonAction, isNull);
     });
 
     // MARK: - dispose
@@ -160,7 +174,7 @@ void main() {
       final activitiesKeys = sut.displayActivities.keys.toList();
       activitiesKeys.shuffle();
       final activity = activitiesKeys.first;
-      final expectedIsSelected = Random().nextBool();
+      final expectedIsSelected = !sut.displayActivities[activity]!;
       var activitiesCopy = Map<String, bool>.from(sut.displayActivities);
 
       final actualOnStateChangedCallCount = onStateChangedCallCount;
@@ -174,46 +188,74 @@ void main() {
       expect(actualOnStateChangedCallCount + 1, onStateChangedCallCount);
     });
 
-    // MARK: - getSaveButtonAction
+    // MARK: - buttonAction
 
-    test('getSaveButtonAction returns null when no image', () {
+    test('buttonAction returns null when no image', () {
       // given
+      final sut = ProfileFormFieldsViewModel(
+        buttonTitle: buttonTitle,
+        onSaved: () {},
+        nameValidator: nameValidator,
+        profileRepository: profileRepository,
+        imagePicker: imagePicker,
+      );
       sut.nameTextController.text = Uuid().v4();
       sut.updateActivitiesByDisplayName(sut.displayActivities.keys.first, true);
 
       // then
-      expect(sut.getSaveButtonAction(() {}), isNull);
+      expect(sut.buttonAction, isNull);
     });
 
-    test('getSaveButtonAction returns null when name is invalid', () async {
+    test('buttonAction returns null when name is invalid', () async {
       // given
+      final sut = ProfileFormFieldsViewModel(
+        buttonTitle: buttonTitle,
+        onSaved: () {},
+        nameValidator: nameValidator,
+        profileRepository: profileRepository,
+        imagePicker: imagePicker,
+      );
       imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
       await sut.pickImage();
 
-      when(nameValidator.validate(any)).thenReturn('Name too short');
-      sut.nameTextController.text = 'A';
+      final invalidName = Uuid().v4();
+      when(nameValidator.validate(invalidName)).thenReturn('Name too short');
+      sut.nameTextController.text = invalidName;
       sut.updateActivitiesByDisplayName(sut.displayActivities.keys.first, true);
 
       // then
-      expect(sut.getSaveButtonAction(() {}), isNull);
+      expect(sut.buttonAction, isNull);
     });
 
-    test(
-      'getSaveButtonAction returns null when no activities selected',
-      () async {
-        // given
-        imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
-        await sut.pickImage();
-
-        sut.nameTextController.text = Uuid().v4();
-
-        // then
-        expect(sut.getSaveButtonAction(() {}), isNull);
-      },
-    );
-
-    test('getSaveButtonAction saves profile and calls onSaved', () async {
+    test('buttonAction returns null when no activities selected', () async {
       // given
+      final sut = ProfileFormFieldsViewModel(
+        buttonTitle: buttonTitle,
+        onSaved: () {},
+        nameValidator: nameValidator,
+        profileRepository: profileRepository,
+        imagePicker: imagePicker,
+      );
+      imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
+      await sut.pickImage();
+
+      sut.nameTextController.text = Uuid().v4();
+
+      // then
+      expect(sut.buttonAction, isNull);
+    });
+
+    test('buttonAction saves profile and calls onSaved', () async {
+      // given
+      var onSavedCalled = false;
+      final sut = ProfileFormFieldsViewModel(
+        buttonTitle: buttonTitle,
+        onSaved: () => onSavedCalled = true,
+        nameValidator: nameValidator,
+        profileRepository: profileRepository,
+        imagePicker: imagePicker,
+      );
+
       final profileImagePath = 'path/to/image.jpg';
       imagePicker.pickedImageReturnValue = XFile(profileImagePath);
       await sut.pickImage();
@@ -229,10 +271,8 @@ void main() {
 
       when(profileRepository.addProfile(any)).thenAnswer((_) async {});
 
-      var onSavedCalled = false;
-
       // when
-      sut.getSaveButtonAction(() => onSavedCalled = true)?.call();
+      sut.buttonAction?.call();
       await Future.delayed(Duration.zero);
 
       // then
@@ -250,71 +290,6 @@ void main() {
           ),
         ),
       ).called(1);
-    });
-
-    // MARK: - getSaveAndPopAction
-
-    testWidgets(
-      'getSaveAndPopAction returns null when conditions not met',
-      (WidgetTester tester) async {
-        // given
-        final buildContext = await BuildContextProvider.get(tester);
-        final navigator = Navigator.of(buildContext);
-
-        // then
-        expect(sut.getSaveAndPopAction(navigator), isNull);
-      },
-    );
-
-    testWidgets(
-      'getSaveAndPopAction returns callback when conditions met',
-      (WidgetTester tester) async {
-        // given
-        imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
-        await sut.pickImage();
-        sut.nameTextController.text = Uuid().v4();
-        sut.updateActivitiesByDisplayName(
-            sut.displayActivities.keys.first, true);
-
-        final buildContext = await BuildContextProvider.get(tester);
-        final navigator = Navigator.of(buildContext);
-
-        // then
-        expect(sut.getSaveAndPopAction(navigator), isNotNull);
-      },
-    );
-
-    // MARK: - initialProfile
-
-    test('initialProfile populates fields from profile', () {
-      // given
-      final profile = ProfileDomain(
-        name: Uuid().v4(),
-        profileImagePath: 'path/to/image.jpg',
-        activities: {
-          for (final activity in ActivitiesConfig.values) activity: false,
-          ActivitiesConfig.values.first: true,
-        },
-      );
-
-      final expectedDisplayActivities = {
-        for (final entry in profile.activities.entries)
-          entry.key.displayName: entry.value,
-      };
-
-      // when
-      final sut = ProfileFormFieldsViewModel(
-        buttonTitle: buttonTitle,
-        nameValidator: nameValidator,
-        profileRepository: profileRepository,
-        imagePicker: imagePicker,
-        initialProfile: profile,
-      );
-
-      // then
-      expect(sut.nameTextController.text, profile.name);
-      expect(sut.profileImagePath, profile.profileImagePath);
-      expect(sut.displayActivities, expectedDisplayActivities);
     });
   });
 }
