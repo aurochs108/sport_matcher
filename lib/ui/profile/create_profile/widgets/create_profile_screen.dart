@@ -18,7 +18,7 @@ class CreateProfileScreen extends StatelessWidget {
         ),
         body: ProfileFormFieldsView(
           buttonTitle: "Next",
-          onSaved: _viewModel.navigateToHomeAction(Navigator.of(context)),
+          onSaved: () => _viewModel.navigateToHomeAction(Navigator.of(context)),
         ),
       ),
     );

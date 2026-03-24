@@ -25,7 +25,7 @@ void main() {
       final navigator = Navigator.of(buildContext);
 
       // when
-      sut.navigateToHomeAction(navigator).call();
+      sut.navigateToHomeAction(navigator);
       await tester.pumpAndSettle();
 
       // then
