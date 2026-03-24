@@ -23,15 +23,18 @@ void main() {
     late MockImagePicker imagePicker;
     late MockAbstractTextValidator nameValidator;
     late MockAbstractProfilesRepository profileRepository;
-    var onStateChangedCallCount = 0;
+    late int onStateChangedCallCount;
+    final buttonTitle = Uuid().v4();
     late ProfileFormFieldsViewModel sut;
 
     setUp(() {
+      onStateChangedCallCount = 0;
       nameValidator = MockAbstractTextValidator();
       when(nameValidator.validate(any)).thenReturn(null);
       profileRepository = MockAbstractProfilesRepository();
       imagePicker = MockImagePicker();
       sut = ProfileFormFieldsViewModel(
+        buttonTitle: buttonTitle,
         nameValidator: nameValidator,
         profileRepository: profileRepository,
         imagePicker: imagePicker,
@@ -39,6 +42,45 @@ void main() {
       sut.onStateChanged = () {
         onStateChangedCallCount++;
       };
+    });
+
+    // MARK: - buttonTitle
+
+    test('buttonTitle returns provided value', () {
+      // then
+      expect(sut.buttonTitle, buttonTitle);
+    });
+
+    // MARK: - getButtonAction
+
+    test('getButtonAction returns null when not provided', () {
+      // then
+      expect(sut.getButtonAction, isNull);
+    });
+
+    test('getButtonAction returns provided callback', () {
+      // given
+      final sut = ProfileFormFieldsViewModel(
+        buttonTitle: buttonTitle,
+        getButtonAction: (model) => () {},
+        nameValidator: nameValidator,
+        profileRepository: profileRepository,
+        imagePicker: imagePicker,
+      );
+
+      // then
+      expect(sut.getButtonAction, isNotNull);
+      expect(sut.getButtonAction?.call(sut), isNotNull);
+    });
+
+    // MARK: - dispose
+
+    test('dispose disposes nameTextController', () {
+      // when
+      sut.dispose();
+
+      // then
+      expect(() => sut.nameTextController.text = Uuid().v4(), throwsFlutterError);
     });
 
     // MARK: - pickImage
@@ -54,7 +96,7 @@ void main() {
       await sut.pickImage();
 
       // then
-      expect(sut.getPickedProfileImagePath(), expectedImagePath);
+      expect(sut.profileImagePath, expectedImagePath);
       expect(actualOnStateChangedCallCount + 1, onStateChangedCallCount);
     });
 
@@ -70,7 +112,7 @@ void main() {
         await sut.pickImage();
 
         // then
-        expect(sut.getPickedProfileImagePath(), isNull);
+        expect(sut.profileImagePath, isNull);
         expect(actualOnStateChangedCallCount, onStateChangedCallCount);
       },
     );
@@ -331,7 +373,7 @@ void main() {
 
       // then
       expect(sut.nameTextController.text, profile.name);
-      expect(sut.getPickedProfileImagePath(), profile.profileImagePath);
+      expect(sut.profileImagePath, profile.profileImagePath);
       expect(sut.hasImage, true);
       expect(
         onStateChangedCallCount,

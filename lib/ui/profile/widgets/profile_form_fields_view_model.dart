@@ -8,7 +8,9 @@ import 'package:sport_matcher/data/profile/config/profile_config.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/abstract_text_validator.dart';
 import 'package:sport_matcher/ui/core/utilities/validators/text_length_validator.dart';
 
-class ProfileFormFieldsViewModel extends ChangeNotifier {
+class ProfileFormFieldsViewModel {
+  final String buttonTitle;
+  final VoidCallback? Function(ProfileFormFieldsViewModel model)? getButtonAction;
   final ImagePicker _picker;
   XFile? _pickedImage;
   String? _existingImagePath;
@@ -21,6 +23,8 @@ class ProfileFormFieldsViewModel extends ChangeNotifier {
   Function()? onStateChanged;
 
   ProfileFormFieldsViewModel({
+    required this.buttonTitle,
+    this.getButtonAction,
     AbstractTextValidator? nameValidator,
     ProfileDomain? initialProfile,
     AbstractProfilesRepository? profileRepository,
@@ -59,9 +63,7 @@ class ProfileFormFieldsViewModel extends ChangeNotifier {
     }
   }
 
-  String? getPickedProfileImagePath() {
-    return _pickedImage?.path ?? _existingImagePath;
-  }
+  String? get profileImagePath => _pickedImage?.path ?? _existingImagePath;
 
   void loadFromProfile(ProfileDomain profile) {
     nameTextController.text = profile.name;
@@ -121,7 +123,7 @@ class ProfileFormFieldsViewModel extends ChangeNotifier {
     await _profileRepository.addProfile(profile);
   }
 
-  void disposeControllers() {
+  void dispose() {
     nameTextController.removeListener(_onStateChanged);
     nameTextController.dispose();
   }

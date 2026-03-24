@@ -26,22 +26,23 @@ class ProfileFormFieldsView extends StatefulWidget {
 }
 
 class _ProfileFormFieldsViewState extends State<ProfileFormFieldsView> {
-  late final _formModel = ProfileFormFieldsViewModel(
+  late final _viewModel = ProfileFormFieldsViewModel(
+    buttonTitle: widget.buttonTitle,
+    getButtonAction: widget.getButtonAction,
     initialProfile: widget.initialProfile,
   );
 
   @override
   void initState() {
     super.initState();
-    _formModel.onStateChanged = () {
+    _viewModel.onStateChanged = () {
       setState(() {});
     };
   }
 
   @override
   void dispose() {
-    _formModel.disposeControllers();
-    _formModel.dispose();
+    _viewModel.dispose();
     super.dispose();
   }
 
@@ -61,17 +62,17 @@ class _ProfileFormFieldsViewState extends State<ProfileFormFieldsView> {
                   children: [
                     Center(child: _photoPlaceholder()),
                     PlainTextField(
-                      controller: _formModel.nameTextController,
+                      controller: _viewModel.nameTextController,
                       title: "Name",
-                      validator: _formModel.nameValidator,
+                      validator: _viewModel.nameValidator,
                       textCapitalization: TextCapitalization.words,
                       autocorrect: false,
                       enableSuggestions: false,
                     ),
                     const TitleMediumText(text: "Select your favorite sports"),
                     ChipsCollectionView(
-                      items: _formModel.displayActivities,
-                      onSelectionChanged: _formModel.updateActivitiesByDisplayName,
+                      items: _viewModel.displayActivities,
+                      onSelectionChanged: _viewModel.updateActivitiesByDisplayName,
                     ),
                   ],
                 ),
@@ -79,8 +80,8 @@ class _ProfileFormFieldsViewState extends State<ProfileFormFieldsView> {
             ),
           ),
           RoundedButton(
-            buttonTitle: widget.buttonTitle,
-            onPressed: widget.getButtonAction?.call(_formModel),
+            buttonTitle: _viewModel.buttonTitle,
+            onPressed: _viewModel.getButtonAction?.call(_viewModel),
           ),
         ],
       ),
@@ -88,7 +89,7 @@ class _ProfileFormFieldsViewState extends State<ProfileFormFieldsView> {
   }
 
   Widget _photoPlaceholder() {
-    final imagePath = _formModel.getPickedProfileImagePath();
+    final imagePath = _viewModel.profileImagePath;
     Widget content;
     if (imagePath case final path?) {
       content = ProfilePhotoView(imagePath: path);
@@ -107,7 +108,7 @@ class _ProfileFormFieldsViewState extends State<ProfileFormFieldsView> {
       child: AspectRatio(
         aspectRatio: 1.0,
         child: OutlinedButton(
-          onPressed: _formModel.pickImage,
+          onPressed: _viewModel.pickImage,
           style: OutlinedButton.styleFrom(
             padding:
                 imagePath == null ? const EdgeInsets.all(48) : EdgeInsets.zero,
