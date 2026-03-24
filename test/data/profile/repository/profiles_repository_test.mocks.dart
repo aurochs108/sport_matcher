@@ -38,19 +38,16 @@ class MockAbstractProfileDatabase extends _i1.Mock
   @override
   _i3.Future<int> insertProfile(_i4.ProfileEntityCompanion? profile) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #insertProfile,
-          [profile],
-        ),
-        returnValue: _i3.Future<int>.value(0),
-      ) as _i3.Future<int>);
+            Invocation.method(#insertProfile, [profile]),
+            returnValue: _i3.Future<int>.value(0),
+          )
+          as _i3.Future<int>);
 
   @override
-  _i3.Future<_i4.ProfileEntityData?> loadProfile() => (super.noSuchMethod(
-        Invocation.method(
-          #loadProfile,
-          [],
-        ),
-        returnValue: _i3.Future<_i4.ProfileEntityData?>.value(),
-      ) as _i3.Future<_i4.ProfileEntityData?>);
+  _i3.Future<_i4.ProfileEntityData?> loadProfile() =>
+      (super.noSuchMethod(
+            Invocation.method(#loadProfile, []),
+            returnValue: _i3.Future<_i4.ProfileEntityData?>.value(),
+          )
+          as _i3.Future<_i4.ProfileEntityData?>);
 }
