@@ -4,16 +4,16 @@ import 'package:sport_matcher/ui/core/ui/buttons/rounded_selectable_button/round
 import 'package:sport_matcher/ui/core/ui/collections/chips_collection_view_model.dart';
 
 class ChipsCollectionView extends StatefulWidget {
-  final ChipsCollectionViewModel viewModel;
+  final ChipsCollectionViewModel _viewModel;
 
   ChipsCollectionView({
     super.key,
     required Map<String, bool> items,
     void Function(String, bool)? onSelectionChanged,
-  }) : viewModel = ChipsCollectionViewModel(
-          items: items,
-          onSelectionChanged: onSelectionChanged,
-        );
+  }) : _viewModel = ChipsCollectionViewModel(
+         items: items,
+         onSelectionChanged: onSelectionChanged,
+       );
 
   @override
   State<ChipsCollectionView> createState() => _ChipsCollectionViewState();
@@ -23,7 +23,7 @@ class _ChipsCollectionViewState extends State<ChipsCollectionView> {
   @override
   void initState() {
     super.initState();
-    widget.viewModel.onStateChanged = () => setState(() {});
+    widget._viewModel.onStateChanged = () => setState(() {});
   }
 
   @override
@@ -35,7 +35,7 @@ class _ChipsCollectionViewState extends State<ChipsCollectionView> {
         runSpacing: AppTheme.rowSpacingSmall,
         alignment: WrapAlignment.center,
         children:
-            widget.viewModel.itemKeys.map((item) {
+            widget._viewModel.itemKeys.map((item) {
               return _activityButton(item);
             }).toList(),
       ),
@@ -45,8 +45,8 @@ class _ChipsCollectionViewState extends State<ChipsCollectionView> {
   Widget _activityButton(String item) {
     return RoundedSelectableButton(
       title: item,
-      initiallySelected: widget.viewModel.isSelected(item),
-      onSelectionChanged: widget.viewModel.getOnSelectionChanged(item),
+      initiallySelected: widget._viewModel.isSelected(item),
+      onSelectionChanged: widget._viewModel.getOnSelectionChanged(item),
     );
   }
 }
