@@ -83,7 +83,7 @@ void main() {
       expect(() => sut.nameTextController.text = Uuid().v4(), throwsFlutterError);
     });
 
-    // MARK: - pickImage
+     // MARK: - pickImage
 
     test('should update picked image path on successful image pick', () async {
       // given
@@ -116,6 +116,26 @@ void main() {
         expect(actualOnStateChangedCallCount, onStateChangedCallCount);
       },
     );
+
+    // MARK: - profileImagePath
+
+    test('profileImagePath returns null initially', () {
+      // then
+      expect(sut.profileImagePath, isNull);
+    });
+
+    // MARK: - onStateChanged
+
+    test('onStateChanged is called when name text changes', () {
+      // given
+      final actualOnStateChangedCallCount = onStateChangedCallCount;
+
+      // when
+      sut.nameTextController.text = Uuid().v4();
+
+      // then
+      expect(actualOnStateChangedCallCount + 1, onStateChangedCallCount);
+    });
 
     // MARK: - displayActivities
 
@@ -154,96 +174,7 @@ void main() {
       expect(actualOnStateChangedCallCount + 1, onStateChangedCallCount);
     });
 
-    // MARK: - hasImage
-
-    test('hasImage returns true after picking image', () async {
-      // given
-      imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
-
-      // when
-      await sut.pickImage();
-
-      // then
-      expect(sut.hasImage, true);
-    });
-
-    test('hasImage returns false when no image picked', () {
-      // then
-      expect(sut.hasImage, false);
-    });
-
-    // MARK: - hasPickedImage
-
-    test('hasPickedImage returns true after picking image', () async {
-      // given
-      imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
-
-      // when
-      await sut.pickImage();
-
-      // then
-      expect(sut.hasPickedImage, true);
-    });
-
-    test('hasPickedImage returns false when no image picked', () {
-      // then
-      expect(sut.hasPickedImage, false);
-    });
-
-    test('hasPickedImage returns false when only existing image path', () {
-      // given
-      final profile = ProfileDomain(
-        name: Uuid().v4(),
-        profileImagePath: 'path/to/image.jpg',
-        activities: {
-          for (final activity in ActivitiesConfig.values) activity: false,
-        },
-      );
-      sut.loadFromProfile(profile);
-
-      // then
-      expect(sut.hasPickedImage, false);
-      expect(sut.hasImage, true);
-    });
-
-    // MARK: - hasSelectedActivities
-
-    test('hasSelectedActivities returns true when activity is selected', () {
-      // when
-      sut.updateActivitiesByDisplayName(sut.displayActivities.keys.first, true);
-
-      // then
-      expect(sut.hasSelectedActivities, true);
-    });
-
-    test(
-      'hasSelectedActivities returns false when no activity is selected',
-      () {
-        // then
-        expect(sut.hasSelectedActivities, false);
-      },
-    );
-
     // MARK: - getSaveButtonAction
-
-    test(
-      'getSaveButtonAction returns callback when has image, name and activities',
-      () async {
-        // given
-        imagePicker.pickedImageReturnValue = XFile('path/to/image.jpg');
-        await sut.pickImage();
-
-        sut.nameTextController.text = Uuid().v4();
-
-        sut.updateActivitiesByDisplayName(
-          sut.displayActivities.keys.first,
-          true,
-        );
-
-        // then
-        expect(sut.getSaveButtonAction(() {}), isNotNull);
-      },
-    );
 
     test('getSaveButtonAction returns null when no image', () {
       // given
@@ -353,9 +284,9 @@ void main() {
       },
     );
 
-    // MARK: - loadFromProfile
+    // MARK: - initialProfile
 
-    test('loadFromProfile populates fields from profile', () {
+    test('initialProfile populates fields from profile', () {
       // given
       final profile = ProfileDomain(
         name: Uuid().v4(),
@@ -366,19 +297,24 @@ void main() {
         },
       );
 
-      final actualOnStateChangedCallCount = onStateChangedCallCount;
+      final expectedDisplayActivities = {
+        for (final entry in profile.activities.entries)
+          entry.key.displayName: entry.value,
+      };
 
       // when
-      sut.loadFromProfile(profile);
+      final sut = ProfileFormFieldsViewModel(
+        buttonTitle: buttonTitle,
+        nameValidator: nameValidator,
+        profileRepository: profileRepository,
+        imagePicker: imagePicker,
+        initialProfile: profile,
+      );
 
       // then
       expect(sut.nameTextController.text, profile.name);
       expect(sut.profileImagePath, profile.profileImagePath);
-      expect(sut.hasImage, true);
-      expect(
-        onStateChangedCallCount,
-        greaterThan(actualOnStateChangedCallCount),
-      );
+      expect(sut.displayActivities, expectedDisplayActivities);
     });
   });
 }

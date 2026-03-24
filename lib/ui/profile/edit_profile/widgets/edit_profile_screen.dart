@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/data/profile/domain/profile_domain.dart';
+import 'package:sport_matcher/ui/profile/edit_profile/widgets/edit_profile_screen_model.dart';
 import 'package:sport_matcher/ui/profile/widgets/profile_form_fields_view.dart';
 
 class EditProfileScreen extends StatelessWidget {
   final ProfileDomain profile;
 
-  const EditProfileScreen({super.key, required this.profile});
+  EditProfileScreen({super.key, required this.profile});
+
+  final _viewModel = EditProfileScreenModel();
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +17,7 @@ class EditProfileScreen extends StatelessWidget {
       body: ProfileFormFieldsView(
         buttonTitle: "Save",
         initialProfile: profile,
-        getButtonAction: (formModel) => formModel.getSaveAndPopAction(
-          Navigator.of(context),
-        ),
+        onSaved: () => _viewModel.onSavedAction(Navigator.of(context)),
       ),
     );
   }

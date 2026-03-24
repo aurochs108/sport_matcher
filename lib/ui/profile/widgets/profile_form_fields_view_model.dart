@@ -10,10 +10,9 @@ import 'package:sport_matcher/ui/core/utilities/validators/text_length_validator
 
 class ProfileFormFieldsViewModel {
   final String buttonTitle;
-  final VoidCallback? Function(ProfileFormFieldsViewModel model)? getButtonAction;
+  final VoidCallback? onSaved;
   final ImagePicker _picker;
   XFile? _pickedImage;
-  String? _existingImagePath;
   final nameTextController = TextEditingController();
   final AbstractTextValidator nameValidator;
   final Map<ActivitiesConfig, bool> _activities = {
@@ -24,7 +23,7 @@ class ProfileFormFieldsViewModel {
 
   ProfileFormFieldsViewModel({
     required this.buttonTitle,
-    this.getButtonAction,
+    this.onSaved,
     AbstractTextValidator? nameValidator,
     ProfileDomain? initialProfile,
     AbstractProfilesRepository? profileRepository,
@@ -38,7 +37,7 @@ class ProfileFormFieldsViewModel {
         _picker = imagePicker ?? ImagePicker() {
     nameTextController.addListener(_onStateChanged);
     if (initialProfile != null) {
-      loadFromProfile(initialProfile);
+      _loadFromProfile(initialProfile);
     }
   }
 
@@ -63,11 +62,11 @@ class ProfileFormFieldsViewModel {
     }
   }
 
-  String? get profileImagePath => _pickedImage?.path ?? _existingImagePath;
+  String? get profileImagePath => _pickedImage?.path;
 
-  void loadFromProfile(ProfileDomain profile) {
+  void _loadFromProfile(ProfileDomain profile) {
     nameTextController.text = profile.name;
-    _existingImagePath = profile.profileImagePath;
+    _pickedImage = XFile(profile.profileImagePath);
     for (final entry in profile.activities.entries) {
       _activities[entry.key] = entry.value;
     }
@@ -89,38 +88,41 @@ class ProfileFormFieldsViewModel {
     onStateChanged?.call();
   }
 
-  bool get hasPickedImage => _pickedImage != null;
-
-  bool get hasImage =>
-      _pickedImage != null || _existingImagePath != null;
-
-  bool get hasSelectedActivities =>
-      _activities.values.any((isSelected) => isSelected);
+  VoidCallback? get buttonAction {
+    final saved = onSaved;
+    if (saved == null) return null;
+    return getSaveButtonAction(saved);
+  }
 
   VoidCallback? getSaveButtonAction(VoidCallback onSaved) {
     final hasName = nameValidator.validate(nameTextController.text) == null;
 
-    if (!hasImage || !hasName || !hasSelectedActivities) return null;
+    if (!_hasImage || !hasName || !_hasSelectedActivities) return null;
 
     return () {
-      saveProfile().then((_) {
+      _saveProfile().then((_) {
         onSaved();
       });
     };
   }
 
-  VoidCallback? getSaveAndPopAction(NavigatorState navigator) {
-    return getSaveButtonAction(() => navigator.pop());
-  }
+  bool get _hasImage => _pickedImage != null;
 
-  Future<void> saveProfile() async {
-    final imagePath = _pickedImage?.path ?? _existingImagePath;
+  bool get _hasSelectedActivities =>
+      _activities.values.any((isSelected) => isSelected);
+
+  Future<void> _saveProfile() async {
+    final imagePath = _pickedImage?.path;
     final profile = ProfileDomain(
       name: nameTextController.text,
       profileImagePath: imagePath!,
       activities: Map<ActivitiesConfig, bool>.from(_activities),
     );
     await _profileRepository.addProfile(profile);
+  }
+
+  VoidCallback? getSaveAndPopAction(NavigatorState navigator) {
+    return getSaveButtonAction(() => navigator.pop());
   }
 
   void dispose() {

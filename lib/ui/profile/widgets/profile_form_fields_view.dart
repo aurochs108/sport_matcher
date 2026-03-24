@@ -11,13 +11,13 @@ import 'package:sport_matcher/ui/profile/widgets/profile_form_fields_view_model.
 
 class ProfileFormFieldsView extends StatefulWidget {
   final String buttonTitle;
-  final VoidCallback? Function(ProfileFormFieldsViewModel model)? getButtonAction;
+  final VoidCallback? onSaved;
   final ProfileDomain? initialProfile;
 
   const ProfileFormFieldsView({
     super.key,
     required this.buttonTitle,
-    this.getButtonAction,
+    this.onSaved,
     this.initialProfile,
   });
 
@@ -28,7 +28,7 @@ class ProfileFormFieldsView extends StatefulWidget {
 class _ProfileFormFieldsViewState extends State<ProfileFormFieldsView> {
   late final _viewModel = ProfileFormFieldsViewModel(
     buttonTitle: widget.buttonTitle,
-    getButtonAction: widget.getButtonAction,
+    onSaved: widget.onSaved,
     initialProfile: widget.initialProfile,
   );
 
@@ -81,7 +81,7 @@ class _ProfileFormFieldsViewState extends State<ProfileFormFieldsView> {
           ),
           RoundedButton(
             buttonTitle: _viewModel.buttonTitle,
-            onPressed: _viewModel.getButtonAction?.call(_viewModel),
+            onPressed: _viewModel.buttonAction,
           ),
         ],
       ),
