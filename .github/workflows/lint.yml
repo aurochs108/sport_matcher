@@ -1,4 +1,4 @@
-name: unit_tests
+name: lint
 
 on:
   pull_request:
@@ -6,12 +6,12 @@ on:
       - main
 
 jobs:
-  test:
+  lint:
     if: ${{ github.event.pull_request.draft == false }}
     runs-on: ubuntu-24.04
 
     steps:
       - uses: ./.github/actions/setup-flutter
 
-      - name: Run tests
-        run: flutter test
+      - name: Analyze code
+        run: flutter analyze --fatal-infos
