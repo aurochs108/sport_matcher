@@ -1,11 +1,9 @@
 name: Setup Flutter
-description: Checkout, install Flutter and restore pub cache
+description: Install Flutter and restore pub cache
 
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v4
-
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
