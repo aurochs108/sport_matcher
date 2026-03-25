@@ -21,7 +21,7 @@ class ProfileDatabase extends _$ProfileDatabase
 
   ProfileDatabase._internal() : super(_openConnection());
 
-  ProfileDatabase._withExecutor(QueryExecutor executor) : super(executor);
+  ProfileDatabase._withExecutor(super.executor);
 
   @override
   int get schemaVersion => 1;
