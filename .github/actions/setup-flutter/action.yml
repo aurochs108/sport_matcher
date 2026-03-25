@@ -1,0 +1,39 @@
+name: Setup Flutter
+description: Install Flutter and restore pub cache
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: stable
+        flutter-version: 3.29.3
+        cache: true
+
+    - name: Disable Flutter analytics
+      shell: bash
+      run: flutter config --no-analytics
+
+    - name: Detect Flutter version
+      id: get_flutter_version
+      shell: bash
+      run: |
+        ver=$(flutter --version --machine | python3 -c 'import sys,json;print(json.load(sys.stdin)["frameworkVersion"])')
+        echo "flutter_version=$ver" >> $GITHUB_OUTPUT
+
+    - name: Cache Pub packages
+      uses: actions/cache@v5
+      with:
+        path: |
+          ~/.pub-cache
+          .pub-cache
+          .dart_tool
+        key: ${{ runner.os }}-flutter-${{ steps.get_flutter_version.outputs.flutter_version }}-pub-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-flutter-${{ steps.get_flutter_version.outputs.flutter_version }}-pub-
+          ${{ runner.os }}-pub-
+
+    - name: Install dependencies
+      shell: bash
+      run: flutter pub get

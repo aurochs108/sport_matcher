@@ -9,7 +9,7 @@ class SignInScreen extends StatelessWidget {
     return EmailAuthenticationScreen(
       title: "Sign in",
       onFinishProcessButtonAction: () {
-        print("todo");
+        // TODO sign in
       },
     );
   }

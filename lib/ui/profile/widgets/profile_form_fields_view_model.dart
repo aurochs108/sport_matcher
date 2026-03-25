@@ -59,7 +59,6 @@ class ProfileFormFieldsViewModel {
       }
     } catch (e) {
       // TODO handle error
-      print('Image pick error: $e');
     }
   }
 
