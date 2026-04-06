@@ -15,7 +15,7 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return EmailAuthenticationScreen(
         title: "Sign up",
-        onFinishProcessButtonAction: (email, password) {
+        onFinishProcessButtonAction: (email, password) async {
           _navigateToCreateProfile(context);
         });
   }

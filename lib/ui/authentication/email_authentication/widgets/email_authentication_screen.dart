@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sport_matcher/ui/authentication/email_authentication/widgets/email_authentication_screen_model.dart';
 import 'package:sport_matcher/ui/core/theme/app_theme.dart';
-import 'package:sport_matcher/ui/core/ui/buttons/rounded_button/rounded_button.dart';
+import 'package:sport_matcher/ui/core/ui/buttons/async_rounded_button/async_rounded_button.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/password_text_field.dart';
 import 'package:sport_matcher/ui/core/ui/text_fields/plain_text_field.dart';
 
@@ -11,7 +11,7 @@ class EmailAuthenticationScreen extends StatefulWidget {
   EmailAuthenticationScreen({
     super.key,
     required String title,
-    required void Function(String email, String password) onFinishProcessButtonAction,
+    required Future<void> Function(String email, String password) onFinishProcessButtonAction,
   }) : _viewModel = EmailAuthenticationScreenModel(
          title: title,
          onFinishProcessButtonAction: onFinishProcessButtonAction,
@@ -64,7 +64,7 @@ class _EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
                 ],
               ),
             ),
-            RoundedButton(
+            AsyncRoundedButton(
               buttonTitle: widget._viewModel.title,
               onPressed: widget._viewModel.getFinishProcessButtonAction(),
             ),
