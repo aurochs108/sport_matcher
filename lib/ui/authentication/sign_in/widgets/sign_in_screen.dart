@@ -16,7 +16,10 @@ class SignInScreen extends StatelessWidget {
         await _viewModel.register(email, password);
         if (_viewModel.errorMessage != null && context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(_viewModel.errorMessage!)),
+            SnackBar(
+              content: Text(_viewModel.errorMessage!),
+              backgroundColor: Colors.red,
+            ),
           );
         }
       },
