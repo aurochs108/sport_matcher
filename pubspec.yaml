@@ -19,8 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  # sdk: ^3.7.0
-  sdk: ">=3.7.0 <4.0.0"
+  sdk: ^3.8.0
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -41,6 +40,7 @@ dependencies:
   path_provider: ^2.1.5
   image_picker: ^1.2.1
   http: ^1.6.0
+  json_annotation: ^4.11.0
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +53,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
   uuid: ^3.0.7
+  json_serializable: ^6.13.1
   mockito: ^5.4.6
   build_runner: ^2.10.5
   drift_dev: ^2.30.0

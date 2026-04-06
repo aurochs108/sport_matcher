@@ -11,7 +11,7 @@ class EmailAuthenticationScreen extends StatefulWidget {
   EmailAuthenticationScreen({
     super.key,
     required String title,
-    required onFinishProcessButtonAction,
+    required void Function(String email, String password) onFinishProcessButtonAction,
   }) : _viewModel = EmailAuthenticationScreenModel(
          title: title,
          onFinishProcessButtonAction: onFinishProcessButtonAction,
