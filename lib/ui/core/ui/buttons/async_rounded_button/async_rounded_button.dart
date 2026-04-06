@@ -8,21 +8,44 @@ class AsyncRoundedButton extends StatefulWidget {
 
   AsyncRoundedButton({
     super.key,
-    required String buttonTitle,
+    required this.buttonTitle,
     Future<void> Function()? onPressed,
-  })  : buttonTitle = buttonTitle,
-        _viewModel = AsyncRoundedButtonScreenModel(onPressed: onPressed);
+  }) : _viewModel = AsyncRoundedButtonScreenModel(onPressed: onPressed);
 
   @override
   State<AsyncRoundedButton> createState() => _AsyncRoundedButtonState();
 }
 
-class _AsyncRoundedButtonState extends State<AsyncRoundedButton> {
+class _AsyncRoundedButtonState extends State<AsyncRoundedButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _animationController;
+  late final Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   Future<void> _handlePressed() async {
+    await _animationController.forward();
     setState(() {});
     await widget._viewModel.handlePressed();
     if (mounted) {
       setState(() {});
+      await _animationController.reverse();
     }
   }
 
@@ -41,22 +64,32 @@ class _AsyncRoundedButtonState extends State<AsyncRoundedButton> {
             horizontal: AppTheme.buttonBorderRadius,
           ),
         ),
-        child: widget._viewModel.isLoading
-            ? const SizedBox(
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) {
+            if (widget._viewModel.isLoading &&
+                _animationController.isCompleted) {
+              return const SizedBox(
                 height: 20,
                 width: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
                   color: Colors.white,
                 ),
-              )
-            : Text(
+              );
+            }
+            return Transform.scale(
+              scale: _scaleAnimation.value,
+              child: Text(
                 widget.buttonTitle,
                 style: const TextStyle(
                   fontSize: 16.0,
                   color: Colors.white,
                 ),
               ),
+            );
+          },
+        ),
       ),
     );
   }
