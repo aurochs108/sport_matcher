@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:sport_matcher/data/auth/api/abstract_auth_api.dart';
-import 'package:sport_matcher/config/app_config.dart';
+import 'package:sport_matcher/config/api_config.dart';
 import 'package:sport_matcher/data/auth/domain/auth_response.dart';
 import 'package:sport_matcher/data/auth/domain/email_registration_request.dart';
 
@@ -13,7 +13,7 @@ class AuthApi extends AbstractAuthApi {
 
   @override
   Future<AuthResponse> register(EmailRegistrationRequest request) async {
-    final url = Uri.parse('${AppConfig.baseUrl}/auth/register/email');
+    final url = Uri.parse('${ApiConfig.baseUrl}/auth/register/email');
     final response = await _client.post(
       url,
       headers: {'Content-Type': 'application/json'},
