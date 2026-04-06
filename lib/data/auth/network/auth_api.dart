@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:sport_matcher/data/auth/network/abstract_auth_api.dart';
 import 'package:sport_matcher/config/api_config.dart';
 import 'package:sport_matcher/data/auth/domain/auth_response.dart';
+import 'package:sport_matcher/data/auth/network/abstract_auth_api.dart';
 import 'package:sport_matcher/data/auth/network/email_registration_request.dart';
+import 'package:sport_matcher/data/network/api_exception.dart';
+import 'package:sport_matcher/data/network/error_response.dart';
 
 class AuthApi extends AbstractAuthApi {
   final http.Client _client;
@@ -24,6 +26,14 @@ class AuthApi extends AbstractAuthApi {
       return AuthResponse.fromJson(jsonDecode(response.body));
     }
 
-    throw Exception('Registration failed: ${response.statusCode}');
+    ErrorResponse? errorResponse;
+    try {
+      errorResponse = ErrorResponse.fromJson(jsonDecode(response.body));
+    } catch (_) {}
+
+    throw ApiException(
+      statusCode: response.statusCode,
+      errorResponse: errorResponse,
+    );
   }
 }
