@@ -1,19 +1,17 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:sport_matcher/data/network/abstract_internet_connection_checker.dart';
 import 'package:sport_matcher/data/network/api_exception.dart';
+import 'package:sport_matcher/data/network/internet_connection_checker.dart';
+import 'package:sport_matcher/ui/core/utilities/mapper/api_error_to_user_message_mapper.dart';
 
-class ErrorToUserMessageMapper {
-  static const _apiErrorMessages = {
-    'EMAIL_ALREADY_EXISTS': 'An account with this email already exists.',
-    'INVALID_EMAIL': 'Please enter a valid email address.',
-    'WEAK_PASSWORD': 'Password is too weak. Please choose a stronger one.',
-    'INVALID_CREDENTIALS': 'Incorrect email or password.',
-    'ACCOUNT_LOCKED': 'Your account has been locked. Please try again later.',
-    'ACCOUNT_DISABLED': 'Your account has been disabled.',
-    'TOKEN_EXPIRED': 'Your session has expired. Please sign in again.',
-    'RATE_LIMIT_EXCEEDED': 'Too many attempts. Please try again later.',
-  };
+class ApiErrorToUserMessageMapper implements AbstractApiErrorToUserMessageMapper {
+  final AbstractInternetConnectionChecker _connectionChecker;
 
+  ApiErrorToUserMessageMapper({
+    AbstractInternetConnectionChecker? connectionChecker,
+  }) : _connectionChecker = connectionChecker ?? InternetConnectionChecker();
   static const _httpStatusMessages = {
     400: 'Invalid request. Please check your input.',
     401: 'Unauthorized. Please sign in again.',
@@ -28,9 +26,17 @@ class ErrorToUserMessageMapper {
     503: 'Service is currently unavailable. Please try again later.',
   };
 
-  String map(Object error) {
+  @override
+  Future<String> map(Object error) async {
+    if (error is TimeoutException) {
+      return 'Request timed out. Please try again.';
+    }
+
     if (error is SocketException) {
-      return 'No internet connection. Please check your network.';
+      if (!await _connectionChecker.hasConnection()) {
+        return 'No internet connection. Please check your network.';
+      }
+      return 'Unable to connect to the server. Please try again later.';
     }
 
     if (error is HttpException) {
@@ -38,10 +44,6 @@ class ErrorToUserMessageMapper {
     }
 
     if (error is ApiException) {
-      final code = error.errorResponse?.code;
-      if (code != null && _apiErrorMessages.containsKey(code)) {
-        return _apiErrorMessages[code]!;
-      }
       if (_httpStatusMessages.containsKey(error.statusCode)) {
         return _httpStatusMessages[error.statusCode]!;
       }
