@@ -3,10 +3,10 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:sport_matcher/config/api_config.dart';
-import 'package:sport_matcher/data/network/api_exception.dart';
-import 'package:sport_matcher/data/network/api_result.dart';
-import 'package:sport_matcher/data/network/error_response.dart';
-import 'package:sport_matcher/data/network/http_method.dart';
+import 'package:sport_matcher/ui/core/utilities/api_request/api_exception.dart';
+import 'package:sport_matcher/ui/core/utilities/api_request/api_result.dart';
+import 'package:sport_matcher/ui/core/utilities/api_request/error_response.dart';
+import 'package:sport_matcher/ui/core/utilities/api_request/http_method.dart';
 import 'package:sport_matcher/ui/core/utilities/mapper/api_error_to_user_message_mapper.dart';
 import 'package:sport_matcher/ui/core/utilities/mapper/api_error_to_user_message_mapper_impl.dart';
 

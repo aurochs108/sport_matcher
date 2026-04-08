@@ -1,4 +1,4 @@
-import 'package:sport_matcher/data/network/error_response.dart';
+import 'package:sport_matcher/ui/core/utilities/api_request/error_response.dart';
 
 class ApiException implements Exception {
   final int statusCode;

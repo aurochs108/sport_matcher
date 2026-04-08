@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:sport_matcher/data/network/abstract_internet_connection_checker.dart';
-import 'package:sport_matcher/data/network/api_exception.dart';
-import 'package:sport_matcher/data/network/internet_connection_checker.dart';
+import 'package:sport_matcher/ui/core/utilities/internet_connection_checker/abstract_internet_connection_checker.dart';
+import 'package:sport_matcher/ui/core/utilities/api_request/api_exception.dart';
+import 'package:sport_matcher/ui/core/utilities/internet_connection_checker/internet_connection_checker.dart';
 import 'package:sport_matcher/ui/core/utilities/mapper/api_error_to_user_message_mapper.dart';
 
 class ApiErrorToUserMessageMapper implements AbstractApiErrorToUserMessageMapper {
