@@ -11,8 +11,9 @@ EmailRegistrationRequest _$EmailRegistrationRequestFromJson(
 ) => EmailRegistrationRequest(
   email: json['email'] as String,
   password: json['password'] as String,
+  deviceId: json['deviceId'] as String,
 );
 
 Map<String, dynamic> _$EmailRegistrationRequestToJson(
   EmailRegistrationRequest instance,
-) => <String, dynamic>{'email': instance.email, 'password': instance.password};
+) => <String, dynamic>{'email': instance.email, 'password': instance.password, 'deviceId': instance.deviceId};

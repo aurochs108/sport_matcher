@@ -33,10 +33,13 @@ class ApiRequest<TResponse> {
   Future<ApiResult<TResponse>> execute() async {
     try {
       final url = Uri.parse('${ApiConfig.baseUrl}$path');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
       final response = await switch (method) {
         HttpMethod.post => _client.post(
             url,
-            headers: {'Content-Type': 'application/json'},
+            headers: headers,
             body: bodyBuilder != null ? jsonEncode(bodyBuilder!()) : null,
           ),
       }.timeout(timeout);
