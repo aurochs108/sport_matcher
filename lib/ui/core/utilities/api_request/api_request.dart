@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:sport_matcher/config/api_config.dart';
 import 'package:sport_matcher/ui/core/utilities/api_request/api_exception.dart';
@@ -44,8 +46,16 @@ class ApiRequest<TResponse> {
           ),
       }.timeout(timeout);
 
+      debugPrint('ApiRequest [$path] ${response.statusCode}: ${response.body}');
+
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        return ApiSuccess(fromJson(jsonDecode(response.body)));
+        try {
+          return ApiSuccess(fromJson(jsonDecode(response.body)));
+        } catch (e, stackTrace) {
+          debugPrint('ApiRequest deserialization error: $e');
+          debugPrint('StackTrace: $stackTrace');
+          return ApiError(await _errorMapper.map(e));
+        }
       }
 
       ErrorResponse? errorResponse;
@@ -57,7 +67,9 @@ class ApiRequest<TResponse> {
         statusCode: response.statusCode,
         errorResponse: errorResponse,
       )));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('ApiRequest error: $e');
+      debugPrint('StackTrace: $stackTrace');
       return ApiError(await _errorMapper.map(e));
     }
   }
