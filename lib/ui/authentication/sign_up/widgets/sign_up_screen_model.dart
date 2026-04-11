@@ -34,7 +34,7 @@ class SignUpScreenModel {
 
     switch (result) {
       case ApiSuccess(:final data):
-        final tokens = _authMapper.toDomain(data);
+        final tokens = _authMapper.responseToDomain(data);
         await _authRepository.saveTokens(tokens);
       case ApiError(:final message):
         errorMessage = message;

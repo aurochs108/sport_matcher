@@ -3,7 +3,7 @@ import 'package:sport_matcher/data/auth/network/response/auth_response.dart';
 import 'package:sport_matcher/data/auth/persistence/entity/token_entity.dart';
 
 class AuthMapper {
-  AuthTokens toDomain(AuthResponse response) {
+  AuthTokens responseToDomain(AuthResponse response) {
     return AuthTokens(
       accessToken: response.accessToken,
       refreshToken: response.refreshToken,
