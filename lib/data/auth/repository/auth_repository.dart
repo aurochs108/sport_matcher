@@ -16,7 +16,7 @@ class AuthRepository extends AbstractAuthRepository {
 
   @override
   Future<void> saveTokens(AuthTokens tokens) {
-    return _tokenStorage.saveTokens(_mapper.toEntity(tokens));
+    return _tokenStorage.saveTokens(_mapper.domainToEntity(tokens));
   }
 
   @override

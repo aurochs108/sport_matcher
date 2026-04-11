@@ -12,7 +12,7 @@ class AuthMapper {
     );
   }
 
-  TokenEntity toEntity(AuthTokens domain) {
+  TokenEntity domainToEntity(AuthTokens domain) {
     return TokenEntity(
       accessToken: domain.accessToken,
       refreshToken: domain.refreshToken,
