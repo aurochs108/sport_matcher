@@ -1,7 +1,8 @@
-import 'package:sport_matcher/data/auth/network/auth_api.dart';
-import 'package:sport_matcher/data/auth/network/email_registration_request.dart';
-import 'package:sport_matcher/data/auth/persistence/abstract_token_storage.dart';
-import 'package:sport_matcher/data/auth/persistence/token_storage.dart';
+import 'package:sport_matcher/data/auth/mapper/auth_mapper.dart';
+import 'package:sport_matcher/data/auth/network/api/auth_api.dart';
+import 'package:sport_matcher/data/auth/network/request/email_registration_request.dart';
+import 'package:sport_matcher/data/auth/repository/abstract_auth_repository.dart';
+import 'package:sport_matcher/data/auth/repository/auth_repository.dart';
 import 'package:sport_matcher/ui/core/utilities/api_request/api_result.dart';
 import 'package:sport_matcher/ui/core/utilities/device_id/abstract_device_id_provider.dart';
 import 'package:sport_matcher/ui/core/utilities/device_id/device_id_provider.dart';
@@ -9,17 +10,20 @@ import 'package:sport_matcher/ui/core/utilities/device_id/device_id_provider.dar
 class SignUpScreenModel {
   final AuthApi _authApi;
   final AbstractDeviceIdProvider _deviceIdProvider;
-  final AbstractTokenStorage _tokenStorage;
+  final AbstractAuthRepository _authRepository;
+  final AuthMapper _authMapper;
 
   String? errorMessage;
 
   SignUpScreenModel({
     AuthApi? authApi,
     AbstractDeviceIdProvider? deviceIdProvider,
-    AbstractTokenStorage? tokenStorage,
+    AbstractAuthRepository? authRepository,
+    AuthMapper? authMapper,
   })  : _authApi = authApi ?? AuthApi(),
         _deviceIdProvider = deviceIdProvider ?? DeviceIdProvider(),
-        _tokenStorage = tokenStorage ?? TokenStorage();
+        _authRepository = authRepository ?? AuthRepository(),
+        _authMapper = authMapper ?? AuthMapper();
 
   Future<void> register(String email, String password) async {
     errorMessage = null;
@@ -30,10 +34,8 @@ class SignUpScreenModel {
 
     switch (result) {
       case ApiSuccess(:final data):
-        await _tokenStorage.saveTokens(
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-        );
+        final tokens = _authMapper.toDomain(data);
+        await _authRepository.saveTokens(tokens);
       case ApiError(:final message):
         errorMessage = message;
     }

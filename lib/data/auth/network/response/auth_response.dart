@@ -12,7 +12,7 @@ class AuthResponse {
   AuthResponse({
     required this.accessToken,
     required this.refreshToken,
-    this.tokenType = 'Bearer',
+    required this.tokenType,
     required this.expiresIn,
   });
 
