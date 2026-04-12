@@ -1,17 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:sport_matcher/ui/core/utilities/internet_connection_checker/abstract_internet_connection_checker.dart';
 import 'package:sport_matcher/data/core/api_request/api_exception.dart';
-import 'package:sport_matcher/ui/core/utilities/internet_connection_checker/internet_connection_checker.dart';
 import 'package:sport_matcher/data/core/mapper/abstract_api_error_to_user_message_mapper.dart';
 
 class ApiErrorToUserMessageMapper implements AbstractApiErrorToUserMessageMapper {
-  final AbstractInternetConnectionChecker _connectionChecker;
-
-  ApiErrorToUserMessageMapper({
-    AbstractInternetConnectionChecker? connectionChecker,
-  }) : _connectionChecker = connectionChecker ?? InternetConnectionChecker();
   static const _httpStatusMessages = {
     400: 'Invalid request. Please check your input.',
     401: 'Unauthorized. Please sign in again.',
@@ -27,15 +20,12 @@ class ApiErrorToUserMessageMapper implements AbstractApiErrorToUserMessageMapper
   };
 
   @override
-  Future<String> map(Object error) async {
+  String map(Object error) {
     if (error is TimeoutException) {
       return 'Request timed out. Please try again.';
     }
 
     if (error is SocketException) {
-      if (!await _connectionChecker.hasConnection()) {
-        return 'No internet connection. Please check your network.';
-      }
       return 'Unable to connect to the server. Please try again later.';
     }
 

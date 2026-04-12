@@ -11,6 +11,8 @@ import 'package:sport_matcher/data/core/api_request/error_response.dart';
 import 'package:sport_matcher/data/core/api_request/http_method.dart';
 import 'package:sport_matcher/data/core/mapper/abstract_api_error_to_user_message_mapper.dart';
 import 'package:sport_matcher/data/core/mapper/api_error_to_user_message_mapper.dart';
+import 'package:sport_matcher/data/core/internet_connection_checker/abstract_internet_connection_checker.dart';
+import 'package:sport_matcher/data/core/internet_connection_checker/internet_connection_checker.dart';
 
 class ApiRequest<TResponse> {
   final String path;
@@ -20,6 +22,7 @@ class ApiRequest<TResponse> {
   final Duration timeout;
   final http.Client _client;
   final AbstractApiErrorToUserMessageMapper _errorMapper;
+  final AbstractInternetConnectionChecker _connectionChecker;
 
   ApiRequest({
     required this.path,
@@ -29,11 +32,17 @@ class ApiRequest<TResponse> {
     this.timeout = const Duration(seconds: 30),
     http.Client? client,
     AbstractApiErrorToUserMessageMapper? errorMapper,
+    AbstractInternetConnectionChecker? connectionChecker,
   })  : _client = client ?? http.Client(),
-        _errorMapper = errorMapper ?? ApiErrorToUserMessageMapper();
+        _errorMapper = errorMapper ?? ApiErrorToUserMessageMapper(),
+        _connectionChecker = connectionChecker ?? InternetConnectionChecker();
 
   Future<ApiResult<TResponse>> execute() async {
     try {
+      if (!await _connectionChecker.hasConnection()) {
+        return ApiError('No internet connection. Please check your network.');
+      }
+
       final url = Uri.parse('${ApiConfig.baseUrl}$path');
       final headers = {
         'Content-Type': 'application/json',
@@ -46,31 +55,45 @@ class ApiRequest<TResponse> {
           ),
       }.timeout(timeout);
 
-      debugPrint('ApiRequest [$path] ${response.statusCode}: ${response.body}');
+      if (kDebugMode) {
+        debugPrint('ApiRequest [$path] ${response.statusCode}: ${response.body}');
+      }
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         try {
           return ApiSuccess(fromJson(jsonDecode(response.body)));
         } catch (e, stackTrace) {
-          debugPrint('ApiRequest deserialization error: $e');
-          debugPrint('StackTrace: $stackTrace');
-          return ApiError(await _errorMapper.map(e));
+          if (kDebugMode) {
+            debugPrint('ApiRequest deserialization error: $e');
+            debugPrint('StackTrace: $stackTrace');
+          }
+          return ApiError(_errorMapper.map(e), statusCode: response.statusCode);
         }
       }
 
-      ErrorResponse? errorResponse;
       try {
-        errorResponse = ErrorResponse.fromJson(jsonDecode(response.body));
-      } catch (_) {}
-
-      return ApiError(await _errorMapper.map(ApiException(
-        statusCode: response.statusCode,
-        errorResponse: errorResponse,
-      )));
+        final errorResponse = ErrorResponse.fromJson(jsonDecode(response.body));
+        return ApiError(
+          _errorMapper.map(ApiException(
+            statusCode: response.statusCode,
+            errorResponse: errorResponse,
+          )),
+          statusCode: response.statusCode,
+        );
+      } catch (_) {
+        return ApiError(
+          _errorMapper.map(ApiException(statusCode: response.statusCode)),
+          statusCode: response.statusCode,
+        );
+      }
     } catch (e, stackTrace) {
-      debugPrint('ApiRequest error: $e');
-      debugPrint('StackTrace: $stackTrace');
-      return ApiError(await _errorMapper.map(e));
+      if (kDebugMode) {
+        debugPrint('ApiRequest error: $e');
+        debugPrint('StackTrace: $stackTrace');
+      }
+      return ApiError(_errorMapper.map(e));
+    } finally {
+      _client.close();
     }
   }
 }

@@ -1,3 +1,3 @@
 abstract class AbstractApiErrorToUserMessageMapper {
-  Future<String> map(Object error);
+  String map(Object error);
 }
