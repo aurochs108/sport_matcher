@@ -16,6 +16,8 @@ class AuthMapper {
     return TokenEntity(
       accessToken: domain.accessToken,
       refreshToken: domain.refreshToken,
+      tokenType: domain.tokenType,
+      expiresIn: domain.expiresIn,
     );
   }
 
@@ -23,8 +25,8 @@ class AuthMapper {
     return AuthTokens(
       accessToken: entity.accessToken,
       refreshToken: entity.refreshToken,
-      tokenType: 'Bearer',
-      expiresIn: 0,
+      tokenType: entity.tokenType,
+      expiresIn: entity.expiresIn,
     );
   }
 }

@@ -5,6 +5,8 @@ import 'package:sport_matcher/data/auth/persistence/entity/token_entity.dart';
 class TokenStorage implements AbstractTokenStorage {
   static const _accessTokenKey = 'access_token';
   static const _refreshTokenKey = 'refresh_token';
+  static const _tokenTypeKey = 'token_type';
+  static const _expiresInKey = 'expires_in';
 
   final FlutterSecureStorage _storage;
 
@@ -16,6 +18,8 @@ class TokenStorage implements AbstractTokenStorage {
     await Future.wait([
       _storage.write(key: _accessTokenKey, value: entity.accessToken),
       _storage.write(key: _refreshTokenKey, value: entity.refreshToken),
+      _storage.write(key: _tokenTypeKey, value: entity.tokenType),
+      _storage.write(key: _expiresInKey, value: entity.expiresIn.toString()),
     ]);
   }
 
@@ -23,11 +27,15 @@ class TokenStorage implements AbstractTokenStorage {
   Future<TokenEntity?> loadTokens() async {
     final accessToken = await _storage.read(key: _accessTokenKey);
     final refreshToken = await _storage.read(key: _refreshTokenKey);
-    if (accessToken == null || refreshToken == null) return null;
+    final tokenType = await _storage.read(key: _tokenTypeKey);
+    final expiresIn = await _storage.read(key: _expiresInKey);
+    if (accessToken == null || refreshToken == null || tokenType == null || expiresIn == null) return null;
 
     return TokenEntity(
       accessToken: accessToken,
       refreshToken: refreshToken,
+      tokenType: tokenType,
+      expiresIn: int.parse(expiresIn),
     );
   }
 
@@ -36,6 +44,8 @@ class TokenStorage implements AbstractTokenStorage {
     await Future.wait([
       _storage.delete(key: _accessTokenKey),
       _storage.delete(key: _refreshTokenKey),
+      _storage.delete(key: _tokenTypeKey),
+      _storage.delete(key: _expiresInKey),
     ]);
   }
 }
