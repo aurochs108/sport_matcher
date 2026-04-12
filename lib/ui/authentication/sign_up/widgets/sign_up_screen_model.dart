@@ -3,8 +3,8 @@ import 'package:sport_matcher/data/auth/network/api/auth_api.dart';
 import 'package:sport_matcher/data/auth/repository/abstract_auth_repository.dart';
 import 'package:sport_matcher/data/auth/repository/auth_repository.dart';
 import 'package:sport_matcher/data/core/api_request/api_result.dart';
-import 'package:sport_matcher/ui/core/utilities/device_id/abstract_device_id_provider.dart';
-import 'package:sport_matcher/ui/core/utilities/device_id/device_id_provider.dart';
+import 'package:sport_matcher/data/core/device_id/abstract_device_id_provider.dart';
+import 'package:sport_matcher/data/core/device_id/device_id_provider.dart';
 
 class SignUpScreenModel {
   final AuthApi _authApi;

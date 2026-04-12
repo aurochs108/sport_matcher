@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sport_matcher/ui/core/utilities/device_id/abstract_device_id_provider.dart';
+import 'package:sport_matcher/data/core/device_id/abstract_device_id_provider.dart';
 import 'package:uuid/uuid.dart';
 
 class DeviceIdProvider implements AbstractDeviceIdProvider {
