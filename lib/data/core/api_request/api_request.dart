@@ -80,7 +80,10 @@ class ApiRequest<TResponse> {
           )),
           statusCode: response.statusCode,
         );
-      } catch (_) {
+      } catch (error) {
+        if (kDebugMode) {
+          debugPrint('ApiRequest error response parsing error: $error');
+        }
         return ApiError(
           _errorMapper.map(ApiException(statusCode: response.statusCode)),
           statusCode: response.statusCode,
