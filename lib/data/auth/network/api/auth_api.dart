@@ -7,7 +7,16 @@ import 'package:sport_matcher/data/core/api_request/http_method.dart';
 
 class AuthApi extends AbstractAuthApi {
   @override
-  Future<ApiResult<AuthResponse>> register(EmailRegistrationRequest request) {
+  Future<ApiResult<AuthResponse>> register({
+    required String email,
+    required String password,
+    required String deviceId,
+  }) {
+    final request = EmailRegistrationRequest(
+      email: email,
+      password: password,
+      deviceId: deviceId,
+    );
     return ApiRequest<AuthResponse>(
       path: '/auth/register/email',
       method: HttpMethod.post,

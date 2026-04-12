@@ -1,6 +1,5 @@
 import 'package:sport_matcher/data/auth/mapper/auth_mapper.dart';
 import 'package:sport_matcher/data/auth/network/api/auth_api.dart';
-import 'package:sport_matcher/data/auth/network/request/email_registration_request.dart';
 import 'package:sport_matcher/data/auth/repository/abstract_auth_repository.dart';
 import 'package:sport_matcher/data/auth/repository/auth_repository.dart';
 import 'package:sport_matcher/data/core/api_request/api_result.dart';
@@ -29,7 +28,9 @@ class SignUpScreenModel {
     errorMessage = null;
     final deviceId = await _deviceIdProvider.getDeviceId();
     final result = await _authApi.register(
-      EmailRegistrationRequest(email: email, password: password, deviceId: deviceId),
+      email: email,
+      password: password,
+      deviceId: deviceId,
     );
 
     switch (result) {
