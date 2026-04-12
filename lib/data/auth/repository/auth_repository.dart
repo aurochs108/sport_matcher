@@ -15,12 +15,12 @@ class AuthRepository extends AbstractAuthRepository {
         _mapper = mapper ?? AuthMapper();
 
   @override
-  Future<void> saveTokens(AuthTokens tokens) {
+  Future<void> saveTokens(AuthTokensDomain tokens) {
     return _tokenStorage.saveTokens(_mapper.domainToEntity(tokens));
   }
 
   @override
-  Future<AuthTokens?> loadTokens() async {
+  Future<AuthTokensDomain?> loadTokens() async {
     final entity = await _tokenStorage.loadTokens();
     if (entity == null) return null;
 

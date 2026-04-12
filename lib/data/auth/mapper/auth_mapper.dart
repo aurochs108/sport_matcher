@@ -3,8 +3,8 @@ import 'package:sport_matcher/data/auth/network/response/auth_response.dart';
 import 'package:sport_matcher/data/auth/persistence/entity/token_entity.dart';
 
 class AuthMapper {
-  AuthTokens responseToDomain(AuthResponse response) {
-    return AuthTokens(
+  AuthTokensDomain responseToDomain(AuthResponse response) {
+    return AuthTokensDomain(
       accessToken: response.accessToken,
       refreshToken: response.refreshToken,
       tokenType: response.tokenType,
@@ -12,7 +12,7 @@ class AuthMapper {
     );
   }
 
-  TokenEntity domainToEntity(AuthTokens domain) {
+  TokenEntity domainToEntity(AuthTokensDomain domain) {
     return TokenEntity(
       accessToken: domain.accessToken,
       refreshToken: domain.refreshToken,
@@ -21,8 +21,8 @@ class AuthMapper {
     );
   }
 
-  AuthTokens entityToDomain(TokenEntity entity) {
-    return AuthTokens(
+  AuthTokensDomain entityToDomain(TokenEntity entity) {
+    return AuthTokensDomain(
       accessToken: entity.accessToken,
       refreshToken: entity.refreshToken,
       tokenType: entity.tokenType,
