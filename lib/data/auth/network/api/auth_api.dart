@@ -1,9 +1,9 @@
 import 'package:sport_matcher/data/auth/network/response/auth_response.dart';
 import 'package:sport_matcher/data/auth/network/api/abstract_auth_api.dart';
 import 'package:sport_matcher/data/auth/network/request/email_registration_request.dart';
-import 'package:sport_matcher/ui/core/utilities/api_request/api_request.dart';
-import 'package:sport_matcher/ui/core/utilities/api_request/api_result.dart';
-import 'package:sport_matcher/ui/core/utilities/api_request/http_method.dart';
+import 'package:sport_matcher/data/core/api_request/api_request.dart';
+import 'package:sport_matcher/data/core/api_request/api_result.dart';
+import 'package:sport_matcher/data/core/api_request/http_method.dart';
 
 class AuthApi extends AbstractAuthApi {
   @override
