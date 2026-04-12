@@ -36,8 +36,10 @@ class SignUpScreenModel {
       case ApiSuccess(:final data):
         final tokens = _authMapper.responseToDomain(data);
         await _authRepository.saveTokens(tokens);
-      case ApiError(:final message):
-        errorMessage = message;
+      case ApiError(:final message, :final code):
+        errorMessage = code == 'EMAIL_ALREADY_REGISTERED'
+            ? 'This email is already in use. Please use a different email.'
+            : message;
     }
   }
 }

@@ -79,6 +79,7 @@ class ApiRequest<TResponse> {
             errorResponse: errorResponse,
           )),
           statusCode: response.statusCode,
+          code: errorResponse.code,
         );
       } catch (error) {
         if (kDebugMode) {

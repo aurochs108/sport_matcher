@@ -11,6 +11,7 @@ class ApiSuccess<T> extends ApiResult<T> {
 class ApiError<T> extends ApiResult<T> {
   final String message;
   final int? statusCode;
+  final String? code;
 
-  const ApiError(this.message, {this.statusCode});
+  const ApiError(this.message, {this.statusCode, this.code});
 }
