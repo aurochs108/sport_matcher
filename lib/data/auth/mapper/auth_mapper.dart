@@ -20,13 +20,4 @@ class AuthMapper {
       expiresIn: domain.expiresIn,
     );
   }
-
-  AuthTokensDomain entityToDomain(TokenEntity entity) {
-    return AuthTokensDomain(
-      accessToken: entity.accessToken,
-      refreshToken: entity.refreshToken,
-      tokenType: entity.tokenType,
-      expiresIn: entity.expiresIn,
-    );
-  }
 }

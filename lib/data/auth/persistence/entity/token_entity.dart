@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'token_entity.g.dart';
+
+@JsonSerializable()
 class TokenEntity {
   final String accessToken;
   final String refreshToken;
@@ -10,4 +15,6 @@ class TokenEntity {
     required this.tokenType,
     required this.expiresIn,
   });
+
+  Map<String, dynamic> toJson() => _$TokenEntityToJson(this);
 }
