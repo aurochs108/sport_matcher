@@ -3,12 +3,12 @@ import 'package:sport_matcher/data/auth/network/api/auth_api.dart';
 import 'package:sport_matcher/data/auth/repository/abstract_auth_repository.dart';
 import 'package:sport_matcher/data/auth/repository/auth_repository.dart';
 import 'package:sport_matcher/data/core/api_request/api_result.dart';
-import 'package:sport_matcher/data/core/device_id/abstract_device_id_provider.dart';
-import 'package:sport_matcher/data/core/device_id/device_id_provider.dart';
+import 'package:sport_matcher/data/device_id/repository/abstract_device_id_repository.dart';
+import 'package:sport_matcher/data/device_id/repository/device_id_repository.dart';
 
 class SignUpScreenModel {
   final AuthApi _authApi;
-  final AbstractDeviceIdProvider _deviceIdProvider;
+  final AbstractDeviceIdRepository _deviceIdRepository;
   final AbstractAuthRepository _authRepository;
   final AuthMapper _authMapper;
 
@@ -16,17 +16,17 @@ class SignUpScreenModel {
 
   SignUpScreenModel({
     AuthApi? authApi,
-    AbstractDeviceIdProvider? deviceIdProvider,
+    AbstractDeviceIdRepository? deviceIdRepository,
     AbstractAuthRepository? authRepository,
     AuthMapper? authMapper,
   })  : _authApi = authApi ?? AuthApi(),
-        _deviceIdProvider = deviceIdProvider ?? DeviceIdProvider(),
+        _deviceIdRepository = deviceIdRepository ?? DeviceIdRepository(),
         _authRepository = authRepository ?? AuthRepository(),
         _authMapper = authMapper ?? AuthMapper();
 
   Future<void> register(String email, String password) async {
     errorMessage = null;
-    final deviceId = await _deviceIdProvider.getDeviceId();
+    final deviceId = await _deviceIdRepository.getDeviceId();
     final result = await _authApi.register(
       email: email,
       password: password,
