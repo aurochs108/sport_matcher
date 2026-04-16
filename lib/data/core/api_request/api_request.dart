@@ -8,6 +8,7 @@ import 'package:sport_matcher/config/api_config.dart';
 import 'package:sport_matcher/data/core/api_request/api_exception.dart';
 import 'package:sport_matcher/data/core/api_request/api_result.dart';
 import 'package:sport_matcher/data/core/api_request/error_response.dart';
+import 'package:sport_matcher/data/core/api_request/http_client_provider.dart';
 import 'package:sport_matcher/data/core/api_request/http_method.dart';
 import 'package:sport_matcher/data/core/mapper/abstract_api_error_to_user_message_mapper.dart';
 import 'package:sport_matcher/data/core/mapper/api_error_to_user_message_mapper.dart';
@@ -33,7 +34,7 @@ class ApiRequest<T> {
     http.Client? client,
     AbstractApiErrorToUserMessageMapper? errorMapper,
     AbstractInternetConnectionChecker? connectionChecker,
-  })  : _client = client ?? http.Client(),
+  })  : _client = client ?? HttpClientProvider.instance,
         _errorMapper = errorMapper ?? ApiErrorToUserMessageMapper(),
         _connectionChecker = connectionChecker ?? InternetConnectionChecker();
 
@@ -69,8 +70,6 @@ class ApiRequest<T> {
         debugPrint('StackTrace: $stackTrace');
       }
       return ApiError(_errorMapper.map(error));
-    } finally {
-      _client.close();
     }
   }
 
