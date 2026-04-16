@@ -9,7 +9,7 @@ part of 'auth_response.dart';
 AuthResponse _$AuthResponseFromJson(Map<String, dynamic> json) => AuthResponse(
   accessToken: json['accessToken'] as String,
   refreshToken: json['refreshToken'] as String,
-  tokenType: json['tokenType'] as String? ?? 'Bearer',
+  tokenType: json['tokenType'] as String,
   expiresIn: (json['expiresIn'] as num).toInt(),
 );
 

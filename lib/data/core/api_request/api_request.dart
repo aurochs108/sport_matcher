@@ -14,11 +14,11 @@ import 'package:sport_matcher/data/core/mapper/api_error_to_user_message_mapper.
 import 'package:sport_matcher/data/core/internet_connection_checker/abstract_internet_connection_checker.dart';
 import 'package:sport_matcher/data/core/internet_connection_checker/internet_connection_checker.dart';
 
-class ApiRequest<TResponse> {
+class ApiRequest<T> {
   final String path;
   final HttpMethod method;
-  final Map<String, dynamic> Function()? bodyBuilder;
-  final TResponse Function(Map<String, dynamic>) fromJson;
+  final Map<String, dynamic>? body;
+  final T Function(Map<String, dynamic>) fromJson;
   final Duration timeout;
   final http.Client _client;
   final AbstractApiErrorToUserMessageMapper _errorMapper;
@@ -28,7 +28,7 @@ class ApiRequest<TResponse> {
     required this.path,
     required this.method,
     required this.fromJson,
-    this.bodyBuilder,
+    this.body,
     this.timeout = const Duration(seconds: 30),
     http.Client? client,
     AbstractApiErrorToUserMessageMapper? errorMapper,
@@ -37,7 +37,7 @@ class ApiRequest<TResponse> {
         _errorMapper = errorMapper ?? ApiErrorToUserMessageMapper(),
         _connectionChecker = connectionChecker ?? InternetConnectionChecker();
 
-  Future<ApiResult<TResponse>> execute() async {
+  Future<ApiResult<T>> execute() async {
     try {
       if (!await _connectionChecker.hasConnection()) {
         return ApiError('No internet connection. Please check your network.');
@@ -51,7 +51,7 @@ class ApiRequest<TResponse> {
         HttpMethod.post => _client.post(
             url,
             headers: headers,
-            body: bodyBuilder != null ? jsonEncode(bodyBuilder!()) : null,
+            body: body != null ? jsonEncode(body) : null,
           ),
       }.timeout(timeout);
 
@@ -60,44 +60,51 @@ class ApiRequest<TResponse> {
       }
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        try {
-          return ApiSuccess(fromJson(jsonDecode(response.body)));
-        } catch (e, stackTrace) {
-          if (kDebugMode) {
-            debugPrint('ApiRequest deserialization error: $e');
-            debugPrint('StackTrace: $stackTrace');
-          }
-          return ApiError(_errorMapper.map(e), statusCode: response.statusCode);
-        }
+        return _parseSuccess(response);
       }
-
-      try {
-        final errorResponse = ErrorResponse.fromJson(jsonDecode(response.body));
-        return ApiError(
-          _errorMapper.map(ApiException(
-            statusCode: response.statusCode,
-            errorResponse: errorResponse,
-          )),
-          statusCode: response.statusCode,
-          code: errorResponse.code,
-        );
-      } catch (error) {
-        if (kDebugMode) {
-          debugPrint('ApiRequest error response parsing error: $error');
-        }
-        return ApiError(
-          _errorMapper.map(ApiException(statusCode: response.statusCode)),
-          statusCode: response.statusCode,
-        );
-      }
-    } catch (e, stackTrace) {
+      return _parseError(response);
+    } catch (error, stackTrace) {
       if (kDebugMode) {
-        debugPrint('ApiRequest error: $e');
+        debugPrint('ApiRequest error: $error');
         debugPrint('StackTrace: $stackTrace');
       }
-      return ApiError(_errorMapper.map(e));
+      return ApiError(_errorMapper.map(error));
     } finally {
       _client.close();
+    }
+  }
+
+  ApiResult<T> _parseSuccess(http.Response response) {
+    try {
+      return ApiSuccess(fromJson(jsonDecode(response.body)));
+    } catch (error, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('ApiRequest deserialization error: $error');
+        debugPrint('StackTrace: $stackTrace');
+      }
+      return ApiError(_errorMapper.map(error), statusCode: response.statusCode);
+    }
+  }
+
+  ApiResult<T> _parseError(http.Response response) {
+    try {
+      final errorResponse = ErrorResponse.fromJson(jsonDecode(response.body));
+      return ApiError(
+        _errorMapper.map(ApiException(
+          statusCode: response.statusCode,
+          errorResponse: errorResponse,
+        )),
+        statusCode: response.statusCode,
+        code: errorResponse.code,
+      );
+    } catch (error) {
+      if (kDebugMode) {
+        debugPrint('ApiRequest error response parsing error: $error');
+      }
+      return ApiError(
+        _errorMapper.map(ApiException(statusCode: response.statusCode)),
+        statusCode: response.statusCode,
+      );
     }
   }
 }

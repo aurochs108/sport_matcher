@@ -21,7 +21,7 @@ class AuthApi extends AbstractAuthApi {
       path: '/auth/register/email',
       method: HttpMethod.post,
       fromJson: AuthResponse.fromJson,
-      bodyBuilder: () => request.toJson(),
+      body: request.toJson(),
     ).execute();
   }
 }
