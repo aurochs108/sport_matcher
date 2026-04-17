@@ -31,7 +31,7 @@ class ApiRequest<T> {
     http.Client? client,
     AbstractApiErrorToUserMessageMapper? errorMapper,
   })  : _client = client ?? HttpClientProvider.instance,
-        _errorMapper = errorMapper ?? ApiErrorToUserMessageMapper();
+        _errorMapper = errorMapper ?? const ApiErrorToUserMessageMapper();
 
   Future<ApiResult<T>> execute() async {
     try {
