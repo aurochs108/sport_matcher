@@ -27,7 +27,7 @@ class SignUpScreenModel {
   Future<void> register(String email, String password) async {
     errorMessage = null;
     final deviceId = await _deviceIdRepository.getDeviceId();
-    final result = await _authApi.register(
+    final result = await _authApi.registerWithEmail(
       email: email,
       password: password,
       deviceId: deviceId,
