@@ -20,7 +20,7 @@ class AuthApi implements AbstractAuthApi {
     return ApiRequest<AuthResponse>(
       path: '/auth/register/email',
       method: HttpMethod.post,
-      fromJson: AuthResponse.fromJson,
+      responseParser: AuthResponse.fromJson,
       body: request.toJson(),
     ).execute();
   }
