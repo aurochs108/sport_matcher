@@ -23,10 +23,12 @@ class _AsyncRoundedButtonState extends State<AsyncRoundedButton>
   late final AnimationController _animationController;
   late final Animation<double> _scaleAnimation;
 
+  bool get _isEnabled => widget._onPressed != null && !_viewModel.isLoading;
+
   @override
   void initState() {
     super.initState();
-    _viewModel = AsyncRoundedButtonScreenModel(onPressed: widget._onPressed);
+    _viewModel = AsyncRoundedButtonScreenModel();
     _viewModel.onStateChanged = () => setState(() {});
     _animationController = AnimationController(
       vsync: this,
@@ -45,8 +47,10 @@ class _AsyncRoundedButtonState extends State<AsyncRoundedButton>
   }
 
   Future<void> _handlePressed() async {
+    final onPressed = widget._onPressed;
+    if (onPressed == null) return;
     await _animationController.forward();
-    await _viewModel.handlePressed();
+    await _viewModel.handlePressed(onPressed);
     if (mounted) {
       await _animationController.reverse();
     }
@@ -57,9 +61,9 @@ class _AsyncRoundedButtonState extends State<AsyncRoundedButton>
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: _viewModel.isEnabled ? _handlePressed : null,
+        onPressed: _isEnabled ? _handlePressed : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: _viewModel.backgroundColor,
+          backgroundColor: _isEnabled ? Colors.blue : Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
           ),
