@@ -3,22 +3,24 @@ import 'package:flutter/material.dart';
 class AsyncRoundedButtonScreenModel {
   VoidCallback? onStateChanged;
 
-  bool _hasCallback = false;
+  Future<void> Function()? _onPressed;
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
 
-  bool get isEnabled => _hasCallback && !_isLoading;
+  bool get isEnabled => _onPressed != null && !_isLoading;
 
   Color get backgroundColor => isEnabled ? Colors.blue : Colors.grey;
 
-  set hasCallback(bool value) {
-    if (_hasCallback == value) return;
-    _hasCallback = value;
+  set onPressed(Future<void> Function()? value) {
+    if (_onPressed == value) return;
+    _onPressed = value;
     onStateChanged?.call();
   }
 
-  Future<void> handlePressed(Future<void> Function() onPressed) async {
+  Future<void> handlePressed() async {
+    final onPressed = _onPressed;
+    if (onPressed == null) return;
     _isLoading = true;
     onStateChanged?.call();
     try {

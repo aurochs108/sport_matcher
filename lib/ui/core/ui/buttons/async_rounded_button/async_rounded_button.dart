@@ -28,7 +28,7 @@ class _AsyncRoundedButtonState extends State<AsyncRoundedButton>
     super.initState();
     _viewModel = AsyncRoundedButtonScreenModel();
     _viewModel.onStateChanged = () => setState(() {});
-    _viewModel.hasCallback = widget._onPressed != null;
+    _viewModel.onPressed = widget._onPressed;
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
@@ -39,9 +39,9 @@ class _AsyncRoundedButtonState extends State<AsyncRoundedButton>
   }
 
   @override
-  void didUpdateWidget(covariant AsyncRoundedButton oldWidget) {
+  void didUpdateWidget(AsyncRoundedButton oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _viewModel.hasCallback = widget._onPressed != null;
+    _viewModel.onPressed = widget._onPressed;
   }
 
   @override
@@ -52,10 +52,8 @@ class _AsyncRoundedButtonState extends State<AsyncRoundedButton>
   }
 
   Future<void> _handlePressed() async {
-    final onPressed = widget._onPressed;
-    if (onPressed == null) return;
     await _animationController.forward();
-    await _viewModel.handlePressed(onPressed);
+    await _viewModel.handlePressed();
     if (mounted) {
       await _animationController.reverse();
     }
