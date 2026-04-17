@@ -3,14 +3,15 @@ import 'package:sport_matcher/ui/core/theme/app_theme.dart';
 import 'package:sport_matcher/ui/core/ui/buttons/async_rounded_button/async_rounded_button_screen_model.dart';
 
 class AsyncRoundedButton extends StatefulWidget {
-  final String buttonTitle;
-  final AsyncRoundedButtonScreenModel _viewModel;
+  final String _buttonTitle;
+  final Future<void> Function()? _onPressed;
 
-  AsyncRoundedButton({
+  const AsyncRoundedButton({
     super.key,
-    required this.buttonTitle,
+    required String buttonTitle,
     Future<void> Function()? onPressed,
-  }) : _viewModel = AsyncRoundedButtonScreenModel(onPressed: onPressed);
+  })  : _buttonTitle = buttonTitle,
+        _onPressed = onPressed;
 
   @override
   State<AsyncRoundedButton> createState() => _AsyncRoundedButtonState();
@@ -18,12 +19,15 @@ class AsyncRoundedButton extends StatefulWidget {
 
 class _AsyncRoundedButtonState extends State<AsyncRoundedButton>
     with SingleTickerProviderStateMixin {
+  late final AsyncRoundedButtonScreenModel _viewModel;
   late final AnimationController _animationController;
   late final Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
+    _viewModel = AsyncRoundedButtonScreenModel(onPressed: widget._onPressed);
+    _viewModel.onStateChanged = () => setState(() {});
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
@@ -35,16 +39,15 @@ class _AsyncRoundedButtonState extends State<AsyncRoundedButton>
 
   @override
   void dispose() {
+    _viewModel.onStateChanged = null;
     _animationController.dispose();
     super.dispose();
   }
 
   Future<void> _handlePressed() async {
     await _animationController.forward();
-    setState(() {});
-    await widget._viewModel.handlePressed();
+    await _viewModel.handlePressed();
     if (mounted) {
-      setState(() {});
       await _animationController.reverse();
     }
   }
@@ -54,9 +57,9 @@ class _AsyncRoundedButtonState extends State<AsyncRoundedButton>
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: widget._viewModel.isEnabled ? _handlePressed : null,
+        onPressed: _viewModel.isEnabled ? _handlePressed : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: widget._viewModel.backgroundColor,
+          backgroundColor: _viewModel.backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
           ),
@@ -67,8 +70,7 @@ class _AsyncRoundedButtonState extends State<AsyncRoundedButton>
         child: AnimatedBuilder(
           animation: _scaleAnimation,
           builder: (context, child) {
-            if (widget._viewModel.isLoading &&
-                _animationController.isCompleted) {
+            if (_viewModel.isLoading && _animationController.isCompleted) {
               return const SizedBox(
                 height: 20,
                 width: 20,
@@ -81,7 +83,7 @@ class _AsyncRoundedButtonState extends State<AsyncRoundedButton>
             return Transform.scale(
               scale: _scaleAnimation.value,
               child: Text(
-                widget.buttonTitle,
+                widget._buttonTitle,
                 style: const TextStyle(
                   fontSize: 16.0,
                   color: Colors.white,
