@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:http/http.dart' as http;
 import 'package:sport_matcher/data/core/api_request/api_exception.dart';
 import 'package:sport_matcher/data/core/mapper/abstract_api_error_to_user_message_mapper.dart';
 
@@ -26,7 +27,15 @@ class ApiErrorToUserMessageMapper implements AbstractApiErrorToUserMessageMapper
     }
 
     if (error is SocketException) {
-      return 'Unable to connect to the server. Please try again later.';
+      return 'No internet connection. Please check your network.';
+    }
+
+    if (error is HandshakeException || error is TlsException) {
+      return 'Secure connection to the server failed. Please try again.';
+    }
+
+    if (error is http.ClientException) {
+      return 'A network error occurred. Please try again.';
     }
 
     if (error is HttpException) {

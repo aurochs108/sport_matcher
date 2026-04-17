@@ -12,8 +12,6 @@ import 'package:sport_matcher/data/core/api_request/http_client_provider.dart';
 import 'package:sport_matcher/data/core/api_request/http_method.dart';
 import 'package:sport_matcher/data/core/mapper/abstract_api_error_to_user_message_mapper.dart';
 import 'package:sport_matcher/data/core/mapper/api_error_to_user_message_mapper.dart';
-import 'package:sport_matcher/data/core/internet_connection_checker/abstract_internet_connection_checker.dart';
-import 'package:sport_matcher/data/core/internet_connection_checker/internet_connection_checker.dart';
 
 class ApiRequest<T> {
   final String path;
@@ -23,7 +21,6 @@ class ApiRequest<T> {
   final Duration timeout;
   final http.Client _client;
   final AbstractApiErrorToUserMessageMapper _errorMapper;
-  final AbstractInternetConnectionChecker _connectionChecker;
 
   ApiRequest({
     required this.path,
@@ -33,17 +30,11 @@ class ApiRequest<T> {
     this.timeout = const Duration(seconds: 30),
     http.Client? client,
     AbstractApiErrorToUserMessageMapper? errorMapper,
-    AbstractInternetConnectionChecker? connectionChecker,
   })  : _client = client ?? HttpClientProvider.instance,
-        _errorMapper = errorMapper ?? ApiErrorToUserMessageMapper(),
-        _connectionChecker = connectionChecker ?? InternetConnectionChecker();
+        _errorMapper = errorMapper ?? ApiErrorToUserMessageMapper();
 
   Future<ApiResult<T>> execute() async {
     try {
-      if (!await _connectionChecker.hasConnection()) {
-        return ApiError('No internet connection. Please check your network.');
-      }
-
       final url = Uri.parse('${ApiConfig.baseUrl}$path');
       final headers = {
         'Content-Type': 'application/json',
