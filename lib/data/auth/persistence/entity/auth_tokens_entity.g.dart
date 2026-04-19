@@ -1,19 +1,20 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_response.dart';
+part of 'auth_tokens_entity.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-AuthResponse _$AuthResponseFromJson(Map<String, dynamic> json) => AuthResponse(
-  accessToken: json['accessToken'] as String,
-  refreshToken: json['refreshToken'] as String,
-  tokenType: json['tokenType'] as String,
-  expiresIn: (json['expiresIn'] as num).toInt(),
-);
+AuthTokensEntity _$AuthTokensEntityFromJson(Map<String, dynamic> json) =>
+    AuthTokensEntity(
+      accessToken: json['accessToken'] as String,
+      refreshToken: json['refreshToken'] as String,
+      tokenType: json['tokenType'] as String,
+      expiresIn: (json['expiresIn'] as num).toInt(),
+    );
 
-Map<String, dynamic> _$AuthResponseToJson(AuthResponse instance) =>
+Map<String, dynamic> _$AuthTokensEntityToJson(AuthTokensEntity instance) =>
     <String, dynamic>{
       'accessToken': instance.accessToken,
       'refreshToken': instance.refreshToken,

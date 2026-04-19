@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sport_matcher/data/auth/domain/auth_tokens.dart';
 import 'package:sport_matcher/data/auth/mapper/auth_tokens_mapper.dart';
-import 'package:sport_matcher/data/auth/network/response/auth_response.dart';
+import 'package:sport_matcher/data/auth/network/response/auth_tokens_reponse.dart';
 
 void main() {
   group('AuthTokensMapper', () {
     final sut = AuthTokensMapper();
 
     test('responseToDomain maps response fields to domain', () {
-      final response = AuthResponse(
+      final response = AuthTokensReponse(
         accessToken: 'access-token',
         refreshToken: 'refresh-token',
         tokenType: 'Bearer',

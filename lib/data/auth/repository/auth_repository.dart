@@ -1,17 +1,17 @@
 import 'package:sport_matcher/data/auth/domain/auth_tokens.dart';
 import 'package:sport_matcher/data/auth/mapper/auth_tokens_mapper.dart';
-import 'package:sport_matcher/data/auth/persistence/database/abstract_token_database.dart';
-import 'package:sport_matcher/data/auth/persistence/database/token_database.dart';
+import 'package:sport_matcher/data/auth/persistence/database/abstract_auth_tokens_database.dart';
+import 'package:sport_matcher/data/auth/persistence/database/auth_tokens_database.dart';
 import 'package:sport_matcher/data/auth/repository/abstract_auth_repository.dart';
 
 class AuthRepository extends AbstractAuthRepository {
-  final AbstractTokenDatabase _tokenDatabase;
+  final AbstractAuthTokensDatabase _tokenDatabase;
   final AuthTokensMapper _mapper;
 
   AuthRepository({
-    AbstractTokenDatabase? tokenDatabase,
+    AbstractAuthTokensDatabase? tokenDatabase,
     AuthTokensMapper? mapper,
-  }) : _tokenDatabase = tokenDatabase ?? TokenDatabase(),
+  }) : _tokenDatabase = tokenDatabase ?? AuthTokensDatabase(),
        _mapper = mapper ?? AuthTokensMapper();
 
   @override
