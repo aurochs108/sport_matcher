@@ -1,4 +1,4 @@
-import 'package:sport_matcher/data/auth/mapper/auth_mapper.dart';
+import 'package:sport_matcher/data/auth/mapper/auth_tokens_mapper.dart';
 import 'package:sport_matcher/data/auth/network/api/auth_api.dart';
 import 'package:sport_matcher/data/auth/repository/abstract_auth_repository.dart';
 import 'package:sport_matcher/data/auth/repository/auth_repository.dart';
@@ -10,7 +10,7 @@ class SignUpScreenModel {
   final AuthApi _authApi;
   final AbstractDeviceIdRepository _deviceIdRepository;
   final AbstractAuthRepository _authRepository;
-  final AuthMapper _authMapper;
+  final AuthTokensMapper _authTokensMapper;
 
   String? errorMessage;
 
@@ -18,11 +18,11 @@ class SignUpScreenModel {
     AuthApi? authApi,
     AbstractDeviceIdRepository? deviceIdRepository,
     AbstractAuthRepository? authRepository,
-    AuthMapper? authMapper,
-  })  : _authApi = authApi ?? AuthApi(),
-        _deviceIdRepository = deviceIdRepository ?? DeviceIdRepository(),
-        _authRepository = authRepository ?? AuthRepository(),
-        _authMapper = authMapper ?? AuthMapper();
+    AuthTokensMapper? authTokensMapper,
+  }) : _authApi = authApi ?? AuthApi(),
+       _deviceIdRepository = deviceIdRepository ?? DeviceIdRepository(),
+       _authRepository = authRepository ?? AuthRepository(),
+       _authTokensMapper = authTokensMapper ?? AuthTokensMapper();
 
   Future<void> register(String email, String password) async {
     errorMessage = null;
@@ -35,7 +35,7 @@ class SignUpScreenModel {
 
     switch (result) {
       case ApiSuccess(:final data):
-        final tokens = _authMapper.responseToDomain(data);
+        final tokens = _authTokensMapper.responseToDomain(data);
         await _authRepository.saveTokens(tokens);
       case ApiError(:final message, :final code):
         errorMessage = code == 'EMAIL_ALREADY_REGISTERED'
