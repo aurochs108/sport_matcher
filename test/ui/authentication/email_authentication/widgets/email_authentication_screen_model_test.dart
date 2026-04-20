@@ -14,6 +14,8 @@ void main() {
     late MockAbstractTextValidator emailValidator;
     late MockAbstractTextValidator passwordValidator;
     late int onFinishProcessButtonActionCallsCount;
+    late String? lastOnFinishProcessButtonActionEmail;
+    late String? lastOnFinishProcessButtonActionPassword;
     late int onStateChangedCallsCount;
     late EmailAuthenticationScreenModel sut;
 
@@ -22,12 +24,17 @@ void main() {
       emailValidator = MockAbstractTextValidator();
       passwordValidator = MockAbstractTextValidator();
       onFinishProcessButtonActionCallsCount = 0;
+      lastOnFinishProcessButtonActionEmail = null;
+      lastOnFinishProcessButtonActionPassword = null;
       sut = EmailAuthenticationScreenModel(
         title: title,
         emailValidator: emailValidator,
         passwordValidator: passwordValidator,
-        onFinishProcessButtonAction: () =>
-            {onFinishProcessButtonActionCallsCount += 1},
+        onFinishProcessButtonAction: (email, password) async {
+          onFinishProcessButtonActionCallsCount += 1;
+          lastOnFinishProcessButtonActionEmail = email;
+          lastOnFinishProcessButtonActionPassword = password;
+        },
       );
       onStateChangedCallsCount = 0;
       sut.onStateChanged = () {
@@ -119,6 +126,44 @@ void main() {
       );
     });
 
+    test(
+      'should deactivate button and notify state change when valid fields become invalid',
+      () {
+        // given
+        final noTextError = Uuid().v4();
+        when(emailValidator.validate("")).thenReturn(noTextError);
+        when(passwordValidator.validate("")).thenReturn(noTextError);
+
+        final expectedEmail = Uuid().v4();
+        when(emailValidator.validate(expectedEmail)).thenReturn(null);
+        final validPassword = Uuid().v4();
+        when(passwordValidator.validate(validPassword)).thenReturn(null);
+        final invalidPassword = Uuid().v4();
+        when(passwordValidator.validate(invalidPassword)).thenReturn(Uuid().v4());
+
+        // when
+        sut.emailTextController.text = expectedEmail;
+        sut.passwordTextController.text = validPassword;
+        sut.passwordTextController.text = invalidPassword;
+
+        // then
+        _validateEmailAndPasswordValidatorsAndIsFinishProcessButtonActive(
+          sut: sut,
+          expectedIsFinishProcesButtonActive: isFalse,
+          onStateChangedCallsCount: onStateChangedCallsCount,
+          expectedOnStateChangedCallsCount: 2,
+          emailValidator: emailValidator,
+          expectedValidatedEmails: [
+            expectedEmail,
+            expectedEmail,
+            expectedEmail,
+          ],
+          passwordValidator: passwordValidator,
+          expectedValidatedPasswords: ["", validPassword, invalidPassword],
+        );
+      },
+    );
+
     // MARK: - getFinishProcessButtonAction
 
     test('should returns null when button is not active', () {
@@ -132,29 +177,32 @@ void main() {
     });
 
     test(
-        'should execute onFinishProcessButtonActionCallsCount when button is active',
-        () {
-      // given
-      final noTextError = Uuid().v4();
-      when(emailValidator.validate("")).thenReturn(noTextError);
-      when(passwordValidator.validate("")).thenReturn(noTextError);
+      'should execute finish process action with current email and password when button is active',
+      () async {
+        // given
+        final noTextError = Uuid().v4();
+        when(emailValidator.validate("")).thenReturn(noTextError);
+        when(passwordValidator.validate("")).thenReturn(noTextError);
 
-      final expectedEmail = Uuid().v4();
-      when(emailValidator.validate(expectedEmail)).thenReturn(null);
-      final expectedPassword = Uuid().v4();
-      when(passwordValidator.validate(expectedPassword)).thenReturn(null);
+        final expectedEmail = Uuid().v4();
+        when(emailValidator.validate(expectedEmail)).thenReturn(null);
+        final expectedPassword = Uuid().v4();
+        when(passwordValidator.validate(expectedPassword)).thenReturn(null);
 
-      sut.emailTextController.text = expectedEmail;
-      sut.passwordTextController.text = expectedPassword;
+        sut.emailTextController.text = expectedEmail;
+        sut.passwordTextController.text = expectedPassword;
 
-      // when
-      final onFinishProcessButtonAction = sut.getFinishProcessButtonAction();
-      onFinishProcessButtonAction?.call();
+        // when
+        final onFinishProcessButtonAction = sut.getFinishProcessButtonAction();
+        await onFinishProcessButtonAction?.call();
 
-      // then
-      expect(onFinishProcessButtonAction, isNotNull);
-      expect(onFinishProcessButtonActionCallsCount, 1);
-    });
+        // then
+        expect(onFinishProcessButtonAction, isNotNull);
+        expect(onFinishProcessButtonActionCallsCount, 1);
+        expect(lastOnFinishProcessButtonActionEmail, expectedEmail);
+        expect(lastOnFinishProcessButtonActionPassword, expectedPassword);
+      },
+    );
   });
 }
 
