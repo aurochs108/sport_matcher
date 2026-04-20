@@ -1,11 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 import 'package:sport_matcher/data/device_id/persistence/database/device_id_database.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../../mocks/mock_shared_preferences_store.dart';
+import 'device_id_database_test.mocks.dart';
 
+@GenerateMocks([SharedPreferencesStorePlatform])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -44,10 +47,16 @@ void main() {
     });
 
     test('saveDeviceId throws when persistence fails', () async {
-      final store = MockSharedPreferencesStore()..failSetValue = true;
+      final store = MockSharedPreferencesStorePlatform();
+      final deviceId = const Uuid().v4();
+      // ignore: deprecated_member_use
+      when(store.isMock).thenReturn(true);
+      when(store.getAll()).thenAnswer((_) async => <String, Object>{});
+      when(
+        store.setValue('String', 'flutter.device_id', deviceId),
+      ).thenAnswer((_) async => false);
       SharedPreferencesStorePlatform.instance = store;
       final sut = DeviceIdDatabase(preferences: SharedPreferences.getInstance());
-      final deviceId = const Uuid().v4();
 
       expect(
         sut.saveDeviceId(deviceId),
