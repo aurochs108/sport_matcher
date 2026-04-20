@@ -4,16 +4,29 @@ import 'package:sport_matcher/data/device_id/persistence/database/device_id_data
 import 'package:sport_matcher/data/device_id/repository/abstract_device_id_repository.dart';
 import 'package:uuid/uuid.dart';
 
+abstract interface class DeviceIdGenerator {
+  String call();
+}
+
+class UuidDeviceIdGenerator implements DeviceIdGenerator {
+  const UuidDeviceIdGenerator([this._uuid = const Uuid()]);
+
+  final Uuid _uuid;
+
+  @override
+  String call() => _uuid.v4();
+}
+
 class DeviceIdRepository implements AbstractDeviceIdRepository {
   final AbstractDeviceIdDatabase _database;
-  final Uuid _uuid;
+  final DeviceIdGenerator _generateDeviceId;
   Future<String>? _deviceId;
 
   DeviceIdRepository({
     AbstractDeviceIdDatabase? database,
-    Uuid? uuid,
+    DeviceIdGenerator? generateDeviceId,
   })  : _database = database ?? DeviceIdDatabase(),
-        _uuid = uuid ?? const Uuid();
+        _generateDeviceId = generateDeviceId ?? const UuidDeviceIdGenerator();
 
   @override
   Future<String> getDeviceId() async {
@@ -38,7 +51,7 @@ class DeviceIdRepository implements AbstractDeviceIdRepository {
     final existing = await _database.getDeviceId();
     if (existing != null) return existing;
 
-    final deviceId = _uuid.v4();
+    final deviceId = _generateDeviceId();
     await _database.saveDeviceId(deviceId);
     return deviceId;
   }
