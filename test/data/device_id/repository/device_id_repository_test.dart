@@ -9,20 +9,15 @@ import 'package:uuid/uuid.dart';
 
 import 'device_id_repository_test.mocks.dart';
 
-@GenerateMocks([AbstractDeviceIdDatabase, DeviceIdGenerator])
+@GenerateMocks([AbstractDeviceIdDatabase])
 void main() {
   group('DeviceIdRepository', () {
     late MockAbstractDeviceIdDatabase database;
-    late MockDeviceIdGenerator generateDeviceId;
     late DeviceIdRepository sut;
 
     setUp(() {
       database = MockAbstractDeviceIdDatabase();
-      generateDeviceId = MockDeviceIdGenerator();
-      sut = DeviceIdRepository(
-        database: database,
-        generateDeviceId: generateDeviceId,
-      );
+      sut = DeviceIdRepository(database: database);
     });
 
     test(
@@ -36,26 +31,22 @@ void main() {
         expect(result, storedDeviceId);
         verify(database.getDeviceId()).called(1);
         verifyNever(database.saveDeviceId(any));
-        verifyNever(generateDeviceId());
       },
     );
 
     test(
       'getDeviceId generates and saves a device ID when none exists',
       () async {
-        final generatedDeviceId = const Uuid().v4();
         when(database.getDeviceId()).thenAnswer((_) async => null);
-        when(generateDeviceId()).thenReturn(generatedDeviceId);
-        when(
-          database.saveDeviceId(generatedDeviceId),
-        ).thenAnswer((_) async {});
+        when(database.saveDeviceId(any)).thenAnswer((_) async {});
 
         final result = await sut.getDeviceId();
+        final savedDeviceId =
+            verify(database.saveDeviceId(captureAny)).captured.single as String;
 
-        expect(result, generatedDeviceId);
+        expect(result, savedDeviceId);
+        expect(Uuid.isValidUUID(fromString: savedDeviceId), isTrue);
         verify(database.getDeviceId()).called(1);
-        verify(generateDeviceId()).called(1);
-        verify(database.saveDeviceId(generatedDeviceId)).called(1);
       },
     );
 
@@ -72,7 +63,6 @@ void main() {
         expect(second, storedDeviceId);
         verify(database.getDeviceId()).called(1);
         verifyNever(database.saveDeviceId(any));
-        verifyNever(generateDeviceId());
       },
     );
 
@@ -90,7 +80,6 @@ void main() {
       expect(await first, storedDeviceId);
       expect(await second, storedDeviceId);
       verifyNever(database.saveDeviceId(any));
-      verifyNever(generateDeviceId());
     });
   });
 }

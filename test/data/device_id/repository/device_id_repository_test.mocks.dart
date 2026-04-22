@@ -6,11 +6,8 @@
 import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i5;
 import 'package:sport_matcher/data/device_id/persistence/database/abstract_device_id_database.dart'
     as _i2;
-import 'package:sport_matcher/data/device_id/repository/device_id_repository.dart'
-    as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -52,24 +49,4 @@ class MockAbstractDeviceIdDatabase extends _i1.Mock
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
           as _i3.Future<void>);
-}
-
-/// A class which mocks [DeviceIdGenerator].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockDeviceIdGenerator extends _i1.Mock implements _i4.DeviceIdGenerator {
-  MockDeviceIdGenerator() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  String call() =>
-      (super.noSuchMethod(
-            Invocation.method(#call, []),
-            returnValue: _i5.dummyValue<String>(
-              this,
-              Invocation.method(#call, []),
-            ),
-          )
-          as String);
 }
