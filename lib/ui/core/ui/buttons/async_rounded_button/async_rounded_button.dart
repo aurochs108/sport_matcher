@@ -22,6 +22,7 @@ class _AsyncRoundedButtonState extends State<AsyncRoundedButton>
   late final AsyncRoundedButtonScreenModel _viewModel;
   late final AnimationController _animationController;
   late final Animation<double> _scaleAnimation;
+  bool _isHandlingPress = false;
 
   @override
   void initState() {
@@ -52,21 +53,37 @@ class _AsyncRoundedButtonState extends State<AsyncRoundedButton>
   }
 
   Future<void> _handlePressed() async {
-    await _animationController.forward();
-    await _viewModel.handlePressed();
-    if (mounted) {
-      await _animationController.reverse();
+    if (_isHandlingPress || !_viewModel.isEnabled) return;
+
+    setState(() {
+      _isHandlingPress = true;
+    });
+
+    try {
+      await _animationController.forward();
+      await _viewModel.handlePressed();
+    } finally {
+      if (mounted) {
+        await _animationController.reverse();
+        setState(() {
+          _isHandlingPress = false;
+        });
+      } else {
+        _isHandlingPress = false;
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isEnabled = _viewModel.isEnabled && !_isHandlingPress;
+
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: _viewModel.isEnabled ? _handlePressed : null,
+        onPressed: isEnabled ? _handlePressed : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: _viewModel.backgroundColor,
+          backgroundColor: isEnabled ? Colors.blue : Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
           ),

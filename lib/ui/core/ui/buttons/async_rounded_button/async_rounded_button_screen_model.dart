@@ -19,6 +19,7 @@ class AsyncRoundedButtonScreenModel {
   }
 
   Future<void> handlePressed() async {
+    if (_isLoading) return;
     final onPressed = _onPressed;
     if (onPressed == null) return;
     _isLoading = true;
