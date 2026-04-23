@@ -1,12 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sport_matcher/data/auth/persistence/database/auth_tokens_database.dart';
 import 'package:sport_matcher/data/auth/persistence/entity/auth_tokens_entity.dart';
 
 import 'auth_tokens_database_test.mocks.dart';
 
+@GenerateMocks([FlutterSecureStorage])
 void main() {
   group('AuthTokensDatabase', () {
     late MockFlutterSecureStorage storage;
