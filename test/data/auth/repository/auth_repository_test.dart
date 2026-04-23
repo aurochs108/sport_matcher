@@ -1,71 +1,209 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sport_matcher/data/auth/domain/auth_tokens.dart';
+import 'package:sport_matcher/data/auth/mapper/auth_tokens_mapper.dart';
+import 'package:sport_matcher/data/auth/network/api/abstract_auth_api.dart';
+import 'package:sport_matcher/data/auth/network/response/auth_tokens_reponse.dart';
+import 'package:sport_matcher/data/auth/persistence/database/abstract_auth_tokens_database.dart';
 import 'package:sport_matcher/data/auth/persistence/entity/auth_tokens_entity.dart';
 import 'package:sport_matcher/data/auth/repository/auth_repository.dart';
+import 'package:sport_matcher/data/core/api_request/api_result.dart';
+import 'package:sport_matcher/data/core/mapper/abstract_api_error_to_user_message_mapper.dart';
+import 'package:sport_matcher/data/device_id/repository/abstract_device_id_repository.dart';
 
-import 'auth_repository_test.mocks.dart';
+class MockAbstractAuthApi extends Mock implements AbstractAuthApi {}
+
+class MockAbstractDeviceIdRepository extends Mock
+    implements AbstractDeviceIdRepository {}
+
+class MockAbstractAuthTokensDatabase extends Mock
+    implements AbstractAuthTokensDatabase {}
+
+class MockAuthTokensMapper extends Mock implements AuthTokensMapper {}
+
+class MockAbstractApiErrorToUserMessageMapper extends Mock
+    implements AbstractApiErrorToUserMessageMapper {}
 
 void main() {
   group('AuthRepository', () {
+    late MockAbstractAuthApi authApi;
+    late MockAbstractDeviceIdRepository deviceIdRepository;
     late MockAbstractAuthTokensDatabase tokenDatabase;
     late MockAuthTokensMapper mapper;
+    late MockAbstractApiErrorToUserMessageMapper errorMapper;
     late AuthRepository sut;
 
     setUp(() {
+      authApi = MockAbstractAuthApi();
+      deviceIdRepository = MockAbstractDeviceIdRepository();
       tokenDatabase = MockAbstractAuthTokensDatabase();
       mapper = MockAuthTokensMapper();
+      errorMapper = MockAbstractApiErrorToUserMessageMapper();
       sut = AuthRepository(
+        authApi: authApi,
+        deviceIdRepository: deviceIdRepository,
         tokenDatabase: tokenDatabase,
         mapper: mapper,
+        errorMapper: errorMapper,
       );
     });
 
-    test('saveTokens maps domain and saves mapped entity', () async {
-      final tokens = AuthTokensDomain(
-        accessToken: 'domain-access-token',
-        refreshToken: 'domain-refresh-token',
+    test('registerWithEmail gets device ID, calls API, saves tokens, and returns success', () async {
+      final response = AuthTokensReponse(
+        accessToken: 'access-token',
+        refreshToken: 'refresh-token',
+        tokenType: 'Bearer',
+        expiresIn: 3600,
+      );
+      final mappedTokens = AuthTokensDomain(
+        accessToken: 'mapped-access-token',
+        refreshToken: 'mapped-refresh-token',
         tokenType: 'Bearer',
         expiresIn: 7200,
       );
       final mappedEntity = AuthTokensEntity(
-        accessToken: 'mapped-access-token',
-        refreshToken: 'mapped-refresh-token',
+        accessToken: 'entity-access-token',
+        refreshToken: 'entity-refresh-token',
         tokenType: 'Bearer',
-        expiresIn: 3600,
+        expiresIn: 7200,
       );
-      when(mapper.domainToEntity(tokens)).thenReturn(mappedEntity);
+      when(deviceIdRepository.getDeviceId()).thenAnswer((_) async => 'device-id');
+      when(
+        authApi.registerWithEmail(
+          email: 'user@example.com',
+          password: 'strong-password',
+          deviceId: 'device-id',
+        ),
+      ).thenAnswer((_) async => ApiSuccess(response));
+      when(mapper.responseToDomain(response)).thenReturn(mappedTokens);
+      when(mapper.domainToEntity(mappedTokens)).thenReturn(mappedEntity);
       when(tokenDatabase.saveTokens(mappedEntity)).thenAnswer((_) async {});
 
-      await sut.saveTokens(tokens);
+      final result = await sut.registerWithEmail(
+        email: 'user@example.com',
+        password: 'strong-password',
+      );
 
-      verify(mapper.domainToEntity(tokens)).called(1);
+      expect(result, isA<ApiSuccess<void>>());
+      verify(deviceIdRepository.getDeviceId()).called(1);
+      verify(
+        authApi.registerWithEmail(
+          email: 'user@example.com',
+          password: 'strong-password',
+          deviceId: 'device-id',
+        ),
+      ).called(1);
+      verify(mapper.responseToDomain(response)).called(1);
+      verify(mapper.domainToEntity(mappedTokens)).called(1);
       verify(tokenDatabase.saveTokens(mappedEntity)).called(1);
+      verifyZeroInteractions(errorMapper);
     });
 
-    test('saveTokens propagates database errors', () async {
-      final tokens = AuthTokensDomain(
-        accessToken: 'domain-access-token',
-        refreshToken: 'domain-refresh-token',
+    test('registerWithEmail returns API error without saving tokens', () async {
+      when(deviceIdRepository.getDeviceId()).thenAnswer((_) async => 'device-id');
+      when(
+        authApi.registerWithEmail(
+          email: 'user@example.com',
+          password: 'strong-password',
+          deviceId: 'device-id',
+        ),
+      ).thenAnswer(
+        (_) async => const ApiError<AuthTokensReponse>(
+          'Registration failed',
+          statusCode: 409,
+          code: 'EMAIL_ALREADY_REGISTERED',
+        ),
+      );
+
+      final result = await sut.registerWithEmail(
+        email: 'user@example.com',
+        password: 'strong-password',
+      );
+
+      expect(result, isA<ApiError<void>>());
+      expect((result as ApiError<void>).message, 'Registration failed');
+      expect(result.statusCode, 409);
+      expect(result.code, 'EMAIL_ALREADY_REGISTERED');
+      verify(deviceIdRepository.getDeviceId()).called(1);
+      verify(
+        authApi.registerWithEmail(
+          email: 'user@example.com',
+          password: 'strong-password',
+          deviceId: 'device-id',
+        ),
+      ).called(1);
+      verifyZeroInteractions(mapper);
+      verifyZeroInteractions(tokenDatabase);
+      verifyZeroInteractions(errorMapper);
+    });
+
+    test('registerWithEmail maps device ID errors to ApiError', () async {
+      final exception = Exception('device id failed');
+      when(deviceIdRepository.getDeviceId()).thenAnswer(
+        (_) => Future<String>.error(exception),
+      );
+      when(errorMapper.map(exception)).thenReturn('mapped error');
+
+      final result = await sut.registerWithEmail(
+        email: 'user@example.com',
+        password: 'strong-password',
+      );
+
+      expect(result, isA<ApiError<void>>());
+      expect((result as ApiError<void>).message, 'mapped error');
+      expect(result.statusCode, isNull);
+      expect(result.code, isNull);
+      verify(errorMapper.map(same(exception))).called(1);
+      verifyZeroInteractions(authApi);
+      verifyZeroInteractions(tokenDatabase);
+    });
+
+    test('registerWithEmail maps token persistence errors to ApiError', () async {
+      final response = AuthTokensReponse(
+        accessToken: 'access-token',
+        refreshToken: 'refresh-token',
+        tokenType: 'Bearer',
+        expiresIn: 3600,
+      );
+      final mappedTokens = AuthTokensDomain(
+        accessToken: 'mapped-access-token',
+        refreshToken: 'mapped-refresh-token',
         tokenType: 'Bearer',
         expiresIn: 7200,
       );
       final mappedEntity = AuthTokensEntity(
-        accessToken: 'mapped-access-token',
-        refreshToken: 'mapped-refresh-token',
+        accessToken: 'entity-access-token',
+        refreshToken: 'entity-refresh-token',
         tokenType: 'Bearer',
-        expiresIn: 3600,
+        expiresIn: 7200,
       );
       final exception = Exception('save failed');
-      when(mapper.domainToEntity(tokens)).thenReturn(mappedEntity);
+      when(deviceIdRepository.getDeviceId()).thenAnswer((_) async => 'device-id');
+      when(
+        authApi.registerWithEmail(
+          email: 'user@example.com',
+          password: 'strong-password',
+          deviceId: 'device-id',
+        ),
+      ).thenAnswer((_) async => ApiSuccess(response));
+      when(mapper.responseToDomain(response)).thenReturn(mappedTokens);
+      when(mapper.domainToEntity(mappedTokens)).thenReturn(mappedEntity);
       when(
         tokenDatabase.saveTokens(mappedEntity),
       ).thenAnswer((_) => Future<void>.error(exception));
+      when(errorMapper.map(exception)).thenReturn('mapped error');
 
-      expect(
-        sut.saveTokens(tokens),
-        throwsA(same(exception)),
+      final result = await sut.registerWithEmail(
+        email: 'user@example.com',
+        password: 'strong-password',
       );
+
+      expect(result, isA<ApiError<void>>());
+      expect((result as ApiError<void>).message, 'mapped error');
+      expect(result.statusCode, isNull);
+      expect(result.code, isNull);
+      verify(errorMapper.map(same(exception))).called(1);
     });
+
   });
 }
