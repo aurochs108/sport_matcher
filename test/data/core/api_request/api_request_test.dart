@@ -19,7 +19,7 @@ void main() {
   group('ApiRequest', () {
     for (final responseStatusCode in [200, 299]) {
       test(
-        'execute sends post request and returns parsed success for $responseStatusCode',
+        'execute sends POST request and returns parsed success for $responseStatusCode',
         () async {
           late http.Request capturedRequest;
           final client = MockClient((request) async {
