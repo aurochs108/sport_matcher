@@ -1,12 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sport_matcher/data/auth/repository/abstract_auth_repository.dart';
 import 'package:sport_matcher/data/core/api_request/api_result.dart';
 import 'package:sport_matcher/ui/authentication/sign_up/widgets/sign_up_screen_model.dart';
 
-class MockAbstractAuthRepository extends Mock implements AbstractAuthRepository {}
+import 'sign_up_screen_model_test.mocks.dart';
 
+@GenerateMocks([AbstractAuthRepository])
 void main() {
+  provideDummy<ApiResult<void>>(const ApiError<void>('dummy error'));
+
   group('SignUpScreenModel', () {
     late MockAbstractAuthRepository authRepository;
     late SignUpScreenModel sut;

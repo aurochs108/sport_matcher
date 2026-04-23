@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sport_matcher/data/auth/domain/auth_tokens.dart';
 import 'package:sport_matcher/data/auth/mapper/auth_tokens_mapper.dart';
@@ -11,20 +12,20 @@ import 'package:sport_matcher/data/core/api_request/api_result.dart';
 import 'package:sport_matcher/data/core/mapper/abstract_api_error_to_user_message_mapper.dart';
 import 'package:sport_matcher/data/device_id/repository/abstract_device_id_repository.dart';
 
-class MockAbstractAuthApi extends Mock implements AbstractAuthApi {}
+import 'auth_repository_test.mocks.dart';
 
-class MockAbstractDeviceIdRepository extends Mock
-    implements AbstractDeviceIdRepository {}
-
-class MockAbstractAuthTokensDatabase extends Mock
-    implements AbstractAuthTokensDatabase {}
-
-class MockAuthTokensMapper extends Mock implements AuthTokensMapper {}
-
-class MockAbstractApiErrorToUserMessageMapper extends Mock
-    implements AbstractApiErrorToUserMessageMapper {}
-
+@GenerateMocks([
+  AbstractAuthApi,
+  AbstractDeviceIdRepository,
+  AbstractAuthTokensDatabase,
+  AuthTokensMapper,
+  AbstractApiErrorToUserMessageMapper,
+])
 void main() {
+  provideDummy<ApiResult<AuthTokensReponse>>(
+    const ApiError<AuthTokensReponse>('dummy error'),
+  );
+
   group('AuthRepository', () {
     late MockAbstractAuthApi authApi;
     late MockAbstractDeviceIdRepository deviceIdRepository;
