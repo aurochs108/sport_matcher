@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -49,7 +51,6 @@ void main() {
     test('saveDeviceId throws when persistence fails', () async {
       final store = MockSharedPreferencesStorePlatform();
       final deviceId = const Uuid().v4();
-      // ignore: deprecated_member_use
       when(store.isMock).thenReturn(true);
       when(store.getAll()).thenAnswer((_) async => <String, Object>{});
       when(
