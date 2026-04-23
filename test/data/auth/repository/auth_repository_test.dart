@@ -1,17 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:sport_matcher/data/auth/domain/auth_tokens.dart';
 import 'package:sport_matcher/data/auth/mapper/auth_tokens_mapper.dart';
 import 'package:sport_matcher/data/auth/network/api/abstract_auth_api.dart';
 import 'package:sport_matcher/data/auth/network/response/auth_tokens_reponse.dart';
 import 'package:sport_matcher/data/auth/persistence/database/abstract_auth_tokens_database.dart';
-import 'package:sport_matcher/data/auth/persistence/entity/auth_tokens_entity.dart';
 import 'package:sport_matcher/data/auth/repository/auth_repository.dart';
 import 'package:sport_matcher/data/core/api_request/api_result.dart';
 import 'package:sport_matcher/data/core/mapper/abstract_api_error_to_user_message_mapper.dart';
 import 'package:sport_matcher/data/device_id/repository/abstract_device_id_repository.dart';
 
+import '../../../random/auth_tokens_domain_random.dart';
+import '../../../random/auth_tokens_entity_random.dart';
+import '../../../random/auth_tokens_response_random.dart';
 import 'auth_repository_test.mocks.dart';
 
 @GenerateMocks([
@@ -50,24 +51,9 @@ void main() {
     });
 
     test('registerWithEmail gets device ID, calls API, saves tokens, and returns success', () async {
-      final response = AuthTokensReponse(
-        accessToken: 'access-token',
-        refreshToken: 'refresh-token',
-        tokenType: 'Bearer',
-        expiresIn: 3600,
-      );
-      final mappedTokens = AuthTokensDomain(
-        accessToken: 'mapped-access-token',
-        refreshToken: 'mapped-refresh-token',
-        tokenType: 'Bearer',
-        expiresIn: 7200,
-      );
-      final mappedEntity = AuthTokensEntity(
-        accessToken: 'entity-access-token',
-        refreshToken: 'entity-refresh-token',
-        tokenType: 'Bearer',
-        expiresIn: 7200,
-      );
+      final response = AuthTokensResponseRandom.random();
+      final mappedTokens = AuthTokensDomainRandom.random();
+      final mappedEntity = AuthTokensEntityRandom.random();
       when(deviceIdRepository.getDeviceId()).thenAnswer((_) async => 'device-id');
       when(
         authApi.registerWithEmail(
@@ -160,24 +146,9 @@ void main() {
     });
 
     test('registerWithEmail maps token persistence errors to ApiError', () async {
-      final response = AuthTokensReponse(
-        accessToken: 'access-token',
-        refreshToken: 'refresh-token',
-        tokenType: 'Bearer',
-        expiresIn: 3600,
-      );
-      final mappedTokens = AuthTokensDomain(
-        accessToken: 'mapped-access-token',
-        refreshToken: 'mapped-refresh-token',
-        tokenType: 'Bearer',
-        expiresIn: 7200,
-      );
-      final mappedEntity = AuthTokensEntity(
-        accessToken: 'entity-access-token',
-        refreshToken: 'entity-refresh-token',
-        tokenType: 'Bearer',
-        expiresIn: 7200,
-      );
+      final response = AuthTokensResponseRandom.random();
+      final mappedTokens = AuthTokensDomainRandom.random();
+      final mappedEntity = AuthTokensEntityRandom.random();
       final exception = Exception('save failed');
       when(deviceIdRepository.getDeviceId()).thenAnswer((_) async => 'device-id');
       when(
@@ -205,6 +176,5 @@ void main() {
       expect(result.code, isNull);
       verify(errorMapper.map(same(exception))).called(1);
     });
-
   });
 }

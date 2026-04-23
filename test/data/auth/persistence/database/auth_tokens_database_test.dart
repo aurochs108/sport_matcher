@@ -5,8 +5,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sport_matcher/data/auth/persistence/database/auth_tokens_database.dart';
-import 'package:sport_matcher/data/auth/persistence/entity/auth_tokens_entity.dart';
 
+import '../../../../random/auth_tokens_entity_random.dart';
 import 'auth_tokens_database_test.mocks.dart';
 
 @GenerateMocks([FlutterSecureStorage])
@@ -21,12 +21,7 @@ void main() {
     });
 
     test('saveTokens writes entity json under auth_tokens key', () async {
-      final entity = AuthTokensEntity(
-        accessToken: 'access-token',
-        refreshToken: 'refresh-token',
-        tokenType: 'Bearer',
-        expiresIn: 3600,
-      );
+      final entity = AuthTokensEntityRandom.random();
       final expectedJson = jsonEncode(entity);
       when(
         storage.write(
@@ -46,12 +41,7 @@ void main() {
     });
 
     test('saveTokens propagates storage errors', () async {
-      final entity = AuthTokensEntity(
-        accessToken: 'access-token',
-        refreshToken: 'refresh-token',
-        tokenType: 'Bearer',
-        expiresIn: 3600,
-      );
+      final entity = AuthTokensEntityRandom.random();
       final expectedJson = jsonEncode(entity);
       final exception = Exception('write failed');
       when(

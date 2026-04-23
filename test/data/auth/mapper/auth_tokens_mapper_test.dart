@@ -1,19 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sport_matcher/data/auth/domain/auth_tokens.dart';
 import 'package:sport_matcher/data/auth/mapper/auth_tokens_mapper.dart';
-import 'package:sport_matcher/data/auth/network/response/auth_tokens_reponse.dart';
+
+import '../../../random/auth_tokens_domain_random.dart';
+import '../../../random/auth_tokens_response_random.dart';
 
 void main() {
   group('AuthTokensMapper', () {
     final sut = AuthTokensMapper();
 
     test('responseToDomain maps response fields to domain', () {
-      final response = AuthTokensReponse(
-        accessToken: 'access-token',
-        refreshToken: 'refresh-token',
-        tokenType: 'Bearer',
-        expiresIn: 3600,
-      );
+      final response = AuthTokensResponseRandom.random();
 
       final result = sut.responseToDomain(response);
 
@@ -24,12 +20,7 @@ void main() {
     });
 
     test('domainToEntity maps domain fields to entity', () {
-      final domain = AuthTokensDomain(
-        accessToken: 'domain-access-token',
-        refreshToken: 'domain-refresh-token',
-        tokenType: 'Bearer',
-        expiresIn: 7200,
-      );
+      final domain = AuthTokensDomainRandom.random();
 
       final result = sut.domainToEntity(domain);
 
