@@ -42,40 +42,46 @@ void main() {
       ).called(1);
     });
 
-    test('register stores repository error message on generic error', () async {
-      when(
-        authRepository.registerWithEmail(
-          email: 'user@example.com',
-          password: 'strong-password',
+    final errorTestCases = <({
+      String description,
+      ApiError<void> repositoryResult,
+      String expectedErrorMessage,
+    })>[
+      (
+        description: 'stores repository error message on generic error',
+        repositoryResult: ApiError<void>(
+          'Registration failed',
+          statusCode: 500,
         ),
-      ).thenAnswer((_) async => const ApiError('Registration failed', statusCode: 500));
-
-      await sut.register('user@example.com', 'strong-password');
-
-      expect(sut.errorMessage, 'Registration failed');
-    });
-
-    test('register maps EMAIL_ALREADY_REGISTERED to the user-friendly message', () async {
-      when(
-        authRepository.registerWithEmail(
-          email: 'user@example.com',
-          password: 'strong-password',
-        ),
-      ).thenAnswer(
-        (_) async => const ApiError<void>(
+        expectedErrorMessage: 'Registration failed',
+      ),
+      (
+        description:
+            'maps EMAIL_ALREADY_REGISTERED to the user-friendly message',
+        repositoryResult: ApiError<void>(
           'Backend duplicate message',
           statusCode: 409,
           code: 'EMAIL_ALREADY_REGISTERED',
         ),
-      );
+        expectedErrorMessage:
+            'This email is already in use. Please use a different email.',
+      ),
+    ];
 
-      await sut.register('user@example.com', 'strong-password');
+    for (final testCase in errorTestCases) {
+      test('register ${testCase.description}', () async {
+        when(
+          authRepository.registerWithEmail(
+            email: 'user@example.com',
+            password: 'strong-password',
+          ),
+        ).thenAnswer((_) async => testCase.repositoryResult);
 
-      expect(
-        sut.errorMessage,
-        'This email is already in use. Please use a different email.',
-      );
-    });
+        await sut.register('user@example.com', 'strong-password');
+
+        expect(sut.errorMessage, testCase.expectedErrorMessage);
+      });
+    }
 
     test('register clears previous error before a successful retry', () async {
       when(
