@@ -46,10 +46,6 @@ void main() {
 
     test('should activate button when both validators return null', () {
       // given
-      final noTextError = Uuid().v4();
-      when(emailValidator.validate("")).thenReturn(noTextError);
-      when(passwordValidator.validate("")).thenReturn(noTextError);
-
       final expectedEmail = Uuid().v4();
       when(emailValidator.validate(expectedEmail)).thenReturn(null);
       final expectedPassword = Uuid().v4();
@@ -62,13 +58,13 @@ void main() {
       // then
       _validateEmailAndPasswordValidatorsAndIsFinishProcessButtonActive(
         sut: sut,
-        expectedIsFinishProcesButtonActive: isTrue,
-        onStateChangedCallsCount: onStateChangedCallsCount,
-        expectedOnStateChangedCallsCount: 1,
         emailValidator: emailValidator,
         expectedValidatedEmails: [expectedEmail, expectedEmail],
         passwordValidator: passwordValidator,
         expectedValidatedPasswords: ["", expectedPassword],
+        expectedIsFinishProcesButtonActive: isTrue,
+        onStateChangedCallsCount: onStateChangedCallsCount,
+        expectedOnStateChangedCallsCount: 1,
       );
     });
 
@@ -89,13 +85,13 @@ void main() {
       // then
       _validateEmailAndPasswordValidatorsAndIsFinishProcessButtonActive(
         sut: sut,
-        expectedIsFinishProcesButtonActive: isFalse,
-        onStateChangedCallsCount: onStateChangedCallsCount,
-        expectedOnStateChangedCallsCount: 0,
         emailValidator: emailValidator,
         expectedValidatedEmails: [expectedEmail],
         passwordValidator: passwordValidator,
         expectedValidatedPasswords: [""],
+        expectedIsFinishProcesButtonActive: isFalse,
+        onStateChangedCallsCount: onStateChangedCallsCount,
+        expectedOnStateChangedCallsCount: 0,
       );
     });
 
@@ -116,13 +112,13 @@ void main() {
       // then
       _validateEmailAndPasswordValidatorsAndIsFinishProcessButtonActive(
         sut: sut,
-        expectedIsFinishProcesButtonActive: isFalse,
-        onStateChangedCallsCount: onStateChangedCallsCount,
-        expectedOnStateChangedCallsCount: 0,
         emailValidator: emailValidator,
         expectedValidatedEmails: [""],
         passwordValidator: passwordValidator,
         expectedValidatedPasswords: [expectedPassword],
+        expectedIsFinishProcesButtonActive: isFalse,
+        onStateChangedCallsCount: onStateChangedCallsCount,
+        expectedOnStateChangedCallsCount: 0,
       );
     });
 
@@ -130,16 +126,14 @@ void main() {
       'should deactivate button and notify state change when valid fields become invalid',
       () {
         // given
-        final noTextError = Uuid().v4();
-        when(emailValidator.validate("")).thenReturn(noTextError);
-        when(passwordValidator.validate("")).thenReturn(noTextError);
-
         final expectedEmail = Uuid().v4();
         when(emailValidator.validate(expectedEmail)).thenReturn(null);
         final validPassword = Uuid().v4();
         when(passwordValidator.validate(validPassword)).thenReturn(null);
         final invalidPassword = Uuid().v4();
-        when(passwordValidator.validate(invalidPassword)).thenReturn(Uuid().v4());
+        when(
+          passwordValidator.validate(invalidPassword),
+        ).thenReturn(Uuid().v4());
 
         // when
         sut.emailTextController.text = expectedEmail;
@@ -149,9 +143,6 @@ void main() {
         // then
         _validateEmailAndPasswordValidatorsAndIsFinishProcessButtonActive(
           sut: sut,
-          expectedIsFinishProcesButtonActive: isFalse,
-          onStateChangedCallsCount: onStateChangedCallsCount,
-          expectedOnStateChangedCallsCount: 2,
           emailValidator: emailValidator,
           expectedValidatedEmails: [
             expectedEmail,
@@ -160,6 +151,9 @@ void main() {
           ],
           passwordValidator: passwordValidator,
           expectedValidatedPasswords: ["", validPassword, invalidPassword],
+          expectedIsFinishProcesButtonActive: isFalse,
+          onStateChangedCallsCount: onStateChangedCallsCount,
+          expectedOnStateChangedCallsCount: 2,
         );
       },
     );
@@ -208,21 +202,22 @@ void main() {
 
 void _validateEmailAndPasswordValidatorsAndIsFinishProcessButtonActive({
   required EmailAuthenticationScreenModel sut,
-  required Matcher expectedIsFinishProcesButtonActive,
-  required int onStateChangedCallsCount,
-  required int expectedOnStateChangedCallsCount,
   required MockAbstractTextValidator emailValidator,
   required List<String> expectedValidatedEmails,
   required MockAbstractTextValidator passwordValidator,
   required List<String> expectedValidatedPasswords,
+  required Matcher expectedIsFinishProcesButtonActive,
+  required int onStateChangedCallsCount,
+  required int expectedOnStateChangedCallsCount,
 }) {
-  expect(sut.isFinishProcesButtonActive, expectedIsFinishProcesButtonActive);
-  expect(onStateChangedCallsCount, expectedOnStateChangedCallsCount);
-
   final capturedEmails = verify(emailValidator.validate(captureAny)).captured;
   expect(capturedEmails, expectedValidatedEmails);
 
   final capturedPasswords =
       verify(passwordValidator.validate(captureAny)).captured;
   expect(capturedPasswords, expectedValidatedPasswords);
+
+  expect(sut.isFinishProcesButtonActive, expectedIsFinishProcesButtonActive);
+
+  expect(onStateChangedCallsCount, expectedOnStateChangedCallsCount);
 }
