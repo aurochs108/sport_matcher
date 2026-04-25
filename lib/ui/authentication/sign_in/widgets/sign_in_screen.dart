@@ -8,7 +8,7 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return EmailAuthenticationScreen(
       title: "Sign in",
-      onFinishProcessButtonAction: () {
+      onFinishProcessButtonAction: (email, password) async {
         // TODO sign in
       },
     );

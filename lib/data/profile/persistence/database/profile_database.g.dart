@@ -259,61 +259,50 @@ class $ProfileEntityTable extends ProfileEntity
   ProfileEntityData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ProfileEntityData(
-      id:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}id'],
-          )!,
-      name:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}name'],
-          )!,
-      profileImagePath:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}profile_image_path'],
-          )!,
-      bike:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.bool,
-            data['${effectivePrefix}bike'],
-          )!,
-      climbing:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.bool,
-            data['${effectivePrefix}climbing'],
-          )!,
-      football:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.bool,
-            data['${effectivePrefix}football'],
-          )!,
-      hockey:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.bool,
-            data['${effectivePrefix}hockey'],
-          )!,
-      pingPong:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.bool,
-            data['${effectivePrefix}ping_pong'],
-          )!,
-      running:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.bool,
-            data['${effectivePrefix}running'],
-          )!,
-      tennis:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.bool,
-            data['${effectivePrefix}tennis'],
-          )!,
-      voleyball:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.bool,
-            data['${effectivePrefix}voleyball'],
-          )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      profileImagePath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_image_path'],
+      )!,
+      bike: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}bike'],
+      )!,
+      climbing: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}climbing'],
+      )!,
+      football: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}football'],
+      )!,
+      hockey: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}hockey'],
+      )!,
+      pingPong: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}ping_pong'],
+      )!,
+      running: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}running'],
+      )!,
+      tennis: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}tennis'],
+      )!,
+      voleyball: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}voleyball'],
+      )!,
     );
   }
 
@@ -448,10 +437,9 @@ class ProfileEntityData extends DataClass
     return ProfileEntityData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
-      profileImagePath:
-          data.profileImagePath.present
-              ? data.profileImagePath.value
-              : this.profileImagePath,
+      profileImagePath: data.profileImagePath.present
+          ? data.profileImagePath.value
+          : this.profileImagePath,
       bike: data.bike.present ? data.bike.value : this.bike,
       climbing: data.climbing.present ? data.climbing.value : this.climbing,
       football: data.football.present ? data.football.value : this.football,
@@ -909,16 +897,12 @@ class $$ProfileEntityTableTableManager
         TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer:
-              () => $$ProfileEntityTableFilterComposer($db: db, $table: table),
-          createOrderingComposer:
-              () =>
-                  $$ProfileEntityTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer:
-              () => $$ProfileEntityTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
+          createFilteringComposer: () =>
+              $$ProfileEntityTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProfileEntityTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ProfileEntityTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -971,16 +955,9 @@ class $$ProfileEntityTableTableManager
                 tennis: tennis,
                 voleyball: voleyball,
               ),
-          withReferenceMapper:
-              (p0) =>
-                  p0
-                      .map(
-                        (e) => (
-                          e.readTable(table),
-                          BaseReferences(db, table, e),
-                        ),
-                      )
-                      .toList(),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
           prefetchHooksCallback: null,
         ),
       );
