@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'auth_tokens_entity.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class AuthTokensEntity {
   final String accessToken;
   final String refreshToken;

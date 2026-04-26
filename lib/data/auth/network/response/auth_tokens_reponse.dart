@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'auth_tokens_reponse.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createToJson: false)
 class AuthTokensReponse {
   final String accessToken;
   final String refreshToken;
