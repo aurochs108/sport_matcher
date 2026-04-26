@@ -13,11 +13,3 @@ AuthTokensReponse _$AuthTokensReponseFromJson(Map<String, dynamic> json) =>
       tokenType: json['tokenType'] as String,
       expiresIn: (json['expiresIn'] as num).toInt(),
     );
-
-Map<String, dynamic> _$AuthTokensReponseToJson(AuthTokensReponse instance) =>
-    <String, dynamic>{
-      'accessToken': instance.accessToken,
-      'refreshToken': instance.refreshToken,
-      'tokenType': instance.tokenType,
-      'expiresIn': instance.expiresIn,
-    };

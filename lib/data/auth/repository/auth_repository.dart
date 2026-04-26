@@ -1,4 +1,3 @@
-import 'package:sport_matcher/data/auth/domain/auth_tokens.dart';
 import 'package:sport_matcher/data/auth/mapper/auth_tokens_mapper.dart';
 import 'package:sport_matcher/data/auth/network/api/abstract_auth_api.dart';
 import 'package:sport_matcher/data/auth/network/api/auth_api.dart';
